@@ -64,7 +64,7 @@ class AutoBindingServiceProvider extends ServiceProvider
                     $moduleName = $moduleDir->getBasename();
                     // Assuming namespace convention Modules\ModuleName
                     $moduleBaseNamespace = config('modules.namespace', 'Modules') . '\\' . $moduleName;
-                    
+
                     // Correctly construct path: modules/ModuleName/src/Contracts
                     $moduleContractPath = $moduleDir->getPathname() . '/' . trim($moduleAppPath, '/') . '/Contracts';
 
@@ -141,13 +141,13 @@ class AutoBindingServiceProvider extends ServiceProvider
                 // Determine the root namespace for the module/app to find concrete classes
                 // If namespace is 'Modules\User\Contracts\Services', we want 'Modules\User'
                 // If namespace is 'Modules\User\src\Contracts', we want 'Modules\User' (assuming PSR-4 maps 'src' to 'Modules\User')
-                
+
                 // Strategy: Find where 'Contracts' starts and take everything before it.
                 $contractsPos = strpos($fileNamespace, 'Contracts');
                 if ($contractsPos !== false) {
-                     // Get 'Modules\User' from 'Modules\User\Contracts...'
-                     // Remove trailing backslash if exists
-                    $rootNamespace = rtrim(substr($fileNamespace, 0, $contractsPos), '\');
+                    // Get 'Modules\User' from 'Modules\User\Contracts...'
+                    // Remove trailing backslash if exists
+                    $rootNamespace = rtrim(substr($fileNamespace, 0, $contractsPos), '\\');
                 } else {
                     $rootNamespace = $baseNamespace;
                 }
@@ -189,7 +189,7 @@ class AutoBindingServiceProvider extends ServiceProvider
             // Services
             $rootNamespace . '\\Services\\' . $shortName,
             $rootNamespace . '\\Services\\' . $shortName . 'Service', // e.g. User -> UserService
-            
+
             // Repositories
             $rootNamespace . '\\Repositories\\Eloquent' . $shortName,
             $rootNamespace . '\\Repositories\\' . $shortName,
