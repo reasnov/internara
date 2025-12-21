@@ -132,7 +132,7 @@ return [
             'actions' => ['path' => 'src/Actions', 'generate' => false],
             'casts' => ['path' => 'src/Casts', 'generate' => false],
             'channels' => ['path' => 'src/Broadcasting', 'generate' => false],
-            'class' => ['path' => 'src/Classes', 'generate' => false],
+            'class' => ['path' => 'src', 'generate' => false],
             'command' => ['path' => 'src/Console', 'generate' => false],
             'component-class' => ['path' => 'src/View/Components', 'generate' => false],
             'emails' => ['path' => 'src/Emails', 'generate' => false],
@@ -141,7 +141,7 @@ return [
             'exceptions' => ['path' => 'src/Exceptions', 'generate' => false],
             'jobs' => ['path' => 'src/Jobs', 'generate' => false],
             'helpers' => ['path' => 'src/Helpers', 'generate' => false],
-            'interfaces' => ['path' => 'src/Interfaces', 'generate' => false],
+            'interfaces' => ['path' => 'src/Contracts', 'generate' => false],
             'listener' => ['path' => 'src/Listeners', 'generate' => false],
             'model' => ['path' => 'src/Models', 'generate' => false],
             'notifications' => ['path' => 'src/Notifications', 'generate' => false],
@@ -229,7 +229,11 @@ return [
     */
     'commands' => ConsoleServiceProvider::defaultCommands()
         ->merge([
-            // New commands go here
+            \App\Console\Commands\ModuleMakeClassCommand::class,
+            \App\Console\Commands\ModuleMakeInterfaceCommand::class,
+            \App\Console\Commands\ModuleMakeServiceCommand::class,
+            \App\Console\Commands\ModuleMakeRepositoryCommand::class,
+            \App\Console\Commands\ModuleMakeEntityCommand::class,
         ])->toArray(),
 
     /*

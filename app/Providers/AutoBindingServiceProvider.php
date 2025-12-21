@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Modules\Support\General\Filter;
-use Illuminate\Support\Facades\Log;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
 
 class AutoBindingServiceProvider extends ServiceProvider
 {
@@ -14,10 +16,10 @@ class AutoBindingServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $bindings = Filter::make(array_merge(
+        $bindings = array_merge(
             $this->getDefaultBindings(),
             $this->getBindings()
-        ))->clean()->get();
+        );
 
         foreach ($bindings as $abstract => $concrete) {
             /** Ensure that the abstract is an existing interface and the concrete is an existing class (not an interface itself) */
@@ -44,20 +46,27 @@ class AutoBindingServiceProvider extends ServiceProvider
     {
         $bindings = [];
 
-        // Scan App/Contracts
+        // Scan App/src/Contracts (Assuming structure: app/src/Contracts) - Adjusted for potential structure
+        // If 'app' folder uses standard Laravel structure, contracts might be in app/Contracts
         $appContractPath = app_path('Contracts');
         if (file_exists($appContractPath)) {
             $bindings = array_merge($bindings, $this->discoverBindingsInPath($appContractPath, 'App'));
         }
 
-        // Scan Modules/*/Contracts
-        $modulesPath = base_path('modules');
+        // Scan Modules/*/src/Contracts
+        $modulesPath = config('modules.paths.modules', base_path('modules'));
+        // Use 'app_folder' from config which should be 'src/' now
+        $moduleAppPath = config('modules.paths.app_folder', 'src/');
+
         try {
             foreach (new \DirectoryIterator($modulesPath) as $moduleDir) {
                 if ($moduleDir->isDir() && !$moduleDir->isDot()) {
                     $moduleName = $moduleDir->getBasename();
-                    $moduleBaseNamespace = 'Modules\\' . $moduleName;
-                    $moduleContractPath = base_path("modules/{$moduleName}/app/Contracts");
+                    // Assuming namespace convention Modules\ModuleName
+                    $moduleBaseNamespace = config('modules.namespace', 'Modules') . '\\' . $moduleName;
+                    
+                    // Correctly construct path: modules/ModuleName/src/Contracts
+                    $moduleContractPath = $moduleDir->getPathname() . '/' . trim($moduleAppPath, '/') . '/Contracts';
 
                     if (file_exists($moduleContractPath)) {
                         $bindings = array_merge($bindings, $this->discoverBindingsInPath($moduleContractPath, $moduleBaseNamespace));
@@ -82,7 +91,7 @@ class AutoBindingServiceProvider extends ServiceProvider
     }
 
     /**
-     * Discovers bindings (interface to concrete) within a given contract path by scanning PHP files.
+     * Discovers bindings (interface to concrete) within a given contract path by scanning PHP files recursively.
      *
      * @param string $contractPath The path to the contracts directory.
      * @param string $baseNamespace The base namespace for the contracts (e.g., 'App', 'Modules\User').
@@ -92,13 +101,19 @@ class AutoBindingServiceProvider extends ServiceProvider
     {
         $discoveredBindings = [];
         if (!is_dir($contractPath)) {
-            Log::debug("AutoBindingServiceProvider: Contract path '{$contractPath}' does not exist. Skipping.");
             return $discoveredBindings;
         }
 
-        $phpFiles = glob($contractPath . '/**/*.php');
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($contractPath));
 
-        foreach ($phpFiles as $filePath) {
+        /** @var SplFileInfo $file */
+        foreach ($iterator as $file) {
+            if ($file->isDir() || $file->getExtension() !== 'php') {
+                continue;
+            }
+
+            $filePath = $file->getPathname();
+
             try {
                 $content = @file_get_contents($filePath);
                 if ($content === false) {
@@ -106,13 +121,13 @@ class AutoBindingServiceProvider extends ServiceProvider
                 }
 
                 if (!preg_match('/namespace\s+([^;]+);/', $content, $namespaceMatches)) {
+                    // Fallback to base namespace if no namespace declaration found (unlikely for valid PHP code)
                     $fileNamespace = $baseNamespace;
                 } else {
                     $fileNamespace = trim($namespaceMatches[1]);
                 }
 
                 if (!preg_match('/^interface\s+(\w+)\b/m', $content, $interfaceMatches)) {
-                    Log::debug("AutoBindingServiceProvider: No interface found in file '{$filePath}'. Skipping.");
                     continue;
                 }
                 $interfaceName = trim($interfaceMatches[1]);
@@ -123,12 +138,24 @@ class AutoBindingServiceProvider extends ServiceProvider
                     continue;
                 }
 
-                $concrete = $this->deriveConcreteClass($abstract, $fileNamespace, $interfaceName);
-
-                if ($concrete && class_exists($concrete) && !interface_exists($concrete)) {
-                    $discoveredBindings[$abstract] = $concrete;
+                // Determine the root namespace for the module/app to find concrete classes
+                // If namespace is 'Modules\User\Contracts\Services', we want 'Modules\User'
+                // If namespace is 'Modules\User\src\Contracts', we want 'Modules\User' (assuming PSR-4 maps 'src' to 'Modules\User')
+                
+                // Strategy: Find where 'Contracts' starts and take everything before it.
+                $contractsPos = strpos($fileNamespace, 'Contracts');
+                if ($contractsPos !== false) {
+                     // Get 'Modules\User' from 'Modules\User\Contracts...'
+                     // Remove trailing backslash if exists
+                    $rootNamespace = rtrim(substr($fileNamespace, 0, $contractsPos), '\');
                 } else {
-                    Log::debug("AutoBindingServiceProvider: Could not find valid concrete for '{$abstract}' (tried '{$concrete}' or multiple patterns). Skipping.");
+                    $rootNamespace = $baseNamespace;
+                }
+
+                $concrete = $this->deriveConcreteClass($abstract, $rootNamespace, $interfaceName);
+
+                if ($concrete) {
+                    $discoveredBindings[$abstract] = $concrete;
                 }
             } catch (\Throwable $e) {
                 Log::error("AutoBindingServiceProvider: Failed to process file '{$filePath}'. Error: " . $e->getMessage());
@@ -141,58 +168,40 @@ class AutoBindingServiceProvider extends ServiceProvider
     /**
      * Derives the concrete class name from an abstract (interface) name based on convention.
      *
-     * This method correctly handles deep subdirectories in the Contracts namespace and removes the
-     * 'App' segment only for module namespaces (Modules\...). Repository patterns are prioritized
-     * with the non-Eloquent class first.
-     *
      * @param string $abstract The fully qualified name of the interface.
-     * @param string $fileNamespace The namespace found in the contract file.
+     * @param string $rootNamespace The root namespace of the module or app (e.g. 'Modules\User').
      * @param string $interfaceName The short name of the interface.
      * @return string|null The fully qualified name of the potential concrete class.
      */
-    private function deriveConcreteClass(string $abstract, string $fileNamespace, string $interfaceName): ?string
+    private function deriveConcreteClass(string $abstract, string $rootNamespace, string $interfaceName): ?string
     {
-        // 1. Find the base namespace (App or Modules\X) by cutting off 'Contracts' and any subdirs.
-        $contractsPosition = strpos($fileNamespace, 'Contracts');
-
-        if ($contractsPosition === false) {
-            $potentialConcreteNamespaceBase = $fileNamespace;
-        } else {
-            // Cut the FQCN right before the 'Contracts' segment and the preceding backslash.
-            $potentialConcreteNamespaceBase = Str::substr($fileNamespace, 0, $contractsPosition - 1);
-        }
-
-        // 2. Prepare the interface short name.
-        $shortenedInterfaceName = $interfaceName;
-
+        // 1. Prepare the interface short name (remove Interface/Contract suffix).
+        $shortName = $interfaceName;
         if (Str::endsWith($interfaceName, 'Interface')) {
-            $shortenedInterfaceName = Str::replaceLast('Interface', '', $interfaceName);
+            $shortName = Str::replaceLast('Interface', '', $interfaceName);
         } elseif (Str::endsWith($interfaceName, 'Contract')) {
-            $shortenedInterfaceName = Str::replaceLast('Contract', '', $interfaceName);
+            $shortName = Str::replaceLast('Contract', '', $interfaceName);
         }
 
-        $potentialConcreteClassNames = [];
+        // Define potential naming patterns for concrete classes
+        // We look in standard locations relative to the root namespace
+        $potentialConcreteClassNames = [
+            // Services
+            $rootNamespace . '\\Services\\' . $shortName,
+            $rootNamespace . '\\Services\\' . $shortName . 'Service', // e.g. User -> UserService
+            
+            // Repositories
+            $rootNamespace . '\\Repositories\\Eloquent' . $shortName,
+            $rootNamespace . '\\Repositories\\' . $shortName,
+            $rootNamespace . '\\Repositories\\' . $shortName . 'Repository', // e.g. User -> UserRepository
 
-        // Pattern 1 & 2: Repositories (PRIORITY SWAPPED: General first, then Eloquent)
-        $potentialConcreteClassNames[] = $potentialConcreteNamespaceBase . '\\Repositories\\' . $shortenedInterfaceName;
-        $potentialConcreteClassNames[] = $potentialConcreteNamespaceBase . '\\Repositories\\Eloquent' . $shortenedInterfaceName;
+            // Direct implementation (e.g. Models or root classes)
+            $rootNamespace . '\\' . $shortName,
+        ];
 
-        // Pattern 3 & 4: Services
-        $potentialConcreteClassNames[] = $potentialConcreteNamespaceBase . '\\Services\\Eloquent' . $shortenedInterfaceName;
-        $potentialConcreteClassNames[] = $potentialConcreteNamespaceBase . '\\Services\\' . $shortenedInterfaceName;
-
-        // Pattern 5: Direct match in the base namespace
-        $potentialConcreteClassNames[] = $potentialConcreteNamespaceBase . '\\' . $shortenedInterfaceName;
-
-        // Pattern 6: Generic replacement of 'Contracts' segment from abstract FQCN (as a fallback).
-        $genericConcreteFromAbstract = Str::replaceFirst('\\Contracts\\', '\\', $abstract);
-        $potentialConcreteClassNames[] = $genericConcreteFromAbstract;
-
-
-        $potentialConcreteClassNames = array_unique(array_filter($potentialConcreteClassNames));
-
+        // Filter and check existence
         foreach ($potentialConcreteClassNames as $potentialConcrete) {
-            if (is_string($potentialConcrete) && $potentialConcrete !== '' && class_exists($potentialConcrete) && !interface_exists($potentialConcrete)) {
+            if (class_exists($potentialConcrete) && !interface_exists($potentialConcrete)) {
                 return $potentialConcrete;
             }
         }

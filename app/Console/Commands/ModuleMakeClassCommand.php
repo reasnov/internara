@@ -68,14 +68,27 @@ class ModuleMakeClassCommand extends GeneratorCommand
      */
     public function getClassNamespace($module): string
     {
-        $namespace = parent::getClassNamespace($module);
+        // Modules\Example
+        $namespace = $this->getModuleNamespace($module);
 
-        // Remove the default 'Classes' sub-namespace if it's present.
-        if (Str::endsWith($namespace, '\\Classes')) {
-            return Str::replaceLast('\\Classes', '', $namespace);
+        // Get the base namespace for interfaces from the modules config, e.g., "Contracts"
+        $interfaceNamespace = GenerateConfigReader::read('interface')->getNamespace();
+
+        // Combine them to get the base interface namespace, e.g., "Modules\Example\Contracts"
+        $baseNamespace = $namespace . '\\' . $interfaceNamespace;
+
+        $name = $this->argument('name');
+
+        // If the name argument includes a path, append it to the namespace
+        if (Str::contains($name, '/')) {
+            $subNamespace = Str::of($name)
+                ->beforeLast('/')
+                ->replace('/', '\\');
+
+            return $baseNamespace . '\\' . $subNamespace;
         }
 
-        return $namespace;
+        return $baseNamespace;
     }
 
     /**
@@ -88,7 +101,7 @@ class ModuleMakeClassCommand extends GeneratorCommand
         $path = $this->getModule()->getPath();
         $generatorPath = GenerateConfigReader::read('class');
 
-        // The getPath() method from the generator config gives us the base directory (e.g., 'app').
+        // The getPath() method from the generator config gives us the base directory (e.g., 'src').
         // The getFileName() method will include any subdirectories from the input name.
         return $path.'/'.$generatorPath->getPath().'/'.$this->getFileName().'.php';
     }
