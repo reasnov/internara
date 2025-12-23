@@ -169,7 +169,7 @@ This represents the end-to-end user flow and should be implemented in the follow
     -   Create `Program` model, migration (with `BIGINT` IDs), and factory.
     -   Implement `ProgramService` (Interface & concrete class).
     -   Add professional PHPDoc to all new/modified classes.
-    -   Register interfaces with the `AutoBindingServiceProvider`.
+    -   Register interfaces with the `BindServiceProvider`.
     -   *(Optional) Implement Repository/Entity layers if complex logic demands it.*
 -   **3. Prepare `Report` Module:**
     -   Generate the module: `php artisan module:make Report`.
