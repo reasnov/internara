@@ -1,3 +1,9 @@
 {
-    "Example": true
+    "Example": true,
+    "Core": true,
+    "Support": true,
+    "Shared": true,
+    "User": true,
+    "Permission": true,
+    "Auth": true
 }

@@ -1,0 +1,30 @@
+{
+    "name": "reasnov/shared",
+    "description": "",
+    "authors": [
+        {
+            "name": "Reas Vyn",
+            "email": "reasnov.official@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Shared\\": "src/",
+            "Modules\\Shared\\Database\\Factories\\": "database/factories/",
+            "Modules\\Shared\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Shared\\Tests\\": "tests/"
+        }
+    }
+}

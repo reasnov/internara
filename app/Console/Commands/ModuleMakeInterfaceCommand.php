@@ -62,7 +62,7 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
         $interfaceName = Str::afterLast($this->argument('name'), '/');
 
         return (new Stub($this->getStub(), [
-            'NAMESPACE' => $this->getClassNamespace($module),
+            'CLASS_NAMESPACE' => $this->getClassNamespace($module),
             'INTERFACE' => Str::studly($interfaceName),
         ]))->render();
     }

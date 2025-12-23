@@ -231,9 +231,7 @@ return [
         ->merge([
             \App\Console\Commands\ModuleMakeClassCommand::class,
             \App\Console\Commands\ModuleMakeInterfaceCommand::class,
-            \App\Console\Commands\ModuleMakeServiceCommand::class,
-            \App\Console\Commands\ModuleMakeRepositoryCommand::class,
-            \App\Console\Commands\ModuleMakeEntityCommand::class,
+            \App\Console\Commands\ModuleMakeTraitCommand::class,
         ])->toArray(),
 
     /*
