@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
@@ -23,12 +22,7 @@ class BindServiceProvider extends ServiceProvider
         $autoBindings = [];
 
         if (config('bindings.autobind', true)) {
-            // Cache the discovery process to avoid IO overhead on every request
-            $ttl = $this->app->isLocal() ? 0 : config('bindings.cache_ttl', 1440);
-
-            $autoBindings = Cache::remember('service_bindings_autobind', $ttl, function () {
-                return $this->scanForBindings();
-            });
+            $autoBindings = $this->scanForBindings();
         }
 
         // Register all bindings (auto-discovered + default)
