@@ -7,6 +7,7 @@ This directory (`docs/master/`) contains the primary documentation for developer
 **Table of Contents**
 
 -   **[Architecture Guide](architecture.md)**: Provides a high-level, developer-friendly guide to Internara's modular architecture, explaining the core concepts, layers (UI, Services, Repositories, Entities), and module communication best practices.
+-   **[Service Binding & Auto-Discovery](service-binding.md)**: Detailed documentation on the automated dependency injection system, configuration, caching, and manual overrides.
 -   **[Module Structure Overview](structure.md)**: Provides an overview of the Core, Shared, Support, and Domain modules, detailing their purpose and contents.
 -   **[Best Practices Guide](best-practices.md)**: A conceptual overview of core architectural principles, development conventions, testing philosophy, and UI/UX design.
 -   **[Development Conventions](conventions.md)**: Outlines the coding and development conventions for the project, ensuring consistency and maintainability, including important namespace conventions for modular development.
