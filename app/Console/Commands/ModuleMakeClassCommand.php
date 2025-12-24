@@ -118,6 +118,12 @@ class ModuleMakeClassCommand extends GeneratorCommand
         return Str::studly($this->argument('name'));
     }
 
+    public function getModuleNamespace($module): string
+    {
+        $baseNamespace = config('modules.namespace') ?: 'Modules';
+        return $baseNamespace . '\\' . $module->getName();
+    }
+
     /**
      * Get the console command arguments.
      *
