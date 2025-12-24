@@ -20,6 +20,7 @@ Used for Role-Based Access Control (RBAC). We have refactored this into a portab
 ## Implementation Philosophy
 
 We do not use these packages "out of the box" in a standard way. Instead, we wrap or configure them to:
-- **Enforce Isolation:** Modules should not leak implementation details.
-- **Support Portability:** Modules (especially `Permission`) are designed to be plug-and-play.
-- **Maintain Clean Namespaces:** Our custom configuration omits the `src` segment from namespaces for better readability.
+- **Enforce Isolation:** Modules should not leak implementation details. All logic, from database migrations to UI components, remains within the module's directory.
+- **Support Portability:** Modules (especially `Permission`) are designed to be plug-and-play. They use "Runtime Configuration Injection" to configure their dependencies without requiring the developer to modify global application config files.
+- **Maintain Clean Namespaces:** Our custom configuration omits the `src` segment from namespaces for better readability and a more professional class structure.
+- **Zero-Manual-Setup:** A well-designed module should work immediately upon being enabled, handling its own service bindings and dependency overrides.

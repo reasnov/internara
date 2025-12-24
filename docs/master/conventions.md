@@ -78,6 +78,10 @@ Adhere strictly to the modular monolith architecture principles detailed in the 
 
 *   **Namespace Convention:** For module files located in `modules/{ModuleName}/src/{Subdirectory}/{FileName}.php`, the namespace **must omit the `src` segment**.
     *   **Example:** `Modules\{ModuleName}\{Subdirectory}`. This applies to `Livewire`, `Services`, `Repositories`, `Entities`, etc.
+*   **Module Isolation & Portability:**
+    *   **Self-Containment:** A module should contain everything it needs to function (routes, views, config, logic, database).
+    *   **Runtime Configuration:** If a module depends on a third-party package (e.g., Spatie Permission), it should use its Service Provider to override that package's configuration at runtime rather than relying on manual changes to the root `config/` directory.
+    *   **Minimal Cross-Module Leaks:** Avoid leaking module-specific logic into the `app/` or `config/` directories of the main application.
 *   **Module Separation:** Each module is a self-contained unit representing a specific business domain.
 *   **No Direct Model Access:** Modules **must not** directly access Eloquent Models (e.g., `Modules\User\Models\User`) from other modules. Interaction should always be via interfaces.
 *   **Interface-First Communication:** All inter-module communication **must** occur through shared interfaces (contracts) defined in the respective module's `Contracts` directory.
