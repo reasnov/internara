@@ -25,8 +25,20 @@ class UserServiceProvider extends ServiceProvider
         $this->registerCommandSchedules();
         $this->registerTranslations();
         $this->registerConfig();
+        $this->registerPolicies();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+    }
+
+    /**
+     * Register the module policies.
+     */
+    protected function registerPolicies(): void
+    {
+        \Illuminate\Support\Facades\Gate::policy(
+            \Modules\User\Models\User::class,
+            \Modules\User\Policies\UserPolicy::class
+        );
     }
 
     /**

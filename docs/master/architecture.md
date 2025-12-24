@@ -32,7 +32,10 @@ Internara is built as a **Modular Monolith**, meaning it's a collection of self-
 **Key Concepts:**
 
 *   **Modular Monolith:** Leveraging `nwidart/laravel-modules` to encapsulate business domains.
-*   **Isolation & Portability:** Each module is designed to be as self-contained as possible. This means minimizing external dependencies, using runtime configuration overrides, and ensuring that a module could, in theory, be extracted and used in another project with minimal friction.
+*   **Isolation & Portability:** Each module is designed to be as self-contained as possible.
+    *   **Independence:** Modules **MUST NOT** depend on the physical existence or internal logic of other modules.
+    *   **External Dependencies:** Modules may depend on the Laravel framework or reputable external packages (e.g., Spatie) with full awareness and careful restriction.
+    *   **Self-Containment:** Ensure that a module could be extracted and used in another project with minimal friction.
 *   **UI Framework:** All user interfaces and interactivity are built using **Livewire** components, powered by the TALL Stack.
 *   **Backend Structure:** Logic is strictly organized into distinct layers:
     *   **Services:** Orchestrate business logic ("what to do").

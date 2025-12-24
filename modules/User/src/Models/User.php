@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Modules\User\Database\Factories\UserFactory;
 use Modules\User\Support\UsernameGenerator;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * Modules\User\Models\User
@@ -35,6 +36,7 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory;
     use Notifiable;
+    use HasRoles;
 
     /**
      * Create a new Eloquent model instance.

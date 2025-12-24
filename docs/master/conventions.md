@@ -81,6 +81,8 @@ Adhere strictly to the modular monolith architecture principles detailed in the 
 *   **Module Isolation & Portability:**
     *   **Self-Containment:** A module should contain everything it needs to function (routes, views, config, logic, database).
     *   **Runtime Configuration:** If a module depends on a third-party package (e.g., Spatie Permission), it should use its Service Provider to override that package's configuration at runtime rather than relying on manual changes to the root `config/` directory.
+    *   **Independence (No Inter-Module Hard Coupling):** Modules should not directly reference concrete classes or assume the existence of other modules. Use events, interfaces, or standard Laravel features (like `Gate`) to interact with system-wide services.
+    *   **Controlled External Dependencies:** While modules should be independent of each other, they are permitted to depend on the Laravel framework or external packages. However, these dependencies should be clearly documented and restricted to the module's specific needs.
     *   **Minimal Cross-Module Leaks:** Avoid leaking module-specific logic into the `app/` or `config/` directories of the main application.
 *   **Module Separation:** Each module is a self-contained unit representing a specific business domain.
 *   **No Direct Model Access:** Modules **must not** directly access Eloquent Models (e.g., `Modules\User\Models\User`) from other modules. Interaction should always be via interfaces.
