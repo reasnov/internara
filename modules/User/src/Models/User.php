@@ -3,7 +3,6 @@
 namespace Modules\User\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -35,8 +34,20 @@ use Modules\User\Support\UsernameGenerator;
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory;
-    use HasUuids;
     use Notifiable;
+
+    /**
+     * Create a new Eloquent model instance.
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        if (config('user.type_id') === 'uuid') {
+            $this->incrementing = false;
+            $this->keyType = 'string';
+        }
+    }
 
     /**
      * The "booted" method of the model.
@@ -44,6 +55,10 @@ class User extends Authenticatable implements MustVerifyEmail
     protected static function booted(): void
     {
         static::creating(function (User $user) {
+            if (config('user.type_id') === 'uuid' && empty($user->id)) {
+                $user->id = (string) Str::uuid();
+            }
+
             if (empty($user->username)) {
                 $user->username = UsernameGenerator::generate();
             }

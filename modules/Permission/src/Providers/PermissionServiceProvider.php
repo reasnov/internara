@@ -25,8 +25,21 @@ class PermissionServiceProvider extends ServiceProvider
         $this->registerCommandSchedules();
         $this->registerTranslations();
         $this->registerConfig();
+        $this->overrideSpatieConfig(); // Tambahkan ini
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+    }
+
+    /**
+     * Override Spatie Permission configuration at runtime.
+     * This ensures the module is isolated and portable.
+     */
+    protected function overrideSpatieConfig(): void
+    {
+        config([
+            'permission.models.role' => \Modules\Permission\Models\Role::class,
+            'permission.models.permission' => \Modules\Permission\Models\Permission::class,
+        ]);
     }
 
     /**
