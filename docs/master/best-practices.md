@@ -15,9 +15,14 @@ Internara is built as a **Modular Monolith**, where distinct business domains ar
     -   **Data Layer (Models):** Represents persisted data and database interactions via Eloquent.
     -   **Optional Layers (Repositories/Entities):** Used only when explicit architectural boundaries or complex integrations are required.
 
--   **Interface-First Communication:** Communication between modules **MUST** happen through shared interfaces (contracts) to ensure loose coupling and maintainability. Avoid direct referencing of concrete classes between modules.
+-   **Interface-First Communication:** Communication between modules **MUST** happen through shared interfaces (contracts) or standard Laravel features (Gates/Policies) to ensure loose coupling. Avoid direct referencing of concrete classes or models between modules.
 
--   **Namespace Convention:** Module files omit the `app` segment in their namespace (e.g., `Modules\{ModuleName}\{Subdirectory}`).
+-   **Namespace Convention:** Module files located in `modules/{ModuleName}/src/` **must omit** the `src` segment in their namespace (e.g., `Modules\{ModuleName}\{Subdirectory}`).
+
+-   **Portability Standards:**
+    -   **Shared Module:** Must be strictly universal and portable.
+    -   **Domain Modules:** Should strive for portability by only depending on **Shared** and external packages.
+    -   **Core/Support Modules:** Can be business-specific and non-portable.
 
 ---
 

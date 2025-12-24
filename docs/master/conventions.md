@@ -79,6 +79,8 @@ Adhere strictly to the modular monolith architecture principles detailed in the 
 *   **Namespace Convention:** For module files located in `modules/{ModuleName}/src/{Subdirectory}/{FileName}.php`, the namespace **must omit the `src` segment**.
     *   **Example:** `Modules\{ModuleName}\{Subdirectory}`. This applies to `Livewire`, `Services`, `Repositories`, `Entities`, etc.
 *   **Module Isolation & Portability:**
+    *   **Shared (Mandatory Portable):** Must contain only universal code. It is strictly forbidden to put business-specific logic here.
+    *   **Core & Support (Non-Portable):** Used for architecture and infrastructure specific to this project's business model.
     *   **Self-Containment:** A module should contain everything it needs to function (routes, views, config, logic, database).
     *   **Runtime Configuration:** If a module depends on a third-party package (e.g., Spatie Permission), it should use its Service Provider to override that package's configuration at runtime rather than relying on manual changes to the root `config/` directory.
     *   **Independence (No Inter-Module Hard Coupling):** Modules should not directly reference concrete classes or assume the existence of other modules. Use events, interfaces, or standard Laravel features (like `Gate`) to interact with system-wide services.

@@ -1,80 +1,58 @@
 # Internara - Core, Shared, and Support Modules Overview
 
-This document provides a detailed overview of the foundational `Core`, `Shared`, and `Support` modules within Internara's modular architecture. These modules are crucial for maintaining the application's structure, promoting reusability, and enabling extensibility, all while adhering to the established [Architecture Guide](architecture.md) and [Development Conventions](conventions.md).
+This document provides a detailed overview of the foundational `Core`, `Shared`, and `Support` modules. These modules define the structural hierarchy and portability standards of the Internara application.
 
 ---
 
-**Table of Contents**
+## 1. Portability & Role Hierarchy
 
-1.  [Core Module](#1-core-module)
-2.  [Shared Module](#2-shared-module)
-3.  [Support Module](#3-support-module)
-4.  [Domain Module](#4-domain-module)
+To maintain a clean modular monolith, we categorize foundational modules based on their relationship to the business logic and their requirement for portability.
+
+| Module | Role | Portability |
+| :--- | :--- | :--- |
+| **Shared** | Universal Toolbox & Base Classes | **Mandatory Portable** (Wajib Portable) |
+| **Support** | Infrastructure Utilities for Core | **Non-Portable** (Business-Specific Support) |
+| **Core** | Base Architecture & Business Rules | **Non-Portable** (Business-Specific) |
 
 ---
 
-**Namespace Convention Note:** For module files located in `modules/{ModuleName}/src/{Subdirectory}/{FileName}.php`, the namespace **must omit the `src` segment**. For instance, `Modules\{ModuleName}\{Subdirectory}`. This ensures a consistent and clean namespace structure across the modular application.
+## 2. Shared Module (The Portable Foundation)
 
-## 1. Core Module
+The `Shared` module is the "toolbox" of the application. It contains components that are completely agnostic of Internara's specific business rules.
 
-The `Core` module serves as the foundational layer of the application, encapsulating essential architectural building blocks and shared resources critical for functionality and consistency across all other modules.
-
-*   **Purpose:** To provide universal interfaces, abstract base classes, and fundamental architectural components that are globally required.
+*   **Requirement:** Every file in this module **must** be able to function in a completely different project (e.g., a Fintech app or an E-commerce site) without modification.
 *   **Contents:**
-    *   **Shared Interfaces (Contracts):** Defines contracts for inter-module communication, ensuring loose coupling and strict adherence to the [Interface-First Principle](architecture.md#3-inter-module-communication-the-golden-rule).
-    *   **Abstract Base Classes:** Provides reusable abstract implementations for common patterns.
-    *   **Architectural Utilities:** Includes core services, traits, or helpers that are universally applicable.
-    *   **Optional:** Base implementations for Repositories and Entities, if the advanced workflow is utilized.
-*   **Key Principle:** The `Core` module is designed to be highly stable and independent, with minimal dependencies on other modules. Changes here should be carefully considered due to their potential widespread impact on the entire application.
+    *   **Universal Exceptions:** `AppException`, `RecordNotFoundException`.
+    *   **General Utilities:** `UsernameGenerator`, `DateHelper`, `StringFormatter`.
+    *   **Generic UI Components:** Pure DaisyUI/Tailwind wrappers (buttons, inputs) that don't assume any business context.
+*   **Key Principle:** Modul bisnis (seperti `User`) hanya boleh bergantung pada modul `Shared` jika ingin tetap portable.
 
-## 2. Shared Module
+## 3. Core Module (The Business Architecture)
 
-The `Shared` module is dedicated to housing concrete, reusable components and helpers that offer common functionalities not specific to any particular business domain. It promotes code reuse and reduces duplication across various parts of the application.
+The `Core` module encapsulates the essential architectural building blocks that are **specific to the Internara business domain**.
 
-*   **Purpose:** To store generic, concrete implementations that can be utilized by multiple modules.
+*   **Purpose:** To provide universal interfaces and data that define *what* Internara is.
 *   **Contents:**
-    *   **Common Utilities:** General-purpose helper functions or classes that provide convenience functionalities without being tied to a specific business process.
-    *   **Generic Blade Components:** Reusable UI components (e.g., buttons, alerts, form elements) built with **DaisyUI** that can be rendered consistently across different module views, adhering to [UI/UX Design Guidelines](../internal/uix-guidelines.md).
-    *   **Reusable Traits:** Traits offering common behaviors to classes without requiring complex inheritance hierarchies.
-*   **Key Principle:** Components within the `Shared` module should be highly cohesive and loosely coupled, designed for broad applicability across the application without introducing module-specific logic.
+    *   **Business Seeders:** `RoleSeeder` (Owner, Admin, Teacher, Student), `PermissionSeeder`.
+    *   **Base Contracts:** Interfaces that define the communication standards between Internara modules.
+    *   **Universal Business Logic:** Logic that applies to all modules but only within this specific application.
+*   **Portability:** This module is **not portable**. It is the "glue" that binds the Internara system together.
 
-## 3. Support Module
+## 4. Support Module (The Infrastructure Support)
 
-The `Support` module specializes in handling integrations with external services and providing infrastructure-level utilities. It acts as an abstraction layer for third-party dependencies or system-level functionalities, ensuring that core business logic remains clean and decoupled from external complexities.
+The `Support` module handles specialized integrations and infrastructure-level utilities that support the `Core` architecture.
 
-*   **Purpose:** To abstract external service integrations and provide specialized, infrastructure-level utilities.
+*   **Purpose:** To abstract complexity and provide tools for the `Core` and domain modules.
 *   **Contents:**
-    *   **External Service Clients:** Integrations with APIs (e.g., payment gateways, email services, cloud storage).
-    *   **Media Library Interactions:** Abstractions for handling file uploads, storage, and retrieval, potentially interfacing with services like AWS S3 or local storage.
-    *   **Specialized Infrastructure Tools:** Utilities for logging, monitoring, or other system-level operations that are not part of a specific business domain.
-    *   **Static Helper Classes:** Collections of static methods for common, non-object-oriented utility functions.
-*   **Key Principle:** The `Support` module isolates external dependencies, making the application more resilient to changes in third-party services and easier to maintain or swap out integrations without impacting core business logic.
+    *   **Exception Handlers:** Logic for rendering `AppException` into specific UI responses.
+    *   **External Clients:** Media library interactions, specialized logging, or monitoring tools.
+*   **Portability:** This module is **non-portable** as it is designed specifically to support the Internara `Core`.
 
-## 4. Domain Module
+---
 
-Domain modules are the heart of the modular monolith, each representing a distinct business domain within the Internara application. They encapsulate all business logic, data models, and presentation concerns related to a specific domain.
+## 5. Domain Module (The Business Heart)
 
-*   **Purpose:** To achieve high cohesion and low coupling by grouping all domain-specific functionalities into a self-contained unit. This promotes independent development, easier maintenance, and scalability for individual business areas.
-*   **Contents:**
-    *   **Models:** Eloquent models and their associated factories, migrations, and seeders.
-    *   **Controllers:** Handle incoming HTTP requests and delegate tasks to services or actions.
-    *   **Views:** Blade templates or Livewire components for rendering domain-specific UI.
-    *   **Services:** Contains the core business logic, orchestrating interactions between models and other components.
-    *   **Actions:** Small, single-purpose classes that encapsulate a specific action or use case.
-    *   **Routes:** Define web and API endpoints for the domain.
-    *   **Tests:** Unit and feature tests specific to the domain's functionality.
-*   **Key Principle:** A domain module should be as independent as possible, communicating with other modules primarily through defined interfaces or events. Direct dependencies on other domain modules should be minimized and carefully managed.
+Domain modules (e.g., `User`, `Internship`) represent distinct business areas. 
 
-**Example: User Domain Module**
-
-The `User` module would encapsulate everything related to user management:
-
-*   `Modules/User/src/Models/User.php`: The Eloquent User model.
-*   `Modules/User/src/Http/Controllers/UserController.php`: Handles user-related requests (e.g., registration, profile management).
-*   `Modules/User/src/Services/UserService.php`: Contains business logic for user operations (e.g., creating a new user, updating a profile).
-*   `Modules/User/src/Actions/RegisterUser.php`: A specific action for user registration.
-*   `Modules/User/resources/views/profile.blade.php`: User profile view.
-*   `Modules/User/routes/web.php`: Defines routes like `/profile`, `/register`.
-*   `Modules/User/tests/Feature/UserRegistrationTest.php`: Tests for user registration functionality.
-
-This structure ensures that all aspects of user management are co-located, making the `User` domain module a self-sufficient unit.
+*   **Standard:** They should strive to be **Portable** by only depending on the `Shared` module and external framework packages.
+*   **Constraint:** They use the data provided by `Core` (like Roles/Permissions) via standard Laravel interfaces (Gates/Policies) to avoid hard-coding dependencies on the physical `Core` module.

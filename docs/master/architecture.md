@@ -44,13 +44,13 @@ Internara is built as a **Modular Monolith**, meaning it's a collection of self-
 *   **Namespace Convention:** For module files located in `modules/{ModuleName}/src/{Subdirectory}/{FileName}.php`, the namespace **must omit the `src` segment**.
     *   **Example:** `Modules\{ModuleName}\{Subdirectory}`. This applies to `Livewire`, `Services`, `Models`, and other subdirectories within a module's `src` folder.
 
-For a complete, step-by-step example of creating a new feature within this architecture, refer to the **[Modular Monolith Developer Guide](modular-monolith.md)**.
+For a complete, step-by-step example of creating a new feature within this architecture, refer to the **[Modular Monolith Developer Guide](workflow.md)**.
 
 ## 2. The TALL Stack
 
 The project is built on the TALL stack, a full-stack development solution that allows for building robust, modern web applications primarily using PHP.
 
-*   **Tailwind CSS (v4):** A utility-first CSS framework that provides low-level utility classes to build custom designs directly in your markup. This approach avoids premature abstraction and allows for highly customizable and maintainable styling. To ensure consistency and rapid development, we use the **DaisyUI** component library.
+*   **Tailwind CSS (v4):** A utility-first CSS framework that provides low-level utility classes to build custom designs directly in your markup. This approach avoids premature abstraction and allows for highly customizable and maintainable styling. To ensure consistency and rapid development, we use the **DaisyUI** component library and **MaryUI** for advanced Livewire interactions.
 *   **Alpine.js:** A rugged, minimal JavaScript framework for adding client-side interactivity to your templates. It's often used for small interactions like dropdowns or toggles. In this project, Alpine.js is automatically included with Livewire 3, making it readily available within Livewire components.
 *   **Laravel (v12):** The core backend framework providing the application's foundation. It handles routing, database management through its Eloquent ORM, authentication, and the overall structure that enables the modular monolith architecture.
 *   **Livewire (v3):** A full-stack framework for Laravel that allows you to build dynamic, reactive interfaces using PHP classes and Blade templates. It eliminates the need for a separate frontend JavaScript framework like React or Vue for most use cases, significantly simplifying the development workflow. This project also uses **Volt**, which allows for creating single-file Livewire components.
@@ -59,7 +59,7 @@ The project is built on the TALL stack, a full-stack development solution that a
 
 Each module adheres to a strict layered architecture to enforce separation of concerns. The flow of data and control generally moves from the UI layer downwards.
 
-**Important Note on Namespaces:** Consistent with the project's namespace convention, all classes within these layers will use a namespace that omits the `app` segment. For instance, a Service in the `User` module would be namespaced `Modules\User\Services`, not `Modules\User\app\Services`.
+**Important Note on Namespaces:** Consistent with the project's namespace convention, all classes within these layers will use a namespace that omits the `src` segment. For instance, a Service in the `User` module would be namespaced `Modules\User\Services`, not `Modules\User\src\Services`.
 
 ### 3.1 UI Layer: Livewire Components
 
@@ -69,8 +69,9 @@ The entry point for user interaction with the application. Livewire components s
 *   **Responsibilities:**
     *   **UI Interaction Logic ONLY:** Livewire components **MUST NOT** contain business logic. Their role is strictly limited to handling UI events, managing component state, and orchestrating interactions with the Service layer.
     *   **Delegation to Services:** All business operations (e.g., data creation, updates, deletions, complex validations, authorization checks beyond simple rendering conditions) **MUST** be delegated to the appropriate Service methods.
+    *   **Authorization:** Use standard Laravel `can()` methods or Policies for UI rendering conditions and action authorization.
     *   Displays data retrieved from the business logic layer.
-*   **Location:** `modules/ModuleName/Livewire/`
+*   **Location:** `modules/ModuleName/src/Livewire/`
 *   **Creation Command:**
     ```bash
     php artisan module:make-livewire CreateUser User --view
@@ -109,7 +110,7 @@ The "brain" of your feature, orchestrating specific business operations.
     *   Interacts directly with **Eloquent Models** to save or retrieve data (in the default workflow).
     *   Dispatches events to notify other parts of the application about changes.
     *   Should be thin and focused on a single business concern.
-*   **Location:** `modules/ModuleName/Services/`
+*   **Location:** `modules/ModuleName/src/Services/`
 *   **Creation Command:**
     ```bash
     php artisan module:make-service UserService User
@@ -123,8 +124,9 @@ The primary layer for interacting with the database.
 *   **Responsibilities:**
     *   Defining database relationships, scopes, and accessors.
     *   Handling data persistence and retrieval.
+    *   Supporting configurable ID types (UUID or Integer).
     *   May contain limited, domain-relevant behavior (e.g., helper methods like `isActive()`).
-*   **Location:** `modules/ModuleName/Models/`
+*   **Location:** `modules/ModuleName/src/Models/`
 *   **Creation Command:**
     ```bash
     php artisan module:make-model User User --migration
@@ -137,12 +139,12 @@ These layers are **not included by default** and should only be introduced when 
 #### Repositories
 *   **Purpose:** To abstract data persistence details, completely decoupling business logic from Eloquent.
 *   **When to Use:** When you need to support multiple data sources (e.g., Database AND API) or when testing requires strict mocking of the data layer without touching the database.
-*   **Location:** `modules/ModuleName/Repositories/`
+*   **Location:** `modules/ModuleName/src/Repositories/`
 
 #### Entities (DTOs)
 *   **Purpose:** Plain PHP objects to transfer data between layers, independent of Eloquent.
 *   **When to Use:** When data structures are complex, come from external sources, or need to be strictly decoupled from the database schema.
-*   **Location:** `modules/ModuleName/Entities/`
+*   **Location:** `modules/ModuleName/src/Entities/`
 
 ## 4. Pragmatic Layered Architecture & Communication Rules
 
@@ -156,17 +158,18 @@ Communication flows downwards.
 *   **Service Layer**: Communicates with the **Model Layer** (or optionally, the **Repository Layer**).
 *   **Model Layer**: Represents the persistence mechanism and should not initiate communication upwards.
 
-### 4.2 Interface-First & Knowledge Hiding
+### 4.2 Interface-First & Standard Authorization
 
-When communicating *between modules*, strictly adhere to the **Interface-First Principle**.
+When communicating *between modules*, strictly adhere to the **Interface-First Principle** or use standard Laravel interfaces.
 
-*   **Example:** If Module A needs to call a service in Module B, it should depend on an interface (e.g., `Modules\User\Contracts\Services\UserService`), not the concrete class.
+*   **Service Interaction:** If Module A needs to call a service in Module B, it should depend on an interface (e.g., `Modules\User\Contracts\Services\UserService`), not the concrete class.
+*   **Authorization Interaction:** Modules should use Laravel's standard `Gate` and `Policy` systems (e.g., `$user->can()`) to interact with the authorization layer, ensuring modules remain isolated from the specific implementation of Role/Permission management.
 
 ## 5. Inter-Module Communication: The Golden Rule
 
-The most critical rule for maintaining a loosely coupled and maintainable modular monolith is the **Interface-First Principle**.
+The most critical rule for maintaining a loosely coupled and maintainable modular monolith is the **Isolation Principle**.
 
-> **Golden Rule:** One module **MUST NOT** directly reference a concrete class (e.g., a `Service` or `Repository` implementation) from another module. All communication between modules **must** happen through shared interfaces (contracts).
+> **Golden Rule:** One module **MUST NOT** directly reference a concrete class (e.g., a `Service` or `Repository` implementation) or an internal model from another module. All interaction between modules **must** happen through shared interfaces (contracts), events, or framework standards (Gates/Policies).
 
 This rule is non-negotiable. It is the foundation for a scalable and maintainable application.
 
@@ -180,62 +183,24 @@ Use this pattern when an action in `Module A` **immediately** requires a result 
     2.  `Module A` (e.g., `InternshipService`) *type-hints* `Module B`'s `Service Interface` in its constructor.
     3.  Laravel's Service Container automatically injects the concrete `UserService` implementation without `InternshipService` knowing the specific class.
 
-    ```php
-    // In Modules/Internship/Services/InternshipService.php
-    namespace Modules\Internship\Services;
-
-    use Modules\User\Contracts\Services\UserService; // Type-hinting the interface
-
-    class InternshipService
-    {
-        public function __construct(
-            private readonly UserService $userService // Dependency injected via interface
-        ) {}
-
-        public function registerStudent(int $userId, int $placementId): void
-        {
-            $user = $this->userService->findUserById($userId); // Calling logic from User module
-
-            if (!$user || !$user->isActive()) {
-                throw new \Exception('User is not active or not found and cannot register.');
-            }
-            // ... continue with registration logic for internship
-        }
-    }
-    ```
-
 ### 5.2 Pattern 2: Events & Listeners (Decoupled Actions)
 
 This is the preferred approach for handling side effects or when one action should trigger several independent outcomes across different modules without tight coupling.
 
 *   **Usage:** When an action occurs in `Module A`, and other modules might need to react to it without `Module A` needing to know or care who those reactors are.
 *   **How it Works:**
-    1.  `Module A` (e.g., `InternshipService`) dispatches an `Event` (e.g., `InternshipApproved`). This event should carry necessary data (e.g., `internshipId`, `userId`).
+    1.  `Module A` (e.g., `InternshipService`) dispatches an `Event`. This event should carry necessary data.
     2.  Other modules (e.g., `User`, `Notification`) define `Listeners` that are configured to react to this specific `Event`.
     3.  The `Internship` module remains completely unaware of which other modules react to its event, ensuring strong decoupling.
 
-    **Example:** When an `Internship` is approved, the `User` module might update the student's status, and a `Notification` module might queue an email. The `Internship` module only dispatches `InternshipApproved`.
+### 5.3 Pattern 3: Standard Framework Interfaces (Policies/Gates)
 
-## 6. Practical Guide: Module Usage
+Use this pattern for cross-cutting concerns like authorization.
 
-### 6.1 Accessing Module Resources
+*   **Usage:** When a domain module needs to authorize an action based on roles or permissions.
+*   **How it Works:**
+    1.  The `User` module defines a `Policy`.
+    2.  The `Core` module provides the data (Roles/Permissions) via a seeder.
+    3.  The `Permission` module handles the underlying storage logic.
+    4.  The domain module simply calls `$user->can('permission.name')`. It doesn't need to know about the `Permission` module or the specific models being used.
 
-Use the `::` syntax with the module's `kebab-case` name (e.g., `user`, `internship`) to access its resources:
-
-*   **Views:** `view('user::profile')`
-*   **Translations:** `__('user::messages.welcome')`
-*   **Configuration:** `config('user.default_role')`
-
-### 6.2 Essential Module Artisan Commands
-
-These commands simplify the creation of module-specific files, ensuring they follow the correct structure and namespace conventions.
-
-*   `php artisan module:list`: List all registered modules.
-*   `php artisan module:make YourModuleName`: Create a new module.
-*   `php artisan module:migrate YourModuleName`: Run database migrations for a specific module.
-*   `php artisan module:seed YourModuleName`: Seed the database for a specific module.
-*   `php artisan module:make-model ModelName YourModuleName --migration`: Create an Eloquent Model and its corresponding migration within a module.
-*   `php artisan module:make-service ServiceName YourModuleName`: Create a Service class within a module.
-*   `php artisan module:make-livewire ComponentName YourModuleName --view`: Create a Livewire component and its associated Blade view within a module.
-
-This robust and maintainable architecture ensures the long-term health of the codebase. By consistently following these patterns, you contribute to a scalable and understandable application.

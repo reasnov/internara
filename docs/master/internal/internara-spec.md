@@ -163,14 +163,16 @@ This represents the end-to-end user flow and should be implemented in the follow
 
 ## 5. Initial Development Roadmap
 
--   **1. Develop Core Modules:** Plan and build the foundational modules for the application.
--   **2. Prepare `Program` Module:**
+-   **1. Foundational Infrastructure [COMPLETED]:**
+    -   Modular Monolith architecture setup.
+    -   `Permission` module with configurable UUID/ID support.
+    -   `User` module with UUIDs, auto-username generation, and standard policies.
+    -   Foundation for inter-module communication (Gates/Policies).
+-   **2. Prepare `Program` Module [NEXT]:**
     -   Generate the module: `php artisan module:make Program`.
-    -   Create `Program` model, migration (with `BIGINT` IDs), and factory.
+    -   Create `Program` model, migration (configurable IDs), and factory.
     -   Implement `ProgramService` (Interface & concrete class).
-    -   Add professional PHPDoc to all new/modified classes.
     -   Register interfaces with the `BindServiceProvider`.
-    -   *(Optional) Implement Repository/Entity layers if complex logic demands it.*
 -   **3. Prepare `Report` Module:**
     -   Generate the module: `php artisan module:make Report`.
     -   Create the `StudentReport` model and migration.
