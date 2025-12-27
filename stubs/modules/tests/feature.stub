@@ -2,17 +2,10 @@
 
 namespace $NAMESPACE$;
 
-use Tests\TestCase;
+uses(Tests\TestCase::class);
 
-class $CLASS$ extends TestCase
-{
-    /**
-     * A basic test example.
-     */
-    public function test_the_application_returns_a_successful_response(): void
-    {
-        $response = $this->get('/');
+test('returns a successfull response', function () {
+    $response = $this->get('/');
 
-        $response->assertStatus(200);
-    }
-}
+    $response->assertStatus(200);
+});

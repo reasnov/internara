@@ -45,9 +45,10 @@ return [
         '{{root}}\Services\{{short}}',
 
         // Repositories
+        '{{root}}\Repositories\Eloquent{{short}}Repository',
+        '{{root}}\Repositories\Eloquent{{short}}',
         '{{root}}\Repositories\Eloquent\{{short}}Repository',
         '{{root}}\Repositories\{{short}}Repository',
-        '{{root}}\Repositories\Eloquent{{short}}',
         '{{root}}\Repositories\{{short}}',
 
         // Actions / Direct
