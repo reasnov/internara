@@ -82,16 +82,14 @@ class AppException extends Exception
     }
 
     /**
-     * Get a subset of the trace stacks as a JSON string.
+     * Get a subset of the exception trace stack.
      *
      * @param  int  $limit  The maximum number of trace stacks to include.
-     * @return string The JSON-encoded trace stacks.
+     * @return array The trace stacks.
      */
-    public function getTraceStacks(int $limit = 6): string
+    public function getSubTrace(int $limit = 6): array
     {
-        $stacks = \array_slice($this->getTrace(), 0, $limit);
-
-        return (string) json_encode($stacks);
+        return \array_slice($this->getTrace(), 0, $limit);
     }
 
     /**
@@ -106,7 +104,7 @@ class AppException extends Exception
 
             if (config('app.debug')) {
                 $payload['context'] = $this->getContext();
-                $payload['stack'] = array_slice($this->getTrace(), 0, 6);
+                $payload['stack'] = $this->getSubTrace();
             }
 
             return response()->json($payload, $this->getCode() ?: 422);

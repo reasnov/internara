@@ -8,8 +8,8 @@ This document outlines the philosophy, conventions, and best practices for handl
 
 1.  [Philosophy of Exception Handling](#1-philosophy-of-exception-handling)
 2.  [Key Exception Classes](#2-key-exception-classes)
-    *   [2.1 `AppException` (`Modules\Core\Exceptions\AppException`)](#21-appexception-modulescoreexceptionsappexception)
-    *   [2.2 `RecordNotFoundException` (`Modules\Core\Exceptions\RecordNotFoundException`)](#22-recordnotfoundexception-modulescoreexceptionsrecordnotfoundexception)
+    *   [2.1 `AppException` (`Modules\Shared\Exceptions\AppException`)](#21-appexception-modulessharedexceptionsappexception)
+    *   [2.2 `RecordNotFoundException` (`Modules\Shared\Exceptions\RecordNotFoundException`)](#22-recordnotfoundexception-modulessharedexceptionsrecordnotfoundexception)
     *   [2.3 Laravel Built-in Exceptions](#23-laravel-built-in-exceptions)
 3.  [When and How to Throw Exceptions](#3-when-and-how-to-throw-exceptions)
     *   [3.1 Throwing `AppException`](#31-throwing-appexception)
@@ -32,7 +32,7 @@ Our approach to exception handling is guided by two core principles:
 
 Internara leverages both custom domain-specific exceptions and Laravel's built-in exceptions to manage errors effectively.
 
-### 2.1 `AppException` (`Modules\Core\Exceptions\AppException`)
+### 2.1 `AppException` (`Modules\Shared\Exceptions\AppException`)
 
 This is the foundational custom exception class for all domain-specific or business logic errors within the application. It provides a robust mechanism to separate user-facing messages from internal logging details.
 
@@ -54,7 +54,7 @@ This is the foundational custom exception class for all domain-specific or busin
     )
     ```
 
-### 2.2 `RecordNotFoundException` (`Modules\Core\Exceptions\RecordNotFoundException`)
+### 2.2 `RecordNotFoundException` (`Modules\Shared\Exceptions\RecordNotFoundException`)
 
 A specialized exception designed for scenarios where a requested data record or resource cannot be located in the system. It extends `AppException`.
 
@@ -83,7 +83,7 @@ Throw `AppException` when custom business logic rules are violated, and you need
 ```php
 namespace Modules\User\Services;
 
-use Modules\Core\Exceptions\AppException;
+use Modules\Shared\Exceptions\AppException;
 use Modules\User\Entities\UserEntity;
 
 class UserService
@@ -111,7 +111,7 @@ Throw `RecordNotFoundException` whenever a required resource cannot be found. Pa
 ```php
 namespace Modules\Post\Services;
 
-use Modules\Core\Exceptions\RecordNotFoundException;
+use Modules\Shared\Exceptions\RecordNotFoundException;
 use Modules\Post\Contracts\Repositories\PostRepository;
 use Modules\Post\Entities\PostEntity;
 
@@ -149,7 +149,7 @@ When a lower-level, generic exception (like `QueryException`) occurs due to a vi
 namespace Modules\User\Repositories;
 
 use Illuminate\Database\QueryException;
-use Modules\Core\Exceptions\AppException;
+use Modules\Shared\Exceptions\AppException;
 use Modules\Core\Contracts\Entities\Entity;
 
 class EloquentUserRepository implements UserRepository
