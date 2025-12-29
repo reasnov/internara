@@ -62,15 +62,20 @@ This document outlines the coding and development conventions for the Internara 
     *   Use Eloquent models (`Model::query()`) for database interactions over raw SQL queries (`DB::`).
     *   Employ eager loading (e.g., `with()`) to prevent N+1 query problems.
     *   When modifying a column in a migration, ensure all previously defined attributes for that column are explicitly included to prevent unintended changes.
-    *   For Laravel 11+, utilize native eager load limiting (e.g., `$query->latest()->limit(10);`).
+    *   For Laravel 12, utilize native eager load limiting (e.g., `$query->latest()->limit(10);`).
+*   **UUID Usage Convention:**
+    To enhance security and prevent resource enumeration attacks (e.g., guessing IDs from URLs like `/users/1`, `/users/2`), UUIDs should be used as the primary key for models whose IDs are or might be exposed publicly.
+    - **Use UUID for**: Public-facing models like `User`, `Internship`, `Post`, etc.
+    - **Use standard `bigIncrements` for**: Internal models that are not exposed, such as `jobs`, `cache`, `sessions`, pivot tables, or models used only for internal bookkeeping.
+    This practice provides a good balance between security and performance/simplicity.
 *   **Models:**
-    *   Create [factories](https://laravel.com/docs/11.x/eloquent-factories) and [seeders](https://laravel.com/docs/11.x/seeding) for new models to facilitate testing and development setup.
+    *   Create [factories](https://laravel.com/docs/12.x/eloquent-factories) and [seeders](https://laravel.com/docs/12.x/seeding) for new models to facilitate testing and development setup.
     *   Prefer the `casts()` method over the deprecated `$casts` property for model attribute casting.
 *   **Controllers & Validation:**
-    *   Always use [Form Request classes](https://laravel.com/docs/11.x/validation#form-request-validation) for validation logic, never inline validation within controllers.
-*   **Queues:** Use [queued jobs](https://laravel.com/docs/11.x/queues) (`ShouldQueue`) for all time-consuming operations to improve application responsiveness.
+    *   Always use [Form Request classes](https://laravel.com/docs/12.x/validation#form-request-validation) for validation logic, never inline validation within controllers.
+*   **Queues:** Use [queued jobs](https://laravel.com/docs/12.x/queues) (`ShouldQueue`) for all time-consuming operations to improve application responsiveness.
 *   **Authentication/Authorization:** Utilize Laravel's built-in authentication and authorization features (Gates, Policies, Sanctum).
-*   **URLs/Routing:** Use [named routes](https://laravel.com/docs/11.x/routing#named-routes) and the `route()` helper function for generating URLs to provide flexibility and maintainability.
+*   **URLs/Routing:** Use [named routes](https://laravel.com/docs/12.x/routing#named-routes) and the `route()` helper function for generating URLs to provide flexibility and maintainability.
 *   **Configuration:** Access configuration values via `config('app.name')`. **Never use `env('APP_NAME')` directly outside of configuration files**, as `env()` values are not cached.
 
 ## 4. Modular Architecture (Laravel Modules) Conventions
