@@ -29,14 +29,10 @@ class RoleSeeder extends Seeder
             );
 
             if ($name === 'owner' || $name === 'admin') {
-                $role->syncPermissions([
+                // Assign only Core permissions
+                $role->givePermissionTo([
                     'core.manage',
                     'core.view-dashboard',
-                    'user.view',
-                    'user.create',
-                    'user.update',
-                    'user.delete',
-                    'user.manage',
                 ]);
             }
         }

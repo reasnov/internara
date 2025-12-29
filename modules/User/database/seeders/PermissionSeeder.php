@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Database\Seeders;
+namespace Modules\User\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Modules\Permission\Models\Permission;
@@ -13,9 +13,11 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
-            'core.manage' => 'Manage core application settings',
-            'core.view-dashboard' => 'View the admin dashboard',
-            // Add other business-specific permissions here
+            'user.view' => 'View user list and details',
+            'user.create' => 'Create new users',
+            'user.update' => 'Update existing users',
+            'user.delete' => 'Delete users',
+            'user.manage' => 'Full user management access',
         ];
 
         foreach ($permissions as $name => $description) {
@@ -23,7 +25,7 @@ class PermissionSeeder extends Seeder
                 ['name' => $name, 'guard_name' => 'web'],
                 [
                     'description' => $description,
-                    'module' => 'Core',
+                    'module' => 'User',
                 ]
             );
         }

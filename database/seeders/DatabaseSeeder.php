@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Nwidart\Modules\Facades\Module;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +14,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $moduleSeeders = $this->getModuleSeeders();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        $this->call($moduleSeeders);
+    }
+
+    protected function getModuleSeeders(): array
+    {
+        $seeders = [];
+
+        $enabledModules = Module::allEnabled();
+
+        foreach ($enabledModules as $module) {
+            $seederClass = "Modules\\{$module->getName()}\\Database\\Seeders\\{$module->getName()}DatabaseSeeder";
+            if (class_exists($seederClass)) {
+                $seeders[] = $seederClass;
+            }
+        }
+
+        return $seeders;
     }
 }

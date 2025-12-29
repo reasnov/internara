@@ -11,8 +11,6 @@ class UserPolicy
      */
     public function viewAny(User $user): bool
     {
-        // Menggunakan standar Laravel 'can'. 
-        // Ini akan bekerja selama sistem otorisasi (Spatie/lainnya) terdaftar di Gate.
         return $user->can('user.view') || $user->can('user.manage');
     }
 

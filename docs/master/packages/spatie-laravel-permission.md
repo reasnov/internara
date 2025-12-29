@@ -1,23 +1,23 @@
-# spatie/laravel-permission Integration
+# Spatie/Laravel-Permission: Technical Integration
 
-We have integrated Spatie's permission package into a dedicated `Permission` module. This implementation is highly customized for security, flexibility, and portability.
+This document details the specific technical customizations made to the `spatie/laravel-permission` package within the dedicated `Permission` module.
+
+> **Note:** For a complete guide on how to create, manage, and use roles and permissions according to project conventions, please refer to the **[Role & Permission Management Guide](../permissions.md)**.
 
 ---
 
 ## Architectural Enhancements
 
+Our integration of this package is highly customized for portability and to fit our modular architecture.
+
 ### 1. Configurable ID Types
-The module supports both **UUID** and **Integer** IDs, controllable via `modules/Permission/config/config.php`.
-- **Default:** `UUID` (to match our `User` model).
-- **Behavior:** The migration and models (`Role`, `Permission`) automatically adapt their primary and foreign keys based on the `model_key_type` setting.
+The `Permission` module supports both **UUID** and **Integer** primary keys for its models. This is controlled via the `model_key_type` setting in `modules/Permission/config/config.php` and is designed to match the primary key type of the `User` model.
 
 ### 2. Module Ownership
-We added a nullable `module` column to the `roles` and `permissions` tables.
-- **Purpose:** Identifies which module "owns" or created a specific permission.
-- **Usage:** Filters permissions in the UI by business domain.
+We have added a nullable `module` column to the `roles` and `permissions` tables. This allows us to identify which module "owns" a specific role or permission, which is useful for filtering and organization.
 
-### 3. Runtime Configuration (Portability)
-To ensure the `Permission` module is plug-and-play, it overrides Spatie's root configuration at runtime via `PermissionServiceProvider`:
+### 3. Runtime Configuration
+To ensure the `Permission` module is portable ("plug-and-play"), it does not require manual changes to the global `config/permission.php` file. Instead, it overrides the necessary configurations at runtime via its own `PermissionServiceProvider`:
 
 ```php
 protected function overrideSpatieConfig(): void
@@ -28,27 +28,4 @@ protected function overrideSpatieConfig(): void
     ]);
 }
 ```
-
----
-
-## Usage
-
-### Service Layer
-Do not use Spatie's traits directly for complex management. Use the provided services:
-- `Modules\Permission\Contracts\Services\RoleService`
-- `Modules\Permission\Contracts\Services\PermissionService`
-
-### Assignment
-Assign roles to users as usual, but remember that the `User` model uses UUIDs:
-
-```php
-$user->assignRole('admin');
-```
-
----
-
-## Testing
-Always use the provided factories for testing:
-```php
-$role = \Modules\Permission\Models\Role::factory()->create(['module' => 'User']);
-```
+This ensures our custom `Role` and `Permission` models are always used.

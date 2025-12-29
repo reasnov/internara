@@ -28,6 +28,7 @@ return new class extends Migration
             }
             $table->string('name');
             $table->string('guard_name');
+            $table->string('description')->nullable();
             $table->string('module')->nullable();
             $table->timestamps();
 
@@ -46,6 +47,7 @@ return new class extends Migration
             }
             $table->string('name');
             $table->string('guard_name');
+            $table->string('description')->nullable();
             $table->string('module')->nullable();
             $table->timestamps();
             if ($teams || config('permission.testing')) {

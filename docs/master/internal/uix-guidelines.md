@@ -138,6 +138,7 @@ Use DaisyUI components for all standard UI elements. Below are examples for comm
 
 For complex UI interactions within Livewire, prefer MaryUI wrappers where available. These provide a fluent PHP interface for DaisyUI components.
 
+-   **Priority Rule:** If a required custom component does not already exist in the project, developers **must prioritize using a MaryUI component** before creating a new one from scratch. This maintains consistency and accelerates development.
 -   **Examples:** `x-mary-header`, `x-mary-list`, `x-mary-form`, etc.
 -   Refer to the official [MaryUI Documentation](https://mary-ui.com/) for usage details.
 

@@ -1,9 +1,5 @@
-.env
-.env.backup
-.env.production
-.phpactor.json
-.phpunit.result.cache
 /.fleet
+/.gemini/temp
 /.idea
 /.nova
 /.phpunit.cache
@@ -23,3 +19,8 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+.env
+.env.backup
+.env.production
+.phpactor.json
+.phpunit.result.cache

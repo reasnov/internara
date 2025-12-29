@@ -11,9 +11,10 @@ This document outlines the coding and development conventions for the Internara 
 3.  [Laravel Conventions](#3-laravel-conventions)
 4.  [Modular Architecture (Laravel Modules) Conventions](#4-modular-architecture-laravel-modules-conventions)
 5.  [Livewire & Volt Conventions](#5-livewire--volt-conventions)
-6.  [Testing (Pest) Conventions](#6-testing-pest-conventions)
-7.  [Code Formatting (Pint)](#7-code-formatting-pint)
-8.  [Tailwind CSS Conventions](#8-tailwind-css-conventions)
+6.  [View & Component Conventions](#6-view--component-conventions)
+7.  [Testing (Pest) Conventions](#7-testing-pest-conventions)
+8.  [Code Formatting (Pint)](#8-code-formatting-pint)
+9.  [Tailwind CSS Conventions](#9-tailwind-css-conventions)
 
 ---
 
@@ -130,7 +131,22 @@ The Repository and Entity layers are **optional** and should be used only when j
     *   **Rationale:** This promotes maximum reusability, simplifies testing, and maintains modularity across the application.
 *   **Volt:** Follow existing project examples for determining whether to use the functional or class-based API for new Volt components.
 
-## 6. Testing (Pest) Conventions
+## 6. View & Component Conventions
+
+To maintain a clean and organized `resources/views/components` directory, all Blade components must follow this structure:
+
+*   **`views/components/layouts/`**
+    *   **Purpose:** For major layout components that define the primary structure of a page (e.g., `app.blade.php`, `guest.blade.php`). These components typically include `<html>`, `<head>`, and `<body>` tags and manage the overall page skeleton.
+
+*   **`views/components/ui/`**
+    *   **Purpose:** For small, generic, and highly reusable UI components that are application-agnostic. These are the fundamental building blocks of the interface.
+    *   **Examples:** `button.blade.php`, `input.blade.php`, `card.blade.php`, `modal.blade.php`.
+
+*   **`views/components/partials/{pageName}/`**
+    *   **Purpose:** For composite components that are specific to a certain page or feature section. These partials are composed of smaller `ui` components but are not generic enough to be placed in the `ui` directory themselves.
+    *   **Example:** A user profile header might be located at `views/components/partials/profile/header.blade.php`. It assembles an avatar, user name, and action buttons, but is only used on the profile page.
+
+## 7. Testing (Pest) Conventions
 
 *   **Pest Only:** All tests **must be written using Pest**. Use `php artisan make:test --pest {name}` to generate test files.
 *   **Comprehensive Testing:** Write tests for happy paths, failure paths, and edge cases to ensure robust functionality.
@@ -139,11 +155,11 @@ The Repository and Entity layers are **optional** and should be used only when j
 *   **Mocking:** Use `Pest\Laravel\mock` or `$this->mock()` for mocking dependencies.
 *   **Browser Tests:** Store browser tests in the `tests/Browser/` directory. Leverage Laravel features like `Event::fake()` and model factories within browser tests.
 
-## 7. Code Formatting (Pint)
+## 8. Code Formatting (Pint)
 
 *   **Automated Formatting:** Before finalizing any changes, always run `vendor/bin/pint --dirty` to format your code according to the project's PHP coding standards.
 
-## 8. Tailwind CSS Conventions
+## 9. Tailwind CSS Conventions
 
 *   **Utility-First:** Prioritize using Tailwind CSS utility classes for styling.
 *   **Consistency:** Follow existing Tailwind usage patterns in sibling files and components.

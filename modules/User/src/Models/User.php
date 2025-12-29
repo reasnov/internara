@@ -13,25 +13,22 @@ use Modules\User\Support\UsernameGenerator;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * Modules\User\Models\User
+ * Represents a user in the system.
  *
- * @property string $id
+ * @property int|string $id
  * @property string $name
  * @property string $email
- * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string $username
- * @property mixed $password
  * @property string|null $avatar_url
- * @property string|null $remember_token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $email_verified_at
+ * @property-read string $password
+ * @property-read string|null $remember_token
+ * @property-read \Illuminate\Support\Carbon|null $created_at
+ * @property-read \Illuminate\Support\Carbon|null $updated_at
  *
- * @method static \Modules\User\Database\Factories\UserFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User query()
- *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
