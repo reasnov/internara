@@ -101,3 +101,20 @@ Alternatively, you can define complex logic in the `BindServiceProvider::context
 5.  If a candidate class exists and implements the interface, it is registered.
 
 > **Note:** Auto-discovery works best when the Interface and the Implementation share the same Root Namespace. For cross-module dependencies, use Manual Binding.
+
+---
+
+## Interaction with `ManagesModuleProvider` Trait
+
+While the `BindServiceProvider` excels at auto-discovering bindings based on conventions, modules often require explicit control over their service bindings (e.g., for custom implementations, singletons, or more complex resolution logic).
+
+The `Modules\Shared\Concerns\Providers\ManagesModuleProvider` trait (used by all standard module service providers) offers a structured way to explicitly declare these bindings within a module's `bindings()` method.
+
+-   **Auto-Discovery (by `BindServiceProvider`)**: Ideal for simple `Interface -> Implementation` bindings that follow strict naming conventions.
+-   **Explicit Declaration (by `ManagesModuleProvider` trait)**: Use this for:
+    -   Custom bindings that don't fit auto-discovery patterns.
+    -   Ensuring specific singletons.
+    -   Resolving ambiguities.
+    -   Decoupling intra-module dependencies where auto-discovery might be overridden or is less clear.
+
+When a module uses the `ManagesModuleProvider` trait and explicitly binds an interface in its `bindings()` method, that explicit binding will take precedence over any potential auto-discovery attempts by the `BindServiceProvider` for that specific interface.

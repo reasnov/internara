@@ -199,8 +199,8 @@ Use this pattern for cross-cutting concerns like authorization.
 
 *   **Usage:** When a domain module needs to authorize an action based on roles or permissions.
 *   **How it Works:**
-    1.  The `User` module defines a `Policy`.
-    2.  The `Core` module provides the data (Roles/Permissions) via a seeder.
+    1.  A domain module (e.g., `User`) defines its own `Policy`.
+    2.  Roles and permissions are defined and assigned across relevant module seeders (e.g., `Core` for base roles, individual modules for their specific permissions).
     3.  The `Permission` module handles the underlying storage logic.
     4.  The domain module simply calls `$user->can('permission.name')`. It doesn't need to know about the `Permission` module or the specific models being used.
 

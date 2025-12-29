@@ -3,10 +3,14 @@
 namespace Modules\Core\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Modules\Permission\Models\Role;
+use Modules\Permission\Contracts\PermissionManager;
 
 class RoleSeeder extends Seeder
 {
+    public function __construct(protected PermissionManager $permissionManager)
+    {
+    }
+
     /**
      * Run the database seeds.
      */
@@ -18,13 +22,7 @@ class RoleSeeder extends Seeder
         ];
 
         foreach ($roles as $name => $description) {
-            Role::updateOrCreate(
-                ['name' => $name, 'guard_name' => 'web'],
-                [
-                    'description' => $description,
-                    'module' => 'Core',
-                ]
-            );
+            $this->permissionManager->createRole($name, $description, 'Core');
         }
     }
 }

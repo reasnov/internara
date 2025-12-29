@@ -82,6 +82,54 @@ This document outlines the coding and development conventions for the Internara 
 
 Adhere strictly to the modular monolith architecture principles detailed in the [Architecture Guide](architecture.md) and [Modular Monolith Developer Guide](modular-monolith.md).
 
+### 4.1 Service Provider Conventions
+
+All module service providers (`Modules\{ModuleName}\Providers\YourServiceProvider.php`) **must** utilize the `Modules\Shared\Concerns\Providers\ManagesModuleProvider` trait to manage their lifecycle methods and service bindings. This ensures a consistent, structured, and lean implementation across all modules.
+
+**Key Responsibilities Handled by `ManagesModuleProvider`:**
+*   Automatic handling of module-specific commands, translations, configuration loading, views, and migrations.
+*   Structured management of service bindings via the `bindings()` method.
+
+**How to Implement:**
+
+1.  **Use the Trait:** Add `use Modules\Shared\Concerns\Providers\ManagesModuleProvider;` and `use ManagesModuleProvider;` to your service provider class.
+2.  **Define Module Metadata:** Ensure `protected string $name = 'YourModuleName';` and `protected string $nameLower = 'your_module_name';` are set.
+3.  **Call Trait Methods in `boot()`:**
+    ```php
+    public function boot(): void
+    {
+        $this->registerCommands();
+        $this->registerCommandSchedules();
+        $this->registerTranslations();
+        $this->registerConfig();
+        $this->registerViews();
+        // The loadMigrationsFrom call can be directly in boot() as it uses $this->name
+        $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+        // Any other module-specific boot logic
+    }
+    ```
+4.  **Call Trait Methods in `register()`:**
+    ```php
+    public function register(): void
+    {
+        $this->registerBindings(); // For explicit bindings defined in bindings()
+        // Any other module-specific registrations (e.g., registering other service providers)
+        $this->app->register(EventServiceProvider::class);
+        $this->app->register(RouteServiceProvider::class);
+    }
+    ```
+5.  **Define Service Bindings:** Implement the `bindings()` method to declare specific interface-to-implementation bindings for your module.
+    ```php
+    protected function bindings(): array
+    {
+        return [
+            // YourModuleContract::class => YourModuleImplementation::class,
+            // Modules\Permission\Contracts\PermissionManager::class => Modules\Permission\Services\PermissionManager::class, // Example from Permission module
+        ];
+    }
+    ```
+This approach makes module service providers highly readable and focused on their unique logic.
+
 *   **Namespace Convention:** For module files located in `modules/{ModuleName}/src/{Subdirectory}/{FileName}.php`, the namespace **must omit the `src` segment**.
     *   **Example:** `Modules\{ModuleName}\{Subdirectory}`. This applies to `Livewire`, `Services`, `Repositories`, `Entities`, etc.
 *   **Module Isolation & Portability:**

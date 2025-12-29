@@ -3,10 +3,14 @@
 namespace Modules\Core\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Modules\Permission\Models\Permission;
+use Modules\Permission\Contracts\PermissionManager;
 
 class PermissionSeeder extends Seeder
 {
+    public function __construct(protected PermissionManager $permissionManager)
+    {
+    }
+
     /**
      * Run the database seeds.
      */
@@ -19,13 +23,7 @@ class PermissionSeeder extends Seeder
         ];
 
         foreach ($permissions as $name => $description) {
-            Permission::updateOrCreate(
-                ['name' => $name, 'guard_name' => 'web'],
-                [
-                    'description' => $description,
-                    'module' => 'Core',
-                ]
-            );
+            $this->permissionManager->createPermission($name, $description, 'Core');
         }
     }
 }
