@@ -26,14 +26,18 @@ class AppException extends Exception
     /**
      * Create a new exception instance.
      *
-     * @param  string  $userMessage  The friendly message (e.g., "The requested data is invalid.").
-     * @param  string|null  $logMessage  The technical message for logging (optional, defaults to $userMessage).
-     * @param  int  $code  The HTTP status code or internal error code (default 422 - Unprocessable Content).
-     * @param  Throwable|null  $previous  The previous exception used for chaining (optional).
-     * @param  array  $context  Additional context data to be logged with the exception.
+     * @param string $userMessage The translation key for the user-friendly message (e.g., "user::exceptions.not_found").
+     * @param array $replace Parameters to pass to the translator for replacement (e.g., ['name' => 'John']).
+     * @param string|null $locale Specific locale to use for the user message, or null for default.
+     * @param string|null $logMessage The technical message for logging (optional, defaults to $userMessage).
+     * @param int $code The HTTP status code or internal error code (default 422 - Unprocessable Content).
+     * @param Throwable|null $previous The previous exception used for chaining (optional).
+     * @param array $context Additional context data to be logged with the exception.
      */
     public function __construct(
         string $userMessage,
+        protected array $replace = [],
+        protected ?string $locale = null,
         ?string $logMessage = null,
         int $code = 422,
         ?Throwable $previous = null,
@@ -46,16 +50,16 @@ class AppException extends Exception
     }
 
     /**
-     * Get the user-friendly message.
+     * Get the translated, user-friendly message.
      *
-     * This message is intended for display to the end-user or client,
-     * so it should be non-technical and easy to understand.
+     * This message is intended for display to the end-user.
+     * It uses the userMessage property as a translation key.
      *
-     * @return string The user-friendly message, with the first letter capitalized.
+     * @return string The translated, user-friendly message.
      */
     public function getUserMessage(): string
     {
-        return ucfirst($this->userMessage);
+        return __($this->userMessage, $this->replace, $this->locale);
     }
 
     /**

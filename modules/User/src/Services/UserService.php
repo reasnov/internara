@@ -4,6 +4,7 @@ namespace Modules\User\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Modules\Shared\Exceptions\AppException;
 use Modules\User\Contracts\Services\UserService as UserServiceContract;
 use Modules\User\Models\User;
 
@@ -13,7 +14,6 @@ class UserService implements UserServiceContract
      * List users with optional filtering and pagination.
      *
      * @param  array<string, mixed>  $filters
-     * @param  int  $perPage
      */
     public function list(array $filters = [], int $perPage = 10): LengthAwarePaginator
     {
@@ -40,9 +40,26 @@ class UserService implements UserServiceContract
      */
     public function create(array $data): User
     {
-        // We do not manually hash the password here because
-        // the User model has 'password' => 'hashed' in casts().
-        return User::create($data);
+        $roles = $data['roles'] ?? null;
+        unset($data['roles']);
+
+        // Rule: Prevent creating a new user as 'owner' if one already exists.
+        if (is_array($roles) && in_array('owner', $roles)) {
+            if (User::role('owner')->exists()) {
+                throw new AppException(
+                    userMessage: 'user::exceptions.owner_already_exists',
+                    code: 403
+                );
+            }
+        }
+
+        $user = User::create($data);
+
+        if (is_array($roles)) {
+            $user->assignRole($roles);
+        }
+
+        return $user;
     }
 
     /**
@@ -77,14 +94,37 @@ class UserService implements UserServiceContract
     public function update(string $id, array $data): User
     {
         $user = User::findOrFail($id);
+        $roles = $data['roles'] ?? null;
+        unset($data['roles']);
 
-        // Filter out null/empty password to prevent overwriting with empty string
-        // if the user intended to keep the current password.
+        // Rule: Prevent removing 'owner' role from the owner account.
+        if ($user->hasRole('owner') && (! is_array($roles) || ! in_array('owner', $roles))) {
+            throw new AppException(
+                userMessage: 'user::exceptions.owner_role_cannot_be_removed',
+                code: 403
+            );
+        }
+
+        // Rule: Prevent assigning 'owner' role if another owner exists.
+        if (is_array($roles) && in_array('owner', $roles) && ! $user->hasRole('owner')) {
+            if (User::role('owner')->exists()) {
+                throw new AppException(
+                    userMessage: 'user::exceptions.owner_cannot_be_transferred',
+                    code: 403
+                );
+            }
+        }
+
+        // Filter out null/empty password to prevent overwriting.
         if (array_key_exists('password', $data) && empty($data['password'])) {
             unset($data['password']);
         }
 
         $user->update($data);
+
+        if (is_array($roles)) {
+            $user->syncRoles($roles);
+        }
 
         return $user;
     }
@@ -95,6 +135,14 @@ class UserService implements UserServiceContract
     public function delete(string $id): bool
     {
         $user = User::findOrFail($id);
+
+        // Rule: Prevent deleting the owner account.
+        if ($user->hasRole('owner')) {
+            throw new AppException(
+                userMessage: 'user::exceptions.owner_cannot_be_deleted',
+                code: 403
+            );
+        }
 
         return $user->delete();
     }

@@ -247,3 +247,32 @@ class UserPolicy
 ```
 
 By using `$user->can()`, the policy remains completely decoupled from the roles. You can freely change which roles get which permissions in your seeders without ever needing to touch the policy code.
+
+---
+
+## 7. Owner vs. Admin Responsibilities
+
+To ensure security and a clear separation of duties, the `owner` and `admin` roles have distinct responsibilities.
+
+### Owner
+The **Owner** role is a "root" or "super-admin" account. There should only be one owner in the system.
+
+- **Responsibilities:**
+  - Manages the application lifecycle and critical configurations.
+  - Can manage other `admin` accounts (create, delete, update).
+  - Has ultimate authority and can perform irreversible, destructive actions.
+  - The `owner` account itself is protected and **cannot be deleted or have its role changed**.
+
+- **Permissions:**
+  - The `owner` role automatically receives **all permissions** in the system via a `Gate::before` check (see `User/Providers/AuthServiceProvider.php`). This happens implicitly and does not require manual permission assignment.
+
+### Admin
+The **Admin** role is for managing the day-to-day operations and data within the application, under the rules set by the owner.
+
+- **Responsibilities:**
+  - Manages day-to-day business data (e.g., users, posts, categories).
+  - Operates within the permissions granted to them.
+  - Cannot manage other `admin` accounts or change fundamental application settings.
+
+- **Permissions:**
+  - Receives a broad set of permissions for management tasks (e.g., `user.manage`), but does not have the implicit "grant all" authority of the `owner`. Permissions must be explicitly assigned via seeders.

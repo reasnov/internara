@@ -17,16 +17,20 @@ class RecordNotFoundException extends AppException
     /**
      * Create a new RecordNotFoundException instance.
      *
-     * @param  string  $userMessage  The user-friendly message (e.g., "The requested post could not be found.").
-     * @param  int  $code  The HTTP status code, defaulting to 404 (Not Found).
-     * @param  Throwable|null  $previous  The previous exception used for chaining.
-     * @param  array  $record  The record identifier(s) that were not found, for logging context.
+     * @param string $userMessage The translation key for the user-friendly message (e.g., "shared::exceptions.record_not_found").
+     * @param array $replace Parameters to pass to the translator for replacement.
+     * @param string|null $locale Specific locale to use for the user message.
+     * @param array $record The record identifier(s) that were not found, for logging context.
+     * @param int $code The HTTP status code, defaulting to 404 (Not Found).
+     * @param Throwable|null $previous The previous exception used for chaining.
      */
     public function __construct(
-        string $userMessage,
+        string $userMessage = 'shared::exceptions.record_not_found', // Default key
+        array $replace = [],
+        ?string $locale = null,
+        array $record = [],
         int $code = 404,
-        ?Throwable $previous = null,
-        array $record = []
+        ?Throwable $previous = null
     ) {
         $context = [];
 
@@ -36,7 +40,9 @@ class RecordNotFoundException extends AppException
 
         parent::__construct(
             userMessage: $userMessage,
-            logMessage: 'Record not found.',
+            replace: $replace,
+            locale: $locale,
+            logMessage: 'Record not found.', // Log message can remain fixed or be a trans key if needed
             code: $code,
             previous: $previous,
             context: $context
