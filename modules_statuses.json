@@ -3,5 +3,6 @@
     "Support": true,
     "Shared": true,
     "User": true,
-    "Permission": true
+    "Permission": true,
+    "Setup": true
 }

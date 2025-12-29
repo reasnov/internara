@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html data-theme="light" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
+    <head>
+        @include('components.layouts.base.head')
+    </head>
+
+    <body class="max-w-screen size-full min-h-screen overflow-x-hidden antialiased">
+        @yield('body')
+
+        @stack('scripts')
+    </body>
+
+</html>

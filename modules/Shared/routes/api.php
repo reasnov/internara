@@ -1,8 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-// use Modules\Shared\Http\Controllers\SharedController;
 
-// Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-//     Route::apiResource('shareds', SharedController::class)->names('shared');
-// });
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "api" middleware group. Now create something great!
+|
+*/

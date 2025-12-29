@@ -1,8 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-// use Modules\Permission\Http\Controllers\PermissionController;
 
-// Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-//     Route::apiResource('permissions', PermissionController::class)->names('permission');
-// });
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "api" middleware group. Now create something great!
+|
+*/
