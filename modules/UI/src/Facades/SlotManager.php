@@ -12,9 +12,6 @@ use Modules\UI\Contracts\Core\SlotManager as SlotManagerContract;
  */
 class SlotManager extends Facade
 {
-    /**
-     * @return string
-     */
     protected static function getFacadeAccessor(): string
     {
         return SlotManagerContract::class;

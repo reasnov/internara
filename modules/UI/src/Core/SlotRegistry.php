@@ -15,8 +15,6 @@ class SlotRegistry implements SlotRegistryContract
 {
     /**
      * The array of registered slots.
-     *
-     * @var array
      */
     protected array $slots = [];
 
@@ -38,7 +36,7 @@ class SlotRegistry implements SlotRegistryContract
     /**
      * Get all registered components for a given slot.
      *
-     * @param string $slot The name of the slot.
+     * @param  string  $slot  The name of the slot.
      * @return array The registered components.
      */
     public function getSlotsFor(string $slot): array

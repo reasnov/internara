@@ -19,7 +19,7 @@ interface SlotRegistry
     /**
      * Get all registered components for a given slot.
      *
-     * @param string $slot The name of the slot.
+     * @param  string  $slot  The name of the slot.
      * @return array The registered components.
      */
     public function getSlotsFor(string $slot): array;

@@ -19,31 +19,21 @@ class SlotManager implements SlotManagerContract
 {
     /**
      * The slot registry instance.
-     *
-     * @var \Modules\UI\Contracts\Core\SlotRegistry
      */
     protected SlotRegistryContract $registry;
 
     /**
      * The view factory instance.
-     *
-     * @var \Illuminate\Contracts\View\Factory
      */
     protected ViewFactory $viewFactory;
 
     /**
      * The Livewire manager instance.
-     *
-     * @var \Livewire\LivewireManager
      */
     protected LivewireManager $livewireManager;
 
     /**
      * Create a new SlotManager instance.
-     *
-     * @param \Modules\UI\Contracts\Core\SlotRegistry $registry
-     * @param \Illuminate\Contracts\View\Factory $viewFactory
-     * @param \Livewire\LivewireManager $livewireManager
      */
     public function __construct(
         SlotRegistryContract $registry,

@@ -57,7 +57,7 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
 
         return (new Stub($this->getStub(), [
             'CLASS_NAMESPACE' => $this->getClassNamespace($module),
-            'INTERFACE' => Str::studly($interfaceName),
+            'CLASS' => Str::studly($interfaceName),
         ]))->render();
     }
 
@@ -108,12 +108,12 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
      */
     protected function getDestinationFilePath(): string
     {
-        $path = Module::getModulePath($this->argument('module'));
+        $modulePath = $this->getModule()->getPath();
 
-        $generatorPath = GenerateConfigReader::read('interface');
+        $interfaceBasePath = GenerateConfigReader::read('interface')->getPath();
 
         // This correctly uses the full 'name' argument to create the path
-        return $path.$generatorPath->getPath().'/'.$this->getFileName().'.php';
+        return $modulePath.$interfaceBasePath.'/'.$this->getFileName().'.php';
     }
 
     /**

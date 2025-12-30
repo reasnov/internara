@@ -7,7 +7,7 @@ use Livewire\Component;
 use Modules\Setup\Concerns\Livewire\HandlesAppSetup;
 use Modules\Setup\Contracts\Services\SetupService;
 
-class SetupAccount extends Component
+class SetupDepartment extends Component
 {
     use HandlesAppSetup;
 
@@ -19,18 +19,18 @@ class SetupAccount extends Component
     public function mount(): void
     {
         $this->initSetupProps(
-            currentStep: 'account',
-            nextStep: 'school',
-            prevStep: 'welcome',
-            extra: ['req_record' => 'owner']
+            currentStep: 'department',
+            nextStep: 'program',
+            prevStep: 'school',
+            extra: ['req_record' => 'department']
         );
     }
 
     public function render(): View
     {
-        return view('setup::livewire.setup-account')
+        return view('setup::livewire.setup-department')
             ->layout('setup::components.layouts.setup', [
-                'title' => 'Buat Akun Administrator | Internara - Sistem Informasi Manajemen PKL',
+                'title' => 'Atur Data Jurusan | Internara - Sistem Informasi Manajemen PKL',
             ]);
     }
 }

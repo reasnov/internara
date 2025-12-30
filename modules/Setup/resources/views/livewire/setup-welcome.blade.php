@@ -1,3 +1,9 @@
-<div>
-    <h3>The <code>SetupWelcome</code> livewire component is loaded from the <code>Setup</code> module.</h3>
+<div class="flex flex-col items-center justify-center text-center">
+    <h1 class="text-3xl font-bold">
+        // Promise Statement
+    </h1>
+
+    <x-mary-button class="btn-primary" wire:click="nextStep">
+        Mulai Instalasi
+    </x-mary-button>
 </div>
