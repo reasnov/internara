@@ -1,4 +1,5 @@
-@extends('shared::components.layouts.base')
+@extends('ui::components.layouts.base')
+
 @section('body')
     <div class="flex min-h-screen flex-col">
         @isset($header)

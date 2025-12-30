@@ -13,8 +13,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class ModuleMakeInterfaceCommand
- *
- * @package App\Console\Commands
  */
 class ModuleMakeInterfaceCommand extends GeneratorCommand
 {
@@ -41,8 +39,6 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
 
     /**
      * Get the stub file for the generator.
-     *
-     * @return string
      */
     protected function getStub(): string
     {
@@ -51,8 +47,6 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
 
     /**
      * Get the template contents for the generator.
-     *
-     * @return string
      */
     protected function getTemplateContents(): string
     {
@@ -71,7 +65,6 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
      * Get the namespace of the class.
      *
      * @param  ModuleModel  $module
-     * @return string
      */
     public function getClassNamespace($module): string
     {
@@ -82,7 +75,7 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
         $interfaceNamespace = GenerateConfigReader::read('interface')->getNamespace();
 
         // Combine them to get the base interface namespace, e.g., "Modules\Example\Contracts"
-        $baseNamespace = $namespace . '\\' . $interfaceNamespace;
+        $baseNamespace = $namespace.'\\'.$interfaceNamespace;
 
         $name = $this->argument('name');
 
@@ -92,7 +85,7 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
                 ->beforeLast('/')
                 ->replace('/', '\\');
 
-            return $baseNamespace . '\\' . $subNamespace;
+            return $baseNamespace.'\\'.$subNamespace;
         }
 
         return $baseNamespace;
@@ -102,19 +95,16 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
      * Get the module's base namespace.
      *
      * @param  ModuleModel  $module
-     * @return string
      */
     public function getModuleNamespace($module): string
     {
         $moduleBaseNamespace = config('modules.namespace');
 
-        return $moduleBaseNamespace . '\\' . $module->getStudlyName();
+        return $moduleBaseNamespace.'\\'.$module->getStudlyName();
     }
 
     /**
      * Get the destination file path.
-     *
-     * @return string
      */
     protected function getDestinationFilePath(): string
     {
@@ -123,13 +113,11 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
         $generatorPath = GenerateConfigReader::read('interface');
 
         // This correctly uses the full 'name' argument to create the path
-        return $path . $generatorPath->getPath() . '/' . $this->getFileName() . '.php';
+        return $path.$generatorPath->getPath().'/'.$this->getFileName().'.php';
     }
 
     /**
      * Get the console command arguments.
-     *
-     * @return array
      */
     protected function getArguments(): array
     {
@@ -141,8 +129,6 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
 
     /**
      * Get the console command options.
-     *
-     * @return array
      */
     protected function getOptions(): array
     {
@@ -153,8 +139,6 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
 
     /**
      * Get the default namespace for the interface.
-     *
-     * @return string
      */
     public function getDefaultNamespace(): string
     {
@@ -164,8 +148,6 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
 
     /**
      * Get the module being operated on.
-     *
-     * @return ModuleModel
      */
     protected function getModule(): ModuleModel
     {
@@ -174,8 +156,6 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
 
     /**
      * Get the file name.
-     *
-     * @return string
      */
     protected function getFileName(): string
     {

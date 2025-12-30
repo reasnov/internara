@@ -2,18 +2,19 @@
 
 namespace Modules\Permission\Providers;
 
+use Illuminate\Support\ServiceProvider;
 use Modules\Permission\Contracts\PermissionManager as PermissionManagerContract;
 use Modules\Permission\Services\PermissionManager;
-use Illuminate\Support\ServiceProvider;
-use Nwidart\Modules\Traits\PathNamespace;
 use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
+use Nwidart\Modules\Traits\PathNamespace;
 
 class PermissionServiceProvider extends ServiceProvider
 {
-    use PathNamespace;
     use ManagesModuleProvider;
+    use PathNamespace;
 
     protected string $name = 'Permission';
+
     protected string $nameLower = 'permission';
 
     /**

@@ -30,6 +30,7 @@ class PermissionManager implements PermissionManagerContract
         if ($role) {
             $role->givePermissionTo($permissions);
         }
+
         return $role;
     }
 }

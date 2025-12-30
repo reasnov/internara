@@ -2,7 +2,8 @@
     "Core": true,
     "Support": true,
     "Shared": true,
+    "UI": true,
+    "Setup": true,
     "User": true,
-    "Permission": true,
-    "Setup": true
+    "Permission": true
 }

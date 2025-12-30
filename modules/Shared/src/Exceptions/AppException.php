@@ -21,18 +21,19 @@ use Throwable;
 class AppException extends Exception
 {
     protected string $userMessage;
+
     protected string $logMessage;
 
     /**
      * Create a new exception instance.
      *
-     * @param string $userMessage The translation key for the user-friendly message (e.g., "user::exceptions.not_found").
-     * @param array $replace Parameters to pass to the translator for replacement (e.g., ['name' => 'John']).
-     * @param string|null $locale Specific locale to use for the user message, or null for default.
-     * @param string|null $logMessage The technical message for logging (optional, defaults to $userMessage).
-     * @param int $code The HTTP status code or internal error code (default 422 - Unprocessable Content).
-     * @param Throwable|null $previous The previous exception used for chaining (optional).
-     * @param array $context Additional context data to be logged with the exception.
+     * @param  string  $userMessage  The translation key for the user-friendly message (e.g., "user::exceptions.not_found").
+     * @param  array  $replace  Parameters to pass to the translator for replacement (e.g., ['name' => 'John']).
+     * @param  string|null  $locale  Specific locale to use for the user message, or null for default.
+     * @param  string|null  $logMessage  The technical message for logging (optional, defaults to $userMessage).
+     * @param  int  $code  The HTTP status code or internal error code (default 422 - Unprocessable Content).
+     * @param  Throwable|null  $previous  The previous exception used for chaining (optional).
+     * @param  array  $context  Additional context data to be logged with the exception.
      */
     public function __construct(
         string $userMessage,

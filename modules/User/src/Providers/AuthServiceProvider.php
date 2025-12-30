@@ -4,9 +4,9 @@ namespace Modules\User\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
 use Modules\User\Models\User;
-use Modules\User\Policies\UserPolicy;
-use Modules\Shared\Concerns\Providers\ManagesModuleProvider; // New Use Statement
+use Modules\User\Policies\UserPolicy; // New Use Statement
 
 class AuthServiceProvider extends ServiceProvider
 {

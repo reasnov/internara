@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Modules\User\Models\User;
 
 uses(Tests\TestCase::class, RefreshDatabase::class);
@@ -22,7 +22,7 @@ test('it has fillable attributes', function () {
         'avatar_url',
     ];
 
-    $user = new User();
+    $user = new User;
 
     expect($user->getFillable())->toBe($fillable);
 });
@@ -33,7 +33,7 @@ test('it hides sensitive attributes', function () {
         'remember_token',
     ];
 
-    $user = new User();
+    $user = new User;
 
     expect($user->getHidden())->toBe($hidden);
 });

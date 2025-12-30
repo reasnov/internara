@@ -15,9 +15,7 @@ class WelcomeUserNotification extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct(protected User $user)
-    {
-    }
+    public function __construct(protected User $user) {}
 
     /**
      * Get the notification's delivery channels.
@@ -37,7 +35,7 @@ class WelcomeUserNotification extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject('Welcome to Internara!')
-            ->greeting('Hello ' . $this->user->name . '!')
+            ->greeting('Hello '.$this->user->name.'!')
             ->line('Thank you for registering. We are excited to have you on board.')
             ->action('View Your Profile', url('/user/profile')) // Example URL
             ->line('Thank you for using our application!');

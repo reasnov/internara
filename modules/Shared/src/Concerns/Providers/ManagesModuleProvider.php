@@ -16,7 +16,7 @@ trait ManagesModuleProvider
     {
         // Logic from ManagesBindings trait
         foreach ($this->bindings() as $abstract => $concrete) {
-            if (!$this instanceof ServiceProvider) {
+            if (! $this instanceof ServiceProvider) {
                 throw new \LogicException('The ManagesModuleProvider trait must be used in a class that extends Illuminate\Support\ServiceProvider.');
             }
             if (is_string($concrete) && (new \ReflectionClass($concrete))->isInstantiable()) {

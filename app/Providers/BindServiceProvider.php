@@ -33,7 +33,7 @@ class BindServiceProvider extends ServiceProvider
 
         foreach ($bindings as $abstract => $concrete) {
             /** Ensure that the abstract is an existing interface and the concrete is an existing class */
-            if (interface_exists($abstract) && class_exists($concrete) && !interface_exists($concrete)) {
+            if (interface_exists($abstract) && class_exists($concrete) && ! interface_exists($concrete)) {
                 $this->app->{$method}($abstract, $concrete);
             }
         }
@@ -92,16 +92,16 @@ class BindServiceProvider extends ServiceProvider
         $moduleAppPath = config('modules.paths.app_folder', 'src/');
         $modulesNamespace = config('modules.namespace', 'Modules');
 
-        if (!is_dir($modulesPath)) {
+        if (! is_dir($modulesPath)) {
             return $paths;
         }
 
         try {
             foreach (new \DirectoryIterator($modulesPath) as $moduleDir) {
-                if ($moduleDir->isDir() && !$moduleDir->isDot()) {
+                if ($moduleDir->isDir() && ! $moduleDir->isDot()) {
                     $moduleName = $moduleDir->getBasename();
-                    $baseNamespace = $modulesNamespace . '\\' . $moduleName;
-                    $contractPath = $moduleDir->getPathname() . '/' . trim($moduleAppPath, '/') . '/Contracts';
+                    $baseNamespace = $modulesNamespace.'\\'.$moduleName;
+                    $contractPath = $moduleDir->getPathname().'/'.trim($moduleAppPath, '/').'/Contracts';
 
                     if (file_exists($contractPath)) {
                         $paths[$contractPath] = $baseNamespace;
@@ -109,7 +109,7 @@ class BindServiceProvider extends ServiceProvider
                 }
             }
         } catch (\Throwable $e) {
-            Log::debug("BindServiceProvider: Failed to scan modules. " . $e->getMessage());
+            Log::debug('BindServiceProvider: Failed to scan modules. '.$e->getMessage());
         }
 
         return $paths;
@@ -118,8 +118,6 @@ class BindServiceProvider extends ServiceProvider
     /**
      * Scan a directory and return found bindings.
      *
-     * @param string $path
-     * @param string $baseNamespace
      * @return array<string, string>
      */
     protected function scanDirectory(string $path, string $baseNamespace): array
@@ -127,7 +125,7 @@ class BindServiceProvider extends ServiceProvider
         $bindings = [];
         $ignoredNamespaces = config('bindings.ignored_namespaces', []);
 
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             return $bindings;
         }
 
@@ -141,7 +139,7 @@ class BindServiceProvider extends ServiceProvider
 
             $interfaceInfo = $this->findInterfaceInFile($file->getPathname());
 
-            if (!$interfaceInfo) {
+            if (! $interfaceInfo) {
                 continue;
             }
 
@@ -171,7 +169,6 @@ class BindServiceProvider extends ServiceProvider
     /**
      * Parse a PHP file to find the interface FQCN.
      *
-     * @param string $filePath
      * @return array{0: string, 1: string}|null [Full Abstract Name, Short Interface Name]
      */
     protected function findInterfaceInFile(string $filePath): ?array
@@ -179,18 +176,18 @@ class BindServiceProvider extends ServiceProvider
         try {
             $content = File::get($filePath);
 
-            if (!preg_match('/namespace\s+([^;]+);/', $content, $nsMatches)) {
+            if (! preg_match('/namespace\s+([^;]+);/', $content, $nsMatches)) {
                 return null;
             }
-            if (!preg_match('/interface\s+(\w+)/', $content, $ifMatches)) {
+            if (! preg_match('/interface\s+(\w+)/', $content, $ifMatches)) {
                 return null;
             }
 
             $namespace = trim($nsMatches[1]);
             $name = trim($ifMatches[1]);
-            $abstract = $namespace . '\\' . $name;
+            $abstract = $namespace.'\\'.$name;
 
-            if (!interface_exists($abstract)) {
+            if (! interface_exists($abstract)) {
                 return null;
             }
 
@@ -203,10 +200,6 @@ class BindServiceProvider extends ServiceProvider
 
     /**
      * Guess the concrete class based on the interface name.
-     *
-     * @param string $rootNamespace
-     * @param string $interfaceName
-     * @return string|null
      */
     protected function deriveConcreteClass(string $rootNamespace, string $interfaceName): ?string
     {
@@ -220,7 +213,7 @@ class BindServiceProvider extends ServiceProvider
         $candidates = $this->getConcreteCandidates($rootNamespace, $shortName);
 
         foreach ($candidates as $candidate) {
-            if (class_exists($candidate) && !interface_exists($candidate)) {
+            if (class_exists($candidate) && ! interface_exists($candidate)) {
                 return $candidate;
             }
         }
@@ -231,8 +224,6 @@ class BindServiceProvider extends ServiceProvider
     /**
      * Get list of potential concrete classes based on config patterns.
      *
-     * @param string $rootNamespace
-     * @param string $shortNamespace
      * @return array<string>
      */
     protected function getConcreteCandidates(string $rootNamespace, string $shortNamespace): array
@@ -253,8 +244,6 @@ class BindServiceProvider extends ServiceProvider
 
     /**
      * Register contextual service bindings (When-Call bindings).
-     *
-     * @return void
      */
     protected function whenCall(): void
     {

@@ -9,9 +9,6 @@ class UsernameGenerator
     /**
      * Generate a unique username with a configurable prefix and random digit length.
      *
-     * @param  string  $prefix
-     * @param  int  $length
-     * @return string
      *
      * @throws \RuntimeException
      */
@@ -26,7 +23,7 @@ class UsernameGenerator
                 $randomNumbers .= random_int(0, 9);
             }
 
-            $username = $prefix . $randomNumbers;
+            $username = $prefix.$randomNumbers;
             $attempt++;
 
             if ($attempt > $maxAttempts) {

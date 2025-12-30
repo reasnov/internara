@@ -13,8 +13,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class ModuleMakeTraitCommand
- *
- * @package App\Console\Commands
  */
 class ModuleMakeTraitCommand extends GeneratorCommand
 {
@@ -41,8 +39,6 @@ class ModuleMakeTraitCommand extends GeneratorCommand
 
     /**
      * Get the stub file for the generator.
-     *
-     * @return string
      */
     protected function getStub(): string
     {
@@ -51,8 +47,6 @@ class ModuleMakeTraitCommand extends GeneratorCommand
 
     /**
      * Get the template contents for the generator.
-     *
-     * @return string
      */
     protected function getTemplateContents(): string
     {
@@ -63,7 +57,7 @@ class ModuleMakeTraitCommand extends GeneratorCommand
 
         return (new Stub($this->getStub(), [
             'CLASS_NAMESPACE' => $this->getClassNamespace($module),
-            'TRAIT'     => Str::studly($traitName),
+            'TRAIT' => Str::studly($traitName),
         ]))->render();
     }
 
@@ -71,7 +65,6 @@ class ModuleMakeTraitCommand extends GeneratorCommand
      * Get the namespace of the class.
      *
      * @param  ModuleModel  $module
-     * @return string
      */
     public function getClassNamespace($module): string
     {
@@ -82,7 +75,7 @@ class ModuleMakeTraitCommand extends GeneratorCommand
         $traitNamespace = GenerateConfigReader::read('trait')->getNamespace();
 
         // Combine them to get the base trait namespace
-        $baseNamespace = $namespace . '\\' . $traitNamespace;
+        $baseNamespace = $namespace.'\\'.$traitNamespace;
 
         $name = $this->argument('name');
 
@@ -92,7 +85,7 @@ class ModuleMakeTraitCommand extends GeneratorCommand
                 ->beforeLast('/')
                 ->replace('/', '\\');
 
-            return $baseNamespace . '\\' . $subNamespace;
+            return $baseNamespace.'\\'.$subNamespace;
         }
 
         return $baseNamespace;
@@ -102,19 +95,16 @@ class ModuleMakeTraitCommand extends GeneratorCommand
      * Get the module's base namespace.
      *
      * @param  ModuleModel  $module
-     * @return string
      */
     public function getModuleNamespace($module): string
     {
         $moduleBaseNamespace = config('modules.namespace');
 
-        return $moduleBaseNamespace . '\\' . $module->getStudlyName();
+        return $moduleBaseNamespace.'\\'.$module->getStudlyName();
     }
 
     /**
      * Get the destination file path.
-     *
-     * @return string
      */
     protected function getDestinationFilePath(): string
     {
@@ -123,13 +113,11 @@ class ModuleMakeTraitCommand extends GeneratorCommand
         $generatorPath = GenerateConfigReader::read('trait');
 
         // This correctly uses the full 'name' argument to create the path
-        return $path . $generatorPath->getPath() . '/' . $this->getFileName() . '.php';
+        return $path.$generatorPath->getPath().'/'.$this->getFileName().'.php';
     }
 
     /**
      * Get the console command arguments.
-     *
-     * @return array
      */
     protected function getArguments(): array
     {
@@ -141,8 +129,6 @@ class ModuleMakeTraitCommand extends GeneratorCommand
 
     /**
      * Get the console command options.
-     *
-     * @return array
      */
     protected function getOptions(): array
     {
@@ -153,8 +139,6 @@ class ModuleMakeTraitCommand extends GeneratorCommand
 
     /**
      * Get the default namespace for the trait.
-     *
-     * @return string
      */
     public function getDefaultNamespace(): string
     {
@@ -164,8 +148,6 @@ class ModuleMakeTraitCommand extends GeneratorCommand
 
     /**
      * Get the module being operated on.
-     *
-     * @return ModuleModel
      */
     protected function getModule(): ModuleModel
     {
@@ -174,8 +156,6 @@ class ModuleMakeTraitCommand extends GeneratorCommand
 
     /**
      * Get the file name.
-     *
-     * @return string
      */
     protected function getFileName(): string
     {

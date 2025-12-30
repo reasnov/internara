@@ -1,14 +1,14 @@
 <?php
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Permission\Models\Permission;
 use Modules\Permission\Models\Role;
 use Modules\Permission\Services\RoleService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(Tests\TestCase::class, RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->service = new RoleService();
+    $this->service = new RoleService;
 });
 
 test('it can list and filter roles', function () {
@@ -24,7 +24,7 @@ test('it can create, update and delete role', function () {
     $role = $this->service->create([
         'name' => 'manager',
         'guard_name' => 'web',
-        'module' => 'Core'
+        'module' => 'Core',
     ]);
 
     expect($role->name)->toBe('manager');

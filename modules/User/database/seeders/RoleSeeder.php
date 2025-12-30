@@ -7,9 +7,7 @@ use Modules\Permission\Contracts\PermissionManager;
 
 class RoleSeeder extends Seeder
 {
-    public function __construct(protected PermissionManager $permissionManager)
-    {
-    }
+    public function __construct(protected PermissionManager $permissionManager) {}
 
     /**
      * Run the database seeds.
@@ -44,4 +42,3 @@ class RoleSeeder extends Seeder
         }
     }
 }
-

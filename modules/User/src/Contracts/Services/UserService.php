@@ -11,7 +11,6 @@ interface UserService
      * List users with optional filtering and pagination.
      *
      * @param  array<string, mixed>  $filters
-     * @param  int  $perPage
      */
     public function list(array $filters = [], int $perPage = 10): LengthAwarePaginator;
 

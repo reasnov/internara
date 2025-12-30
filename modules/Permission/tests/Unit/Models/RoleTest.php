@@ -1,7 +1,7 @@
 <?php
 
-use Modules\Permission\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Modules\Permission\Models\Role;
 
 uses(Tests\TestCase::class, RefreshDatabase::class);
 
@@ -9,7 +9,7 @@ test('it can create a role using factory', function () {
     $role = Role::factory()->create([
         'name' => 'admin',
         'guard_name' => 'web',
-        'module' => 'User'
+        'module' => 'User',
     ]);
 
     expect($role)

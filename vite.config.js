@@ -10,7 +10,18 @@ export default defineConfig({
             input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: true,
         }),
-        tailwindcss(),
+        tailwindcss({
+            // Pass configuration directly to the plugin
+            config: {
+                content: [
+                    './resources/views/**/*.blade.php',
+                    './modules/**/*.blade.php',
+                    './modules/**/*.js',
+                ],
+                // Any other theme/plugin configs can go here
+                plugins: [require('daisyui')],
+            }
+        }),
     ],
     server: {
         cors: true,

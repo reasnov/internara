@@ -1,8 +1,8 @@
 <?php
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\User\Models\User;
 use Modules\User\Support\UsernameGenerator;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(Tests\TestCase::class, RefreshDatabase::class);
 
@@ -37,15 +37,15 @@ test('it generates a username with custom length', function () {
 });
 
 test('it ensures generated username is unique', function () {
-    // We can't easily force a collision with random_int, 
+    // We can't easily force a collision with random_int,
     // but we can mock the behavior or just verify it doesn't return an existing one.
-    
+
     // Create a user with a specific username
     User::factory()->create([
-        'username' => 'u12345678'
+        'username' => 'u12345678',
     ]);
 
-    // Since we can't easily force the generator to pick 'u12345678' first, 
+    // Since we can't easily force the generator to pick 'u12345678' first,
     // we'll just assert that whatever it generates is unique in the DB.
     $newUsername = UsernameGenerator::generate();
 

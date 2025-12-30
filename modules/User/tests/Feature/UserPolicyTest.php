@@ -1,10 +1,10 @@
 <?php
 
-use Modules\User\Models\User;
-use Modules\Permission\Models\Role;
-use Modules\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
+use Modules\Permission\Models\Permission;
+use Modules\Permission\Models\Role;
+use Modules\User\Models\User;
 
 uses(Tests\TestCase::class, RefreshDatabase::class);
 
@@ -13,7 +13,7 @@ beforeEach(function () {
     $this->adminRole = Role::create(['name' => 'admin', 'guard_name' => 'web']);
     $this->viewPermission = Permission::create(['name' => 'user.view', 'guard_name' => 'web']);
     $this->managePermission = Permission::create(['name' => 'user.manage', 'guard_name' => 'web']);
-    
+
     $this->adminRole->givePermissionTo($this->viewPermission);
 });
 

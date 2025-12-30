@@ -36,8 +36,6 @@ class ModuleMakeClassCommand extends GeneratorCommand
 
     /**
      * Get the stub file for the generator.
-     *
-     * @return string
      */
     protected function getStub(): string
     {
@@ -46,8 +44,6 @@ class ModuleMakeClassCommand extends GeneratorCommand
 
     /**
      * Get the template contents for the generator.
-     *
-     * @return string
      */
     protected function getTemplateContents(): string
     {
@@ -64,7 +60,6 @@ class ModuleMakeClassCommand extends GeneratorCommand
      * It will be based on the module namespace and the optional sub-path from the input name.
      *
      * @param  ModuleModel  $module
-     * @return string
      */
     public function getClassNamespace($module): string
     {
@@ -75,7 +70,7 @@ class ModuleMakeClassCommand extends GeneratorCommand
         $interfaceNamespace = GenerateConfigReader::read('interface')->getNamespace();
 
         // Combine them to get the base interface namespace, e.g., "Modules\Example\Contracts"
-        $baseNamespace = $namespace . '\\' . $interfaceNamespace;
+        $baseNamespace = $namespace.'\\'.$interfaceNamespace;
 
         $name = $this->argument('name');
 
@@ -85,7 +80,7 @@ class ModuleMakeClassCommand extends GeneratorCommand
                 ->beforeLast('/')
                 ->replace('/', '\\');
 
-            return $baseNamespace . '\\' . $subNamespace;
+            return $baseNamespace.'\\'.$subNamespace;
         }
 
         return $baseNamespace;
@@ -93,8 +88,6 @@ class ModuleMakeClassCommand extends GeneratorCommand
 
     /**
      * Get the destination file path.
-     *
-     * @return string
      */
     protected function getDestinationFilePath(): string
     {
@@ -110,8 +103,6 @@ class ModuleMakeClassCommand extends GeneratorCommand
      * Get the file name.
      * This will include any subdirectories from the 'name' argument.
      * e.g., 'Services/MyService'
-     *
-     * @return string
      */
     public function getFileName(): string
     {
@@ -121,13 +112,12 @@ class ModuleMakeClassCommand extends GeneratorCommand
     public function getModuleNamespace($module): string
     {
         $baseNamespace = config('modules.namespace') ?: 'Modules';
-        return $baseNamespace . '\\' . $module->getName();
+
+        return $baseNamespace.'\\'.$module->getName();
     }
 
     /**
      * Get the console command arguments.
-     *
-     * @return array
      */
     protected function getArguments(): array
     {
@@ -139,8 +129,6 @@ class ModuleMakeClassCommand extends GeneratorCommand
 
     /**
      * Get the console command options.
-     *
-     * @return array
      */
     protected function getOptions(): array
     {
@@ -151,8 +139,6 @@ class ModuleMakeClassCommand extends GeneratorCommand
 
     /**
      * Get the default namespace for the class.
-     *
-     * @return string
      */
     public function getDefaultNamespace(): string
     {
@@ -163,8 +149,6 @@ class ModuleMakeClassCommand extends GeneratorCommand
 
     /**
      * Get the module being operated on.
-     *
-     * @return ModuleModel
      */
     protected function getModule(): ModuleModel
     {

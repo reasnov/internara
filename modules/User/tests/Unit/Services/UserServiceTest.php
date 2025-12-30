@@ -1,13 +1,13 @@
 <?php
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\User\Models\User;
 use Modules\User\Services\UserService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(Tests\TestCase::class, RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->service = new UserService();
+    $this->service = new UserService;
 });
 
 test('it can create a user', function () {
@@ -26,7 +26,7 @@ test('it can create a user', function () {
 
     // Password should be hashed (handled by Model casts)
     expect(Hash::check('password123', $user->password))->toBeTrue();
-    
+
     // Username should be auto-generated (handled by Model booted)
     expect($user->username)->not->toBeNull();
 });
@@ -46,7 +46,7 @@ test('it can update a user', function () {
     $user = User::factory()->create(['name' => 'Old Name']);
 
     $updatedUser = $this->service->update($user->id, [
-        'name' => 'New Name'
+        'name' => 'New Name',
     ]);
 
     expect($updatedUser->name)->toBe('New Name');
@@ -79,7 +79,7 @@ test('it can delete a user', function () {
 test('it can find by unique fields', function () {
     $user = User::factory()->create([
         'email' => 'unique@example.com',
-        'username' => 'uniqueuser'
+        'username' => 'uniqueuser',
     ]);
 
     expect($this->service->findById($user->id)->id)->toBe($user->id);

@@ -1,7 +1,7 @@
 <?php
 
-use Modules\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Modules\Permission\Models\Permission;
 
 uses(Tests\TestCase::class, RefreshDatabase::class);
 
@@ -9,7 +9,7 @@ test('it can create a permission using factory', function () {
     $permission = Permission::factory()->create([
         'name' => 'edit_posts',
         'guard_name' => 'web',
-        'module' => 'Post'
+        'module' => 'Post',
     ]);
 
     expect($permission)

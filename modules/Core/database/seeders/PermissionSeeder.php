@@ -7,9 +7,7 @@ use Modules\Permission\Contracts\PermissionManager;
 
 class PermissionSeeder extends Seeder
 {
-    public function __construct(protected PermissionManager $permissionManager)
-    {
-    }
+    public function __construct(protected PermissionManager $permissionManager) {}
 
     /**
      * Run the database seeds.

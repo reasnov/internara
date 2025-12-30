@@ -1,13 +1,13 @@
 <?php
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Permission\Models\Permission;
 use Modules\Permission\Services\PermissionService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(Tests\TestCase::class, RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->service = new PermissionService();
+    $this->service = new PermissionService;
 });
 
 test('it can list and filter permissions', function () {
@@ -29,7 +29,7 @@ test('it can create, update and delete permission', function () {
     $permission = $this->service->create([
         'name' => 'create_roles',
         'guard_name' => 'web',
-        'module' => 'Permission'
+        'module' => 'Permission',
     ]);
 
     expect($permission->name)->toBe('create_roles');
