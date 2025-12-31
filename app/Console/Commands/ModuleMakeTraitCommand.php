@@ -108,12 +108,24 @@ class ModuleMakeTraitCommand extends GeneratorCommand
      */
     protected function getDestinationFilePath(): string
     {
-        $modulePath = $this->getModule()->getPath();
+        $module = $this->getModule();
+        $path = $module->getPath(); // e.g., /path/to/internara/modules/School
+        $appFolder = config('modules.paths.app_folder', 'src/'); // 'src/'
 
-        $traitBasePath = GenerateConfigReader::read('traits')->getPath();
+        // Get the path from the generator config, e.g., 'src/Concerns' for traits
+        $traitConfig = GenerateConfigReader::read('traits');
+        $traitPath = $traitConfig->getPath(); // e.g., 'src/Concerns'
 
-        // This correctly uses the full 'name' argument to create the path
-        return $modulePath.$traitBasePath.'/'.$this->getFileName().'.php';
+        // Remove the appFolder prefix if it exists in the configured path
+        $relativeTraitPath = Str::after($traitPath, $appFolder);
+        if ($relativeTraitPath === $traitPath) { // if 'src/' was not in $traitPath
+            $finalRelativePath = $appFolder.$traitPath;
+        } else {
+            $finalRelativePath = $appFolder.$relativeTraitPath;
+        }
+
+        // Construct the full path
+        return $path.'/'.$finalRelativePath.'/'.$this->getFileName().'.php';
     }
 
     /**

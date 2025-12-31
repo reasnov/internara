@@ -52,7 +52,6 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
     {
         $module = $this->getModule();
 
-        // Extract the base class name from the full name argument
         $interfaceName = Str::afterLast($this->argument('name'), '/');
 
         return (new Stub($this->getStub(), [
@@ -68,18 +67,15 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
      */
     public function getClassNamespace($module): string
     {
-        // Modules\Example
+
         $namespace = $this->getModuleNamespace($module);
 
-        // Get the base namespace for interfaces from the modules config, e.g., "Contracts"
         $interfaceNamespace = GenerateConfigReader::read('interfaces')->getNamespace();
 
-        // Combine them to get the base interface namespace, e.g., "Modules\Example\Contracts"
         $baseNamespace = $namespace.'\\'.$interfaceNamespace;
 
         $name = $this->argument('name');
 
-        // If the name argument includes a path, append it to the namespace
         if (Str::contains($name, '/')) {
             $subNamespace = Str::of($name)
                 ->beforeLast('/')
@@ -108,12 +104,23 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
      */
     protected function getDestinationFilePath(): string
     {
-        $modulePath = $this->getModule()->getPath();
+        $module = $this->getModule();
+        $path = $module->getPath();
+        $appFolder = config('modules.paths.app_folder', 'src/');
 
-        $interfaceBasePath = GenerateConfigReader::read('interfaces')->getPath();
+        $interfaceConfig = GenerateConfigReader::read('interfaces');
+        $interfacePath = $interfaceConfig->getPath();
 
-        // This correctly uses the full 'name' argument to create the path
-        return $modulePath.$interfaceBasePath.'/'.$this->getFileName().'.php';
+        $relativeInterfacePath = Str::after($interfacePath, $appFolder);
+        if ($relativeInterfacePath === $interfacePath) {
+
+            $finalRelativePath = $appFolder.$interfacePath;
+        } else {
+
+            $finalRelativePath = $appFolder.$relativeInterfacePath;
+        }
+
+        return $path.'/'.$finalRelativePath.'/'.$this->getFileName().'.php';
     }
 
     /**
@@ -122,7 +129,7 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
     protected function getArguments(): array
     {
         return [
-            ['name', InputArgument::REQUIRED, 'The name of the interface. Subdirectories are allowed (e.g., Services/MyInterface).'],
+            ['name', InputArgument::REQUIRED, 'The name of the interface. Subdirectories are allowed (e.g., Services/SomeInterface).'],
             ['module', InputArgument::REQUIRED, 'The name of module will be used.'],
         ];
     }
@@ -142,7 +149,7 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
      */
     public function getDefaultNamespace(): string
     {
-        // The namespace is constructed manually in getClassNamespace()
+
         return '';
     }
 
@@ -159,7 +166,7 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
      */
     protected function getFileName(): string
     {
-        // Returns the full name argument, e.g., "Services/ExampleContract"
+
         return Str::studly($this->argument('name'));
     }
 }

@@ -63,18 +63,15 @@ class ModuleMakeClassCommand extends GeneratorCommand
      */
     public function getClassNamespace($module): string
     {
-        // Modules\Example
+
         $namespace = $this->getModuleNamespace($module);
 
-        // Get the base namespace for classes from the modules config
         $classNamespace = GenerateConfigReader::read('class')->getNamespace();
 
-        // Combine them to get the base class namespace
         $baseNamespace = $namespace.'\\'.$classNamespace;
 
         $name = $this->argument('name');
 
-        // If the name argument includes a path, append it to the namespace
         if (Str::contains($name, '/')) {
             $subNamespace = Str::of($name)
                 ->beforeLast('/')
@@ -91,12 +88,21 @@ class ModuleMakeClassCommand extends GeneratorCommand
      */
     protected function getDestinationFilePath(): string
     {
-        $path = $this->getModule()->getPath();
-        $generatorPath = GenerateConfigReader::read('class');
+        $module = $this->getModule();
+        $path = $module->getPath();
+        $appFolder = config('modules.paths.app_folder', 'src/');
 
-        // The getPath() method from the generator config gives us the base directory (e.g., 'src').
-        // The getFileName() method will include any subdirectories from the input name.
-        return $path.'/'.$generatorPath->getPath().'/'.$this->getFileName().'.php';
+        $classConfig = GenerateConfigReader::read('class');
+        $classPath = $classConfig->getPath();
+
+        $relativeClassPath = Str::after($classPath, $appFolder);
+        if ($relativeClassPath === $classPath) {
+            $finalRelativePath = $appFolder.$classPath;
+        } else {
+            $finalRelativePath = $appFolder.$relativeClassPath;
+        }
+
+        return $path.'/'.$finalRelativePath.'/'.$this->getFileName().'.php';
     }
 
     /**
@@ -142,8 +148,7 @@ class ModuleMakeClassCommand extends GeneratorCommand
      */
     public function getDefaultNamespace(): string
     {
-        // We return an empty string to prevent the 'Classes' sub-namespace from being
-        // automatically appended, allowing for a direct namespace under the module.
+
         return '';
     }
 
