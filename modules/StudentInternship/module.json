@@ -1,0 +1,11 @@
+{
+    "name": "StudentInternship",
+    "alias": "studentinternship",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\StudentInternship\\Providers\\StudentInternshipServiceProvider"
+    ],
+    "files": []
+}

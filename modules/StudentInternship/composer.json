@@ -1,0 +1,30 @@
+{
+    "name": "reasnov/studentinternship",
+    "description": "",
+    "authors": [
+        {
+            "name": "Reas Vyn",
+            "email": "reasnov.official@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\StudentInternship\\": "src/",
+            "Modules\\StudentInternship\\Database\\Factories\\": "database/factories/",
+            "Modules\\StudentInternship\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\StudentInternship\\Tests\\": "tests/"
+        }
+    }
+}

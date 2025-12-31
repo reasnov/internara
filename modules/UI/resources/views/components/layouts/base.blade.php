@@ -6,7 +6,7 @@
     </head>
 
     <body class="max-w-screen size-full min-h-screen overflow-x-hidden antialiased">
-        @yield('body')
+        {{ $slot }}
 
         @stack('scripts')
     </body>

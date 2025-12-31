@@ -1,11 +1,11 @@
-@extends('ui::components.layouts.base')
+<x-ui::layouts.base>
+    <x-mary-main full-width>
+        {{-- The `$slot` goes here --}}
+        <x-slot:content>
+            {{ $slot }}
+        </x-slot:content>
+    </x-mary-main>
 
-@section('body')
-    <div class="flex size-full flex-col items-center">
-        <main class="flex-1">
-            <div class="container mx-auto px-4 md:px-6 lg:px-8">
-                {{ $slot }}
-            </div>
-        </main>
-    </div>
-@endsection
+    {{--  TOAST area --}}
+    <x-mary-toast />
+</x-ui::layouts.base>

@@ -5,5 +5,13 @@
     "UI": true,
     "Setup": true,
     "User": true,
-    "Permission": true
+    "Permission": true,
+    "Setting": true,
+    "School": true,
+    "Department": true,
+    "Internship": true,
+    "StudentInternship": true,
+    "Assignment": true,
+    "Assessment": true,
+    "StudentReport": true
 }

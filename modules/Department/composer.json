@@ -1,0 +1,30 @@
+{
+    "name": "reasnov/department",
+    "description": "",
+    "authors": [
+        {
+            "name": "Reas Vyn",
+            "email": "reasnov.official@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Department\\": "src/",
+            "Modules\\Department\\Database\\Factories\\": "database/factories/",
+            "Modules\\Department\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Department\\Tests\\": "tests/"
+        }
+    }
+}

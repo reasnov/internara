@@ -1,0 +1,11 @@
+{
+    "name": "StudentReport",
+    "alias": "studentreport",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\StudentReport\\Providers\\StudentReportServiceProvider"
+    ],
+    "files": []
+}

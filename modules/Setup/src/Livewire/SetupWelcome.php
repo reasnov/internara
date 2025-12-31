@@ -27,7 +27,7 @@ class SetupWelcome extends Component
     public function render(): View
     {
         return view('setup::livewire.setup-welcome')
-            ->layout('setup::components.layouts.setup', [
+            ->layout('setup::components.layouts.setup.with-navbar', [
                 'title' => 'Selamat Datang di Internara | Sistem Informasi Manajemen PKL',
             ]);
     }
