@@ -1,6 +1,6 @@
-# Internara - Core, Shared, and Support Modules Overview
+# Internara - Foundational Module Philosophy
 
-This document provides a detailed overview of the foundational `Core`, `Shared`, and `Support` modules. These modules define the structural hierarchy and portability standards of the Internara application.
+This document provides a detailed overview of the foundational `Core`, `Shared`, `Support`, and `UI` modules. These modules define the structural hierarchy and portability standards that govern the Internara application.
 
 ---
 
@@ -8,11 +8,12 @@ This document provides a detailed overview of the foundational `Core`, `Shared`,
 
 To maintain a clean modular monolith, we categorize foundational modules based on their relationship to the business logic and their requirement for portability.
 
-| Module | Role | Portability |
-| :--- | :--- | :--- |
-| **Shared** | Universal Toolbox & Base Classes | **Mandatory Portable** (Wajib Portable) |
-| **Support** | Infrastructure Utilities for Core | **Non-Portable** (Business-Specific Support) |
-| **Core** | Base Architecture & Business Rules | **Non-Portable** (Business-Specific) |
+| Module      | Role                               | Portability                                  |
+| :---------- | :--------------------------------- | :------------------------------------------- |
+| **Core**    | Base Architecture & Business Rules | **Non-Portable** (Business-Specific)         |
+| **UI**      | UI Foundation & Assets             | **Non-Portable** (Business-Specific UI)      |
+| **Support** | Infrastructure Utilities for Core  | **Non-Portable** (Business-Specific Support) |
+| **Shared**  | Universal Toolbox & Base Classes   | **Mandatory Portable**                       |
 
 ---
 
@@ -20,39 +21,35 @@ To maintain a clean modular monolith, we categorize foundational modules based o
 
 The `Shared` module is the "toolbox" of the application. It contains components that are completely agnostic of Internara's specific business rules.
 
-*   **Requirement:** Every file in this module **must** be able to function in a completely different project (e.g., a Fintech app or an E-commerce site) without modification.
-*   **Contents:**
-    *   **Universal Exceptions:** `AppException`, `RecordNotFoundException`.
-    *   **General Utilities:** `UsernameGenerator`, `DateHelper`, `StringFormatter`.
-    *   **Generic UI Components:** Pure DaisyUI/Tailwind wrappers (buttons, inputs) that don't assume any business context.
-*   **Key Principle:** Modul bisnis (seperti `User`) hanya boleh bergantung pada modul `Shared` jika ingin tetap portable.
+-   **Requirement:** Every component in this module must be portable enough to function in a completely different project without modification.
+-   **Key Principle:** Domain modules (like `User` or `Internship`) should only depend on the `Shared` module if they aim to remain portable.
 
 ## 3. Core Module (The Business Architecture)
 
-The `Core` module encapsulates the essential architectural building blocks that are **specific to the Internara business domain**.
+The `Core` module encapsulates the essential architectural building blocks and business rules that are **specific to the Internara business domain**.
 
-*   **Purpose:** To provide universal interfaces and data that define *what* Internara is.
-*   **Contents:**
-    *   **Business Seeders:** `RoleSeeder` (Owner, Admin, Teacher, Student), `PermissionSeeder`.
-    *   **Base Contracts:** Interfaces that define the communication standards between Internara modules.
-    *   **Universal Business Logic:** Logic that applies to all modules but only within this specific application.
-*   **Portability:** This module is **not portable**. It is the "glue" that binds the Internara system together.
+-   **Purpose:** It provides the foundational data and contracts that define _what_ Internara is, serving as the central "glue" that binds the system together.
+-   **Portability:** This module is **not portable** as it is intrinsically tied to the application's business logic.
 
 ## 4. Support Module (The Infrastructure Support)
 
-The `Support` module handles specialized integrations and infrastructure-level utilities that support the `Core` architecture.
+The `Support` module handles specialized integrations and abstracts away infrastructure-level complexity.
 
-*   **Purpose:** To abstract complexity and provide tools for the `Core` and domain modules.
-*   **Contents:**
-    *   **Exception Handlers:** Logic for rendering `AppException` into specific UI responses.
-    *   **External Clients:** Media library interactions, specialized logging, or monitoring tools.
-*   **Portability:** This module is **non-portable** as it is designed specifically to support the Internara `Core`.
+-   **Purpose:** To provide tools and abstract complex processes for the `Core` and domain modules to consume, keeping them clean from infrastructure-specific code.
+-   **Portability:** This module is **non-portable** as it is designed specifically to support the Internara `Core` architecture.
+
+## 5. UI Module (The Frontend Foundation)
+
+The `UI` module is the definitive source of truth for all frontend assets and standards within the Internara application.
+
+-   **Purpose:** To encapsulate the application's visual identity, including all core styling, JavaScript, global Blade/Livewire components, and frontend build configurations.
+-   **Portability:** This module is **non-portable** as it defines the specific look, feel, and brand identity of the Internara application.
 
 ---
 
-## 5. Domain Module (The Business Heart)
+## 6. Domain Module (The Business Heart)
 
-Domain modules (e.g., `User`, `Internship`) represent distinct business areas. 
+Domain modules (e.g., `User`, `Internship`) represent distinct business areas.
 
-*   **Standard:** They should strive to be **Portable** by only depending on the `Shared` module and external framework packages.
-*   **Constraint:** They use the data provided by `Core` (like Roles/Permissions) via standard Laravel interfaces (Gates/Policies) to avoid hard-coding dependencies on the physical `Core` module.
+-   **Standard:** They should strive to be **Portable** by only depending on the `Shared` module and external framework packages.
+-   **Constraint:** They use the data provided by `Core` (like Roles/Permissions) via standard Laravel interfaces (Gates/Policies) to avoid hard-coding dependencies on the physical `Core` module.

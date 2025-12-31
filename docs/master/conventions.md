@@ -80,7 +80,7 @@ This document outlines the coding and development conventions for the Internara 
 
 ## 4. Modular Architecture (Laravel Modules) Conventions
 
-Adhere strictly to the modular monolith architecture principles detailed in the [Architecture Guide](architecture.md) and [Modular Monolith Developer Guide](modular-monolith.md).
+Adhere strictly to the modular monolith architecture principles detailed in the [Architecture Guide](architecture.md) and [Workflow Developer Guide](workflow.md).
 
 ### 4.1 Service Provider Conventions
 

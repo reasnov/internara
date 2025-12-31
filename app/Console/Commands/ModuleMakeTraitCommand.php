@@ -72,7 +72,7 @@ class ModuleMakeTraitCommand extends GeneratorCommand
         $namespace = $this->getModuleNamespace($module);
 
         // Get the base namespace for traits from the modules config
-        $traitNamespace = GenerateConfigReader::read('trait')->getNamespace();
+        $traitNamespace = GenerateConfigReader::read('traits')->getNamespace();
 
         // Combine them to get the base trait namespace
         $baseNamespace = $namespace.'\\'.$traitNamespace;
@@ -110,7 +110,7 @@ class ModuleMakeTraitCommand extends GeneratorCommand
     {
         $modulePath = $this->getModule()->getPath();
 
-        $traitBasePath = GenerateConfigReader::read('trait')->getPath();
+        $traitBasePath = GenerateConfigReader::read('traits')->getPath();
 
         // This correctly uses the full 'name' argument to create the path
         return $modulePath.$traitBasePath.'/'.$this->getFileName().'.php';

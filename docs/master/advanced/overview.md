@@ -9,6 +9,9 @@ This directory contains documentation for advanced development scenarios and cus
 ### 1. [Custom Module Generator](custom-module-generator.md)
 Explains how to customize the generation of new modules, including the use of custom stubs and the "Base Module" cloning pattern for highly specific module structures.
 
+### 2. [Developer UI/UX Guide](uix-guidelines.md)
+Provides the core UI/UX principles and standards for developers, ensuring a consistent and high-quality user experience.
+
 ---
 
 ## When to use these guides

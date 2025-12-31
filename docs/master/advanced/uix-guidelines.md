@@ -45,7 +45,7 @@ Use DaisyUI's semantic color classes instead of hard-coded color utilities. This
 | `error`     | Error states, danger   | `<div class="alert alert-error">`             |
 | `info`      | Informational messages | `<div class="alert alert-info">`              |
 
-*The theme is configured in `modules/UI/resources/css/app.css`. For the complete technical details, see the [UI Technical Implementation Guide](./../../ui-design.md).*
+*The theme is configured in `modules/UI/resources/css/app.css`. For the complete technical details, see the [UI Technical Implementation Guide](../ui-design.md).*
 
 ---
 

@@ -15,6 +15,7 @@ This directory (`docs/master/`) contains the primary documentation for developer
 -   **[Workflow Developer Guide](workflow.md)**: A practical, step-by-step guide for creating new features within a module, including concrete Artisan commands and code examples for Models, Entities, Repositories, Services, and UI components. It clarifies the distinction and interaction between Eloquent Models and Domain Entities.
 -   **[Testing Guide](testing.md)**: A comprehensive guide covering the project's testing philosophy, Pest framework usage, test directory structure, writing tests (including `uses()` helper for Laravel functionalities), and running tests for both application and module levels.
 -   **[Artisan Commands Reference](command.md)**: A comprehensive list of all available Artisan commands within the Internara application, categorized for easy reference.
+-   **[Installation Guide](installation.md)**: Provides step-by-step instructions to set up the Internara application for local development.
 -   **[Exception Handling Guide](exception.md)**: Details the philosophy, key classes, and best practices for managing exceptions consistently across the application.
 -   **[Advanced Developer Guides](advanced/overview.md)**: Strategies for advanced customization, including custom module generation and base module patterns.
 

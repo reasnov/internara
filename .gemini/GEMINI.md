@@ -55,6 +55,9 @@ These directives guide all technical workflows for the Internara project. For de
 -   **Professional PHPDoc**
     Every class and method must include concise and professional PHPDoc, focusing on _why_ complex logic exists.
 
+-   **Cross-check Project Documentation**
+    Always cross-reference and adhere to existing project documentation (especially within the `/docs` directory) to ensure consistency and alignment with established patterns, conventions, and architectural decisions.
+
 ---
 
 ## Standard Project Workflow

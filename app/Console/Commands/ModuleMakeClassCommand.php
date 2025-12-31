@@ -66,11 +66,11 @@ class ModuleMakeClassCommand extends GeneratorCommand
         // Modules\Example
         $namespace = $this->getModuleNamespace($module);
 
-        // Get the base namespace for interfaces from the modules config, e.g., "Contracts"
-        $interfaceNamespace = GenerateConfigReader::read('interface')->getNamespace();
+        // Get the base namespace for classes from the modules config
+        $classNamespace = GenerateConfigReader::read('class')->getNamespace();
 
-        // Combine them to get the base interface namespace, e.g., "Modules\Example\Contracts"
-        $baseNamespace = $namespace.'\\'.$interfaceNamespace;
+        // Combine them to get the base class namespace
+        $baseNamespace = $namespace.'\\'.$classNamespace;
 
         $name = $this->argument('name');
 

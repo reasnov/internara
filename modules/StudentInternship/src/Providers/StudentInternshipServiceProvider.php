@@ -3,15 +3,16 @@
 namespace Modules\StudentInternship\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Nwidart\Modules\Traits\PathNamespace;
 use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
+use Nwidart\Modules\Traits\PathNamespace;
 
 class StudentInternshipServiceProvider extends ServiceProvider
 {
-    use PathNamespace;
     use ManagesModuleProvider;
+    use PathNamespace;
 
     protected string $name = 'StudentInternship';
+
     protected string $nameLower = 'studentinternship';
 
     /**

@@ -72,7 +72,7 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
         $namespace = $this->getModuleNamespace($module);
 
         // Get the base namespace for interfaces from the modules config, e.g., "Contracts"
-        $interfaceNamespace = GenerateConfigReader::read('interface')->getNamespace();
+        $interfaceNamespace = GenerateConfigReader::read('interfaces')->getNamespace();
 
         // Combine them to get the base interface namespace, e.g., "Modules\Example\Contracts"
         $baseNamespace = $namespace.'\\'.$interfaceNamespace;
@@ -110,7 +110,7 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
     {
         $modulePath = $this->getModule()->getPath();
 
-        $interfaceBasePath = GenerateConfigReader::read('interface')->getPath();
+        $interfaceBasePath = GenerateConfigReader::read('interfaces')->getPath();
 
         // This correctly uses the full 'name' argument to create the path
         return $modulePath.$interfaceBasePath.'/'.$this->getFileName().'.php';

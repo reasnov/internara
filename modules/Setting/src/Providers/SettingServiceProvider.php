@@ -3,15 +3,18 @@
 namespace Modules\Setting\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Nwidart\Modules\Traits\PathNamespace;
+use Modules\Setting\Contracts\Services\SettingService as SettingServiceContract;
+use Modules\Setting\Services\SettingService;
 use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
+use Nwidart\Modules\Traits\PathNamespace;
 
 class SettingServiceProvider extends ServiceProvider
 {
-    use PathNamespace;
     use ManagesModuleProvider;
+    use PathNamespace;
 
     protected string $name = 'Setting';
+
     protected string $nameLower = 'setting';
 
     /**
@@ -25,6 +28,9 @@ class SettingServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+
+        // Include the global helper function
+        require_once module_path($this->name, 'src/Functions/setting.php');
     }
 
     /**
@@ -44,6 +50,8 @@ class SettingServiceProvider extends ServiceProvider
      */
     protected function bindings(): array
     {
-        return [];
+        return [
+            SettingServiceContract::class => SettingService::class,
+        ];
     }
 }
