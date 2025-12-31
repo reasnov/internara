@@ -71,11 +71,7 @@
 
 ## Documentation
 
-Comprehensive documentation for developers is available in the `docs/` directory:
-
--   [**Architecture Guide**](docs/master/architecture.md): Understand the modular structure.
--   [**Development Conventions**](docs/master/conventions.md): Coding standards and best practices.
--   [**Workflow Guide**](docs/master/workflow.md): Step-by-step guide for building new features.
+Comprehensive documentation for developers is available in the [`docs/` directory](./docs/master/overview.md), covering architecture, development conventions, and workflow guides.
 
 ## Contributing
 
