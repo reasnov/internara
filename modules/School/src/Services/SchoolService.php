@@ -6,9 +6,38 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\School\Contracts\Services\SchoolService as SchoolServiceContract;
 use Modules\School\Models\School;
+use Modules\Shared\Exceptions\AppException;
 
 class SchoolService implements SchoolServiceContract
 {
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Retrieve schools based on conditions.
+     * Returns a single School model if configured as single record, or a Collection otherwise.
+     *
+     * @param  array<string, mixed>  $where
+     * @param  array<int, string>  $columns
+     * @return School|\Illuminate\Support\Collection
+     */
+    public function get(array $where = [], array $columns = ['*']): School|\Illuminate\Support\Collection
+    {
+        $query = School::query();
+
+        foreach ($where as $column => $value) {
+            $query->where($column, $value);
+        }
+
+        if (config('school.single_record')) {
+            return $query->first($columns);
+        }
+
+        return $query->get($columns);
+    }
+
     /**
      * List schools with optional filtering and pagination.
      *
@@ -38,6 +67,13 @@ class SchoolService implements SchoolServiceContract
      */
     public function create(array $data): School
     {
+        if (config('school.single_record') && School::count() > 0) {
+            throw new AppException(
+                userMessage: 'school::exceptions.single_record_exists',
+                code: 409 // Conflict
+            );
+        }
+
         return School::create($data);
     }
 

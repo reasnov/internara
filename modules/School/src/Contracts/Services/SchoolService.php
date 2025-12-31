@@ -8,6 +8,16 @@ use Modules\School\Models\School;
 interface SchoolService
 {
     /**
+     * Retrieve schools based on conditions.
+     * Returns a single School model if configured as single record, or a Collection otherwise.
+     *
+     * @param  array<string, mixed>  $where
+     * @param  array<int, string>  $columns
+     * @return School|\Illuminate\Support\Collection
+     */
+    public function get(array $where = [], array $columns = ['*']): School|\Illuminate\Support\Collection;
+
+    /**
      * List schools with optional filtering and pagination.
      *
      * @param  array<string, mixed>  $filters
