@@ -179,6 +179,17 @@ The system is composed of two core services:
 *   **Centralized Rendering:** Render all components registered to a specific slot at a single point in your layouts using the `SlotManager` via the `@slotRender` directive.
 *   **Decoupling:** Modules can contribute UI pieces without knowing the exact structure of the consuming layout.
 
+### When to Use the Slot System (The Philosophy)
+
+The Slot System is a powerful tool for decoupling, but it should be used judiciously. Its primary purpose is to create **extension points** in a component where other modules might need to inject UI elements.
+
+> **Rule of Thumb:** Use `@slotRender` only when you expect or want to allow another module to provide a sub-component for a specific part of the UI.
+
+-   **GOOD Use Case:** A slot in the main navbar for user actions (`@slotRender('navbar.actions')`). The `User` module can inject a profile dropdown, and a future `Notification` module could inject a notification bell, all without the `UI` module needing to know about them.
+-   **BAD Use Case:** Rendering a static logo within the navbar. The logo is an integral part of the navbar component and is not expected to be replaced by other modules. In this case, a standard `<img ...>` tag or a simple Blade component (`<x-ui::logo />`) is more appropriate.
+
+For static, non-changeable parts of a component, always prefer standard Blade `@include`s or direct component tags over the slot system.
+
 ### How to Use
 
 #### 1. Registering Components to a Slot
@@ -211,26 +222,35 @@ You can register various types of renderable content using the `SlotRegistry` fa
 
 #### 2. Rendering Slots in your Layouts
 
-Once components are registered, you can render all of them at once in your Blade layouts using the custom `@slotRender` directive, which is powered by the `SlotManager`.
+Once components are registered, you can render them in your Blade layouts. There are two ways to do this: using the custom `@slotRender` directive or the `<x-ui::slot-render>` component tag.
+
+**Method 1: Using the `@slotRender` Directive (Recommended)**
+
+This is the primary and cleanest way to render a slot. It is powered by a custom Blade directive for simplicity.
 
 ```blade
-{{-- In your main layout (e.g., resources/views/components/layouts/app.blade.php) --}}
 <header>
     <div class="container">
         <!-- Other header content -->
         @slotRender('header.actions') {{-- Renders all components registered to 'header.actions' --}}
     </div>
 </header>
-
-<aside>
-    @slotRender('sidebar.menu.top')
-    <!-- Other sidebar content -->
-</aside>
-
-<footer>
-    @slotRender('footer.links')
-</footer>
 ```
+
+**Method 2: Using the Component Tag**
+
+Alternatively, you can use the standard Blade component syntax. This is functionally equivalent to the directive but is more verbose.
+
+```blade
+<header>
+    <div class="container">
+        <!-- Other header content -->
+        <x-ui::slot-render name="header.actions" />
+    </div>
+</header>
+```
+
+Both methods achieve the same result, rendering all UI components that have been registered to the specified slot name.
 
 ### Important Note on Inertia
 

@@ -1,5 +1,5 @@
 @extends('components.layouts.base')
-@section('body')
+@section('content')
     <div class="flex min-h-screen flex-col">
         @isset($header)
             <header class="bg-white shadow">
@@ -16,5 +16,13 @@
                 {{ $slot }}
             </div>
         </main>
+
+        @isset($footer)
+            <footer class="mt-auto">
+                <div class="container mx-auto px-4 text-center md:px-6 lg:px-8">
+                    {{ $footer }}
+                </div>
+            </footer>
+        @endisset
     </div>
 @endsection

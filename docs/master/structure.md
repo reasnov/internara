@@ -13,7 +13,7 @@ To maintain a clean modular monolith, we categorize foundational modules based o
 | **Core**    | Base Architecture & Business Rules | **Non-Portable** (Business-Specific)         |
 | **UI**      | UI Foundation & Assets             | **Non-Portable** (Business-Specific UI)      |
 | **Support** | Infrastructure Utilities for Core  | **Non-Portable** (Business-Specific Support) |
-| **Shared**  | Universal Toolbox & Base Classes   | **Mandatory Portable**                       |
+| **Shared**  | Universal Toolbox & Base Classes   | **Mandatory Portable** (Strictly Mandatory)  |
 
 ---
 

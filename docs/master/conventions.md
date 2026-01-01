@@ -186,18 +186,35 @@ The Repository and Entity layers are **optional** and should be used only when j
 
 ## 6. View & Component Conventions
 
-To maintain a clean and organized `resources/views/components` directory, all Blade components must follow this structure:
+To maintain a clean and organized `resources/views/components` directory in the main application, all Blade components should follow this structure:
 
 *   **`views/components/layouts/`**
-    *   **Purpose:** For major layout components that define the primary structure of a page (e.g., `app.blade.php`, `guest.blade.php`). These components typically include `<html>`, `<head>`, and `<body>` tags and manage the overall page skeleton.
+    *   **Purpose:** For major layout components that define the primary structure of a page (e.g., `app.blade.php`, `guest.blade.php`).
 
 *   **`views/components/ui/`**
-    *   **Purpose:** For small, generic, and highly reusable UI components that are application-agnostic. These are the fundamental building blocks of the interface.
-    *   **Examples:** `button.blade.php`, `input.blade.php`, `card.blade.php`, `modal.blade.php`.
+    *   **Purpose:** For small, generic, and highly reusable UI components that are application-agnostic.
+    *   **Examples:** `button.blade.php`, `input.blade.php`, `card.blade.php`.
 
 *   **`views/components/partials/{pageName}/`**
-    *   **Purpose:** For composite components that are specific to a certain page or feature section. These partials are composed of smaller `ui` components but are not generic enough to be placed in the `ui` directory themselves.
-    *   **Example:** A user profile header might be located at `views/components/partials/profile/header.blade.php`. It assembles an avatar, user name, and action buttons, but is only used on the profile page.
+    *   **Purpose:** For composite components that are specific to a certain page or feature section.
+
+### 6.1 UI Module Component Conventions
+
+The `UI` module serves as the central library for all global, application-wide UI components. To simplify usage, it follows a flatter structure.
+
+*   **Location:** All generic, reusable components (like navbars, buttons, cards, etc.) should be placed directly in:
+    `modules/UI/resources/views/components/`
+
+*   **Usage:** Since these components are registered under the `ui` namespace, they can be called directly without any subdirectory prefix.
+    ```blade
+    {{-- CORRECT --}}
+    <x-ui::navbar />
+    <x-ui::button />
+
+    {{-- INCORRECT --}}
+    <x-ui::ui.navbar />
+    ```
+This convention keeps component tags clean and acknowledges that the `UI` module itself is the designated "ui" library for the project.
 
 ## 7. Testing (Pest) Conventions
 

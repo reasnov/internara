@@ -11,7 +11,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Load the global setting() helper fallback.
+        // This ensures the function exists even if the Setting module is disabled.
+        require_once app_path('Functions/setting.php');
     }
 
     /**

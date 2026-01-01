@@ -9,6 +9,7 @@ use Modules\UI\Contracts\Core\SlotManager as SlotManagerContract;
 use Modules\UI\Contracts\Core\SlotRegistry as SlotRegistryContract;
 use Modules\UI\Core\SlotManager;
 use Modules\UI\Core\SlotRegistry;
+use Modules\UI\Facades\SlotRegistry as SlotRegistryFacade;
 use Nwidart\Modules\Traits\PathNamespace;
 
 class UIServiceProvider extends ServiceProvider
@@ -36,6 +37,8 @@ class UIServiceProvider extends ServiceProvider
         Blade::directive('slotRender', function ($expression) {
             return "<?php echo \Modules\UI\Facades\SlotManager::render({$expression}); ?>";
         });
+
+        $this->registerDefaultNavbarSlots();
     }
 
     /**
@@ -59,5 +62,17 @@ class UIServiceProvider extends ServiceProvider
             SlotManagerContract::class => SlotManager::class,
             SlotRegistryContract::class => SlotRegistry::class,
         ];
+    }
+
+    /**
+     * Register default components for the main navbar slots.
+     */
+    private function registerDefaultNavbarSlots(): void
+    {
+        SlotRegistryFacade::register('navbar.brand', fn () => view('ui::components.brand'));
+
+        SlotRegistryFacade::register('navbar.actions', function () {
+            return view('ui::livewire.theme-toggle') . view('ui::components.user-dropdown');
+        });
     }
 }
