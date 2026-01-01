@@ -3,20 +3,15 @@
 
     <head>
         @include('ui::components.layouts.base.head')
-
-        <script>
-            // Prevents FOUC (Flash of Unstyled Content)
-            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia(
-                    '(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'light');
-            }
-        </script>
     </head>
 
-    <body class="max-w-screen size-full min-h-screen overflow-x-hidden antialiased">
-        @yield('content')
+    <body class="max-w-screen size-full overflow-x-hidden font-sans antialiased">
+        <div class="flex size-full min-h-screen flex-col">
+            @yield('content')
+
+            <x-mary-toast />
+        </div>
+
         @stack('scripts')
     </body>
 

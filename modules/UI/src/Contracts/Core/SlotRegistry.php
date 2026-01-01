@@ -8,6 +8,15 @@ use Illuminate\Contracts\View\View;
 interface SlotRegistry
 {
     /**
+     * Configure the slot registry with an initial set of slots.
+     *
+     * @param array $slots
+     *
+     * @return void
+     */
+    public function configure(array $slots = []): void;
+
+    /**
      * Register a renderable component for a given slot.
      *
      * @param  string  $slot  The name of the slot.

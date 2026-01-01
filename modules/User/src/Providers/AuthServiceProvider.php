@@ -49,6 +49,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected function bindings(): array
     {
-        return []; // No explicit bindings for this AuthServiceProvider, but it adheres to the pattern
+        return [];
     }
 }

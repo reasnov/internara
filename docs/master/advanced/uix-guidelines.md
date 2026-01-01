@@ -45,7 +45,7 @@ Use DaisyUI's semantic color classes instead of hard-coded color utilities. This
 | `error`     | Error states, danger   | `<div class="alert alert-error">`             |
 | `info`      | Informational messages | `<div class="alert alert-info">`              |
 
-*The theme is configured in `modules/UI/resources/css/app.css`. For the complete technical details, see the [UI Technical Implementation Guide](../ui-design.md).*
+_The theme is configured in `modules/UI/resources/css/app.css`. For the complete technical details, see the [UI Technical Implementation Guide](../ui-design.md)._
 
 ---
 
@@ -55,8 +55,7 @@ Use DaisyUI's semantic color classes instead of hard-coded color utilities. This
 -   **Spacing Scale:** Adhere strictly to Tailwind’s default 4px-based spacing scale (`p-4`, `m-8`, `gap-2`).
 -   **Whitespace:** Embrace whitespace to improve focus and reduce cognitive load. Don't crowd elements.
 
-> **DO:** Use spacing scale classes: `<div class="p-4 m-8">`
-> **DON'T:** Use arbitrary values: `<div style="padding: 15px; margin: 30px;">`
+> **DO:** Use spacing scale classes: `<div class="p-4 m-8">` > **DON'T:** Use arbitrary values: `<div style="padding: 15px; margin: 30px;">`
 
 ---
 
@@ -109,7 +108,7 @@ When a component from Module A needs to trigger a UI change or display content f
 -   **Slot Injection (`@slotRender`):** For statically injecting UI from one module into a designated "slot" in another. This is best for layouts and sections where content is added, but not dynamically changed on the client-side.
 -   **Event-Based Rendering:** For dynamic, client-side interactions. A component can dispatch a browser event, and other components (from any module) can listen for this event to update their state and re-render. This is the preferred method for actions like "refresh a data table after a modal closes."
 
-*For details on advanced dynamic UI, see the [UI Technical Implementation Guide](./../../ui-design.md).*
+_For details on advanced dynamic UI, see the [UI Technical Implementation Guide](./../../ui-design.md)._
 
 ---
 

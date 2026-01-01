@@ -4,6 +4,7 @@ namespace Modules\UI\Core;
 
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Arr;
 use Modules\UI\Contracts\Core\SlotRegistry as SlotRegistryContract;
 
 /**
@@ -17,6 +18,28 @@ class SlotRegistry implements SlotRegistryContract
      * The array of registered slots.
      */
     protected array $slots = [];
+
+    public function configure(array $slots = []): void
+    {
+        foreach ($slots as $slot => $components) {
+            if (is_array($components)) {
+                if (Arr::isList($components)) {
+                    // ['slot' => ['component1', 'component2']]
+                    foreach ($components as $component) {
+                        $this->register($slot, $component);
+                    }
+                } else {
+                    // ['slot' => ['component' => [data]]]
+                    foreach ($components as $component => $data) {
+                        $this->register($slot, $component, $data);
+                    }
+                }
+            } else {
+                // ['slot' => 'component]
+                $this->register($slot, $components);
+            }
+        }
+    }
 
     /**
      * Register a renderable component for a given slot.

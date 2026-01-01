@@ -1,3 +1,7 @@
-<x-ui::layouts.base>
-    <x-ui::slot-render name="example"></x-ui::slot-render>
-</x-ui::layouts.base>
+@extends('ui::components.layouts.base.with-navbar')
+
+@section('main')
+    <div class="flex size-full flex-1 flex-col items-center">
+        {{ $slot }}
+    </div>
+@endsection
