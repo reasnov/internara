@@ -11,7 +11,7 @@ class Login extends Component
     {
         return view('user::livewire.auth.login')
             ->layout('user::components.layouts.auth', [
-                'title' => 'Masuk ke Dasbor | ' . setting('site_name', 'Internara')
+                'title' => 'Masuk ke Dasbor | ' . setting('site_title', 'Internara - Sistem Informasi Manajemen PKL')
             ]);
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Facade;
 use Modules\UI\Contracts\Core\SlotRegistry as SlotRegistryContract;
 
 /**
+ * @method static void configure(array $slots = [])
  * @method static void register(string $slot, string|\Closure|\Illuminate\Contracts\View\View $view, array $data = [])
  *
  * @see \Modules\UI\Core\SlotRegistry

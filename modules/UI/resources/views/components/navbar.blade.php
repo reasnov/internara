@@ -5,7 +5,7 @@
     </x-slot:brand>
 
     {{-- Right side actions --}}
-    <x-slot:actions>
+    <x-slot:actions class="space-x-2">
         @slotRender('navbar.actions')
     </x-slot:actions>
 </x-mary-nav>
