@@ -19,7 +19,7 @@ use Modules\Dashboard\Livewire\TeacherDashboard;
 Route::middleware('auth')->group(function () {
     // Student Dashboard
     Route::get('/dashboard', StudentDashboard::class)
-        ->middleware('role:student')
+        ->middleware(['dashboard.redirect', 'role:student'])
         ->name('dashboard');
 
     // Teacher Dashboard
