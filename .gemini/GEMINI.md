@@ -52,6 +52,9 @@ These directives guide all technical workflows for the Internara project. For de
 -   **English Code Only**
     All code must be written in English.
 
+-   **English Documentation Only**
+    All documentation, including comments, user-facing documentation, and any explanatory text, must be written entirely in English, no matter the context or target audience.
+
 -   **Professional PHPDoc**
     Every class and method must include concise and professional PHPDoc, focusing on _why_ complex logic exists.
 

@@ -58,48 +58,56 @@ The **Eloquent Model** defines your direct interface to the database table. Ensu
 php artisan module:make-model User User --migration
 ```
 
-### Step 3: Create the Service (Interface and Implementation)
+### 3.3 Create the Service (Interface and Implementation)
 
 The service encapsulates the business logic.
 
-**3.1. Create the Service Interface**
+**3.3.1 Create the Service Interface**
 Generate the contract (interface) for your service in `src/Contracts/Services`:
 
 ```bash
 php artisan module:make-interface Services/UserService User
 ```
 
-**3.2. Create the Service Implementation**
+**3.3.2 Create the Service Implementation**
+
 Next, generate the concrete implementation for your service in `src/Services`:
 
 ```bash
 php artisan module:make-service UserService User
 ```
 
--   **File Generated:** `modules/User/Services/UserService.php`
+**3.3.3 Extending EloquentService for Common CRUD Operations**
 
-    ```php
-    <?php
+For services that primarily deal with standard CRUD (Create, Read, Update, Delete) operations on a single Eloquent model, it is highly recommended to extend the `Modules\Shared\Services\EloquentService`. This abstract base class provides boilerplate implementations for common methods, reducing code duplication and enforcing consistency.
 
-    namespace Modules\User\Services;
+**How to Implement:**
 
-    use Modules\User\Models\User;
-    use Modules\User\Contracts\Services\UserService as UserServiceContract;
+1.  **Extend `EloquentService`**: Your service implementation class should extend `EloquentService`.
+2.  **Pass Model to Constructor**: In your service's constructor, call `parent::__construct()` and pass an instance of the Eloquent model your service manages.
 
-    class UserService implements UserServiceContract
+*Example for `modules/User/Services/UserService.php`:*
+
+```php
+<?php
+
+namespace Modules\User\Services;
+
+use Modules\Shared\Services\EloquentService;
+use Modules\User\Contracts\Services\UserService as UserServiceContract;
+use Modules\User\Models\User;
+
+class UserService extends EloquentService implements UserServiceContract
+{
+    public function __construct(User $userModel)
     {
-        public function createUser(array $data): User
-        {
-            // Business logic (validation, events, etc.)
-            return User::create($data);
-        }
-
-        public function getUser(string|int $id): ?User
-        {
-            return User::find($id);
-        }
+        parent::__construct($userModel);
     }
-    ```
+
+    // Add specific business logic methods here.
+    // Overwrite CRUD methods if specific logic is needed (e.g., authorization, complex validation).
+}
+```
 
 ### Step 4: Create the UI Component
 

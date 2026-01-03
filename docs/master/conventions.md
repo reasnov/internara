@@ -154,6 +154,11 @@ This approach makes module service providers highly readable and focused on thei
     *   **Translations:** `__('user::messages.welcome')`
     *   **Configuration:** `config('user.default_role')`
 
+*   **Localization Best Practices for Exceptions:**
+    *   **Prioritize Shared Translations:** For generic error messages (e.g., creation/update/deletion failures, record not found, name/email conflicts), always use translation keys defined in the `Shared` module (e.g., `shared::exceptions.creation_failed`).
+    *   **Use Replacements**: Leverage replacement placeholders (e.g., `:record`, `:attribute`) with module-specific terms (e.g., `['record' => 'Department']`, `['record' => 'User']`) to provide context-aware messages.
+    *   **Module-Specific Only**: Only create new translation keys within a module's `lang/` directory when the message is truly unique and cannot be generalized or parameterized from the `Shared` module (e.g., `user::exceptions.invalid_credentials`).
+
 ### 4.3 Repository & Entity Conventions (Optional)
 
 The Repository and Entity layers are **optional** and should be used only when justified by specific architectural needs.
