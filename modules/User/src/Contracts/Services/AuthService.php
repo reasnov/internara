@@ -10,12 +10,13 @@ interface AuthService
     /**
      * Attempt to log in a user with the given credentials.
      *
-     * @param  array  $credentials  Contains 'email' and 'password'.
+     * @param  array  $credentials  Contains 'email' (which can be an email or username), 'password'.
+     * @param  bool  $remember  Whether to "remember" the user.
      * @return Authenticatable|User The authenticated user.
      *
      * @throws \Modules\Shared\Exceptions\AppException If authentication fails.
      */
-    public function login(array $credentials): Authenticatable|User;
+    public function login(array $credentials, bool $remember = false): Authenticatable|User;
 
     /**
      * Log out the currently authenticated user.

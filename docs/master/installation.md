@@ -12,8 +12,16 @@ Before you begin, ensure you have the following installed on your system:
 *   **Composer:** Latest stable version
 *   **Node.js & NPM:** Latest LTS version
 *   **Git:** Latest stable version
-*   **Database:** MySQL 8+, PostgreSQL, or SQLite (for local development, SQLite is often sufficient)
-*   **Web Server:** Nginx or Apache (Laravel Sail or PHP's built-in server can be used for local development)
+*   **Database:** MySQL 8+, PostgreSQL, or SQLite
+*   **Web Server:** Nginx or Apache (optional, for local development)
+
+### Key Third-Party Packages
+
+This project relies on several key packages that are automatically installed via Composer:
+
+-   [nwidart/laravel-modules](https://nwidart.com/laravel-modules/v11/introduction)
+-   [spatie/laravel-permission](https://spatie.be/docs/laravel-permission/v6/introduction)
+-   [robsontenorio/mary](https://mary-ui.com/)
 
 ## 2. Setup Instructions
 

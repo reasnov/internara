@@ -5,4 +5,9 @@ return [
     'owner_role_cannot_be_removed' => 'Role owner tidak dapat dihapus dari akun ini.',
     'owner_cannot_be_transferred' => 'Akun owner sudah ada. Role owner tidak dapat dipindahtangankan.',
     'owner_cannot_be_deleted' => 'Akun owner tidak dapat dihapus.',
+    'invalid_credentials' => 'Kredensial yang diberikan tidak cocok dengan catatan kami.',
+    'email_exists' => 'Pengguna dengan email ini sudah ada.',
+    'registration_failed' => 'Terjadi kesalahan saat pendaftaran. Silakan coba lagi.',
+    'password_mismatch' => 'Kata sandi saat ini yang diberikan tidak cocok dengan catatan kami.',
+    'email_already_verified' => 'Alamat email ini sudah diverifikasi.',
 ];

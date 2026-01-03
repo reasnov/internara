@@ -13,5 +13,6 @@
     "StudentInternship": true,
     "Assignment": true,
     "Assessment": true,
-    "StudentReport": true
+    "StudentReport": true,
+    "Dashboard": true
 }

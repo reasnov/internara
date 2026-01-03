@@ -1,13 +1,15 @@
+@props(['title' => null])
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
     <head>
-        @include('components.layouts.base.head')
+        <x-layouts.base.head :$title />
     </head>
 
     <body class="max-w-screen size-full min-h-screen overflow-x-hidden antialiased">
         <!-- Page Content -->
-        @yield('content')
+        {{ $slot }}
 
         <!-- Scripts -->
         @stack('scripts')

@@ -125,6 +125,9 @@ namespace Modules\\{ModuleName}\\{Subdirectory};
 - **UUID Usage**
   The `User` model uses UUIDs as its primary key.
 
+- **Blade Component Property Shorthand**
+  When passing properties to Blade components, prefer using the shorthand syntax (e.g., `:$title` instead of `:title="$title"`) for cleaner and more concise code.
+
 ---
 
 ## Livewire & Volt Conventions

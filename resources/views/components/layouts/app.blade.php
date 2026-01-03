@@ -1,5 +1,6 @@
-@extends('components.layouts.base')
-@section('content')
+@props(['title' => null, 'header' => null, 'footer' => null])
+
+<x-layouts.base :$title>
     <div class="flex min-h-screen flex-col">
         @isset($header)
             <header class="shadow">
@@ -25,4 +26,4 @@
             </footer>
         @endisset
     </div>
-@endsection
+</x-layouts.base>

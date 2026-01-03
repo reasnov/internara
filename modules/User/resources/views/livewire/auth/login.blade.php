@@ -1,25 +1,29 @@
-<x-ui::card class="border-base-300 w-full max-w-lg rounded-xl border text-center shadow-lg" title="Masuk ke Dasbor"
-    subtitle="Masuk menggunakan email atau username.">
+<x-ui::card class="border-base-300 w-full max-w-lg rounded-xl border text-center shadow-lg" title="Masuk ke Akun Anda"
+    subtitle="Gunakan email atau nama pengguna Anda untuk melanjutkan.">
     <div class="flex flex-col gap-8">
-        <x-ui::form class="text-start">
-            <x-ui::input type="text" label="Email/username" placeholder="Email atau username" required />
+        <x-ui::form class="text-start" wire:submit="login">
+            <x-ui::input type="text" label="Email atau Username" placeholder="Masukkan Email atau Username Anda"
+                wire:model="email" required />
 
             <div class="relative w-full">
-                <x-ui::input type="password" label="Kata sandi" placeholder="Kata sandi" required />
-                <a class="absolute right-0 top-2 text-xs font-medium underline" href="#">Lupa
-                    kata sandi?</a>
+                <x-ui::input type="password" label="Kata Sandi" placeholder="Masukkan Kata Sandi Anda"
+                    wire:model="password" required />
+
                 @if (\Illuminate\Support\Facades\Route::has('forgot-password'))
+                    <a class="absolute right-0 top-2 text-xs font-medium underline"
+                        href="{{ route('forgot-password') }}">Lupa Kata Sandi Anda?</a>
                 @endif
             </div>
 
-            <x-ui::checkbox label="Ingat saya" />
+            <x-ui::checkbox label="Ingat saya" wire:model="remember" />
 
             <div class="mt-4 flex w-full flex-col gap-8">
-                <x-ui::button class="btn-primary w-full" label="Masuk" />
+                <x-ui::button class="btn-primary w-full" label="Masuk Sekarang" type="submit" spinner />
 
                 @if (\Illuminate\Support\Facades\Route::has('register'))
                     <p class="text-center text-sm">
-                        Belum punya akun? <a class="font-medium underline" href="{{ route('register') }}">Daftar</a>
+                        Belum punya akun Internara? <a class="font-medium underline" href="{{ route('register') }}"
+                            wire:navigate>Daftar Sekarang</a>
                     </p>
                 @endif
             </div>

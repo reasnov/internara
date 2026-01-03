@@ -1,13 +1,15 @@
+@props(['title' => null])
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
     <head>
-        @include('ui::components.layouts.base.head')
+        <x-ui::layouts.base.head :$title />
     </head>
 
     <body class="max-w-screen size-full overflow-x-hidden font-sans antialiased">
         <div class="flex size-full min-h-screen flex-col">
-            @yield('content')
+            {{ $slot }}
 
             <x-mary-toast />
         </div>

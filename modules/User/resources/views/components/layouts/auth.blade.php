@@ -1,7 +1,7 @@
-@extends('ui::components.layouts.base.with-navbar')
+@props(['title' => null])
 
-@section('main')
-    <div class="flex size-full flex-1 flex-col items-center justify-center pt-20">
+<x-ui::layouts.base.with-navbar :$title>
+    <div class="flex size-full flex-1 flex-col items-center justify-center pt-16">
         {{ $slot }}
     </div>
-@endsection
+</x-ui::layouts.base.with-navbar>

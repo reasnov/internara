@@ -9,6 +9,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Modules\Shared\Exceptions\AppException;
 use Modules\User\Contracts\Services\AuthService as AuthServiceContract;
 use Modules\User\Models\User;
@@ -18,17 +19,29 @@ class AuthService implements AuthServiceContract
     /**
      * Attempt to log in a user with the given credentials.
      *
-     * @param  array  $credentials  Contains 'email' and 'password'.
+     * @param  array  $credentials  Contains 'email' (which can be an email or username), 'password'.
+     * @param  bool  $remember  Whether to "remember" the user.
      * @return Authenticatable|User The authenticated user.
      *
      * @throws AppException If authentication fails.
      */
-    public function login(array $credentials): Authenticatable|User
+    public function login(array $credentials, bool $remember = false): Authenticatable|User
     {
-        if (! Auth::attempt($credentials)) {
+        // The 'email' field from the form can be either an email or a username.
+        $identifier = $credentials['email'];
+
+        // Determine if the identifier is an email or a username.
+        $loginField = Str::contains($identifier, '@') ? 'email' : 'username';
+
+        $authCredentials = [
+            $loginField => $identifier,
+            'password' => $credentials['password'],
+        ];
+
+        if (! Auth::attempt($authCredentials, $remember)) {
             throw new AppException(
-                userMessage: 'Invalid credentials.',
-                logMessage: 'Authentication attempt failed for email: '.($credentials['email'] ?? 'N/A'),
+                userMessage: 'user::exceptions.invalid_credentials',
+                logMessage: 'Authentication attempt failed for: '.$identifier,
                 code: 401
             );
         }
@@ -58,7 +71,7 @@ class AuthService implements AuthServiceContract
             $user = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
-                'password' => $data['password'],
+                'password' => Hash::make($data['password']),
             ]);
 
             event(new Registered($user));
@@ -67,14 +80,14 @@ class AuthService implements AuthServiceContract
         } catch (QueryException $e) {
             if ($e->getCode() === '23000') { // Duplicate entry SQLSTATE code
                 throw new AppException(
-                    userMessage: 'A user with this email already exists.',
+                    userMessage: 'user::exceptions.email_exists',
                     logMessage: 'Attempted to register with duplicate email: '.$data['email'],
                     code: 409, // Conflict
                     previous: $e
                 );
             }
             throw new AppException(
-                userMessage: 'An error occurred during registration.',
+                userMessage: 'user::exceptions.registration_failed',
                 logMessage: 'Registration failed due to database error: '.$e->getMessage(),
                 code: 500,
                 previous: $e
@@ -101,7 +114,7 @@ class AuthService implements AuthServiceContract
     {
         if (! Hash::check($currentPassword, $user->password)) {
             throw new AppException(
-                userMessage: 'The provided current password does not match our records.',
+                userMessage: 'user::exceptions.password_mismatch',
                 code: 422
             );
         }
@@ -163,7 +176,7 @@ class AuthService implements AuthServiceContract
     {
         if ($user->hasVerifiedEmail()) {
             throw new AppException(
-                userMessage: 'This email address is already verified.',
+                userMessage: 'user::exceptions.email_already_verified',
                 code: 422
             );
         }

@@ -22,6 +22,14 @@
 -   Node.js & NPM
 -   SQLite, MySQL, or PostgreSQL
 
+### Key Third-Party Packages
+
+This project is built upon the Laravel ecosystem and several key packages:
+
+-   [nwidart/laravel-modules](https://nwidart.com/laravel-modules/v11/introduction)
+-   [spatie/laravel-permission](https://spatie.be/docs/laravel-permission/v6/introduction)
+-   [robsontenorio/mary](https://mary-ui.com/)
+
 ## Installation
 
 1.  **Clone the repository:**

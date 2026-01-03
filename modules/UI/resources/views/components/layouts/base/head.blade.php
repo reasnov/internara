@@ -1,10 +1,12 @@
+@props(['title' => config('app.name')])
+
 <!-- Meta Tags -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 @stack('meta')
 
 <!-- Title -->
-<title>{{ $title ?? 'Page Title' }}</title>
+<title>{{ $title }}</title>
 
 <!-- Favicon -->
 <link rel="icon" href="/favicon.ico" sizes="any">

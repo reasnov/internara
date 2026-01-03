@@ -1,13 +1,13 @@
-@extends('ui::components.layouts.base')
+@props(['title' => null])
 
-@section('content')
+<x-ui::layouts.base :$title>
     <div class="flex flex-1 flex-col">
         <x-ui::navbar sticky full-width />
 
         <x-ui::main with-nav full-width>
-            @yield('main')
+            {{ $slot }}
         </x-ui::main>
 
         <x-ui::footer />
     </div>
-@endsection
+</x-ui::layouts.base>
