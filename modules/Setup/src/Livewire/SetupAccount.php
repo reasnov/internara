@@ -30,7 +30,9 @@ class SetupAccount extends Component
     {
         return view('setup::livewire.setup-account')
             ->layout('setup::components.layouts.setup', [
-                'title' => 'Buat Akun Administrator | Internara - Sistem Informasi Manajemen PKL',
+                'title' => __('Buat Akun Administrator | :site_title', [
+                    'site_title' => setting('site_title', 'Internara')
+                ]),
             ]);
     }
 }

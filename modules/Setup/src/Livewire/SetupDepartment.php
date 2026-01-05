@@ -20,7 +20,7 @@ class SetupDepartment extends Component
     {
         $this->initSetupProps(
             currentStep: 'department',
-            nextStep: 'program',
+            nextStep: 'internship',
             prevStep: 'school',
             extra: ['req_record' => 'department']
         );
@@ -30,7 +30,9 @@ class SetupDepartment extends Component
     {
         return view('setup::livewire.setup-department')
             ->layout('setup::components.layouts.setup', [
-                'title' => 'Atur Data Jurusan | Internara - Sistem Informasi Manajemen PKL',
+                'title' => __('Atur Data Jurusan | :site_title', [
+                    'site_title' => setting('site_title', 'Internara')
+                ]),
             ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Modules\Setup\Concerns\Livewire;
 
+use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Modules\Setup\Contracts\Services\SetupService;
@@ -18,6 +19,8 @@ trait HandlesAppSetup
 
     protected function initSetupProps(string $currentStep, string $nextStep = '', string $prevStep = '', array $extra = [])
     {
+        $this->requireSetupAccess();
+
         $this->setupProps = [
             'currentStep' => $currentStep,
             'nextStep' => $nextStep,
@@ -26,33 +29,68 @@ trait HandlesAppSetup
         ];
     }
 
+    protected function requireSetupAccess(): bool
+    {
+        $isAppInstalled = $this->setupService->isAppInstalled();
+        if ($isAppInstalled) {
+            $this->redirectToLanding();
+        }
+
+        return $isAppInstalled;
+    }
+
     protected function ensurePrevStepCompleted(): void
     {
-        if ($this->setupProps['prevStep'] && ! $this->setupService->isStepCompleted($this->setupProps['prevStep'])) {
-            $prevRoute = 'setup.'.$this->setupProps['prevStep'];
-            $this->redirectRoute($prevRoute, navigate: true);
+        $prevStep = $this->setupProps['prevStep'] ?? null;
+        $sessionKey = "setup:{$prevStep}";
+
+        if ($this->setupProps['prevStep'] && ! Session::get($sessionKey, false)) {
+            $this->redirectToStep($this->setupProps['prevStep']);
         }
     }
 
     public function nextStep(): void
     {
         if ($this->setupProps['currentStep'] === 'complete') {
-            $landingRoute = $this->setupProps['extra']['landing_route'] ?? 'login';
-
-            $this->setupService->finalizeAppSetup();
-            $this->redirectRoute($landingRoute, navigate: true);
-
+            $this->finalizeAppSetup();
             return;
         }
 
-        $nextRoute = 'setup.'.$this->setupProps['nextStep'];
-
         $this->proceedNextStep();
-        $this->redirectRoute($nextRoute, navigate: true);
+        $this->redirectToStep($this->setupProps['nextStep']);
     }
 
     protected function proceedNextStep(): bool
     {
-        return $this->setupService->proceedNextStep($this->setupProps['currentStep'], $this->setupProps['nextStep'], $this->setupProps['extra']['req_record'] ?? '');
+        $success = $this->setupService->proceedNextStep($this->setupProps['currentStep'], $this->setupProps['nextStep'], $this->setupProps['extra']['req_record'] ?? '');
+
+        if ($success) {
+            $currentStep = $this->setupProps['currentStep'];
+            $sessionKey = "setup:{$currentStep}";
+            Session::put($sessionKey, $success);
+        }
+
+        return $success;
+    }
+
+    protected function finalizeAppSetup(): void
+    {
+
+        $this->setupService->finalizeAppSetup();
+        $this->redirectToLanding();
+    }
+
+    protected function redirectToStep(string $name): void
+    {
+        $routeName = "setup.{$name}";
+        $this->redirectRoute($routeName, navigate: true);
+    }
+
+    protected function redirectToLanding(): void
+    {
+        Session::flush();
+
+        $landingRoute = $this->setupProps['extra']['landing_route'] ?? 'login';
+        $this->redirectRoute($landingRoute, navigate: true);
     }
 }

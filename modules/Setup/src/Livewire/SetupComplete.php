@@ -20,7 +20,7 @@ class SetupComplete extends Component
     {
         $this->initSetupProps(
             currentStep: 'complete',
-            prevStep: 'program',
+            prevStep: 'internship',
         );
     }
 
@@ -28,7 +28,9 @@ class SetupComplete extends Component
     {
         return view('setup::livewire.setup-complete')
             ->layout('setup::components.layouts.setup', [
-                'title' => 'Satu Langkah Lagi | Internara - Sistem Informasi Manajemen PKL',
+                'title' => __('Satu Langkah Lagi | :site_title', [
+                    'site_title' => setting('site_title', 'Internara')
+                ]),
             ]);
     }
 }

@@ -121,9 +121,9 @@ class AuthService implements AuthServiceContract
             );
         }
 
-        $user->password = Hash::make($newPassword);
-
-        return $user->save();
+        return $user->update([
+            'password' => Hash::make($newPassword)
+        ]);
     }
 
     /**

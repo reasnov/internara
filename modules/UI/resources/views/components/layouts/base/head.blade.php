@@ -1,4 +1,4 @@
-@props(['title' => config('app.name')])
+@props(['title' => setting('site_title', 'Internara')])
 
 <!-- Meta Tags -->
 <meta charset="utf-8">

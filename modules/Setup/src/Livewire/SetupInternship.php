@@ -6,7 +6,7 @@ use Livewire\Component;
 use Modules\Setup\Concerns\Livewire\HandlesAppSetup;
 use Modules\Setup\Contracts\Services\SetupService;
 
-class SetupProgram extends Component
+class SetupInternship extends Component
 {
     use HandlesAppSetup;
 
@@ -18,18 +18,20 @@ class SetupProgram extends Component
     public function mount(): void
     {
         $this->initSetupProps(
-            currentStep: 'program',
+            currentStep: 'internship',
             nextStep: 'complete',
             prevStep: 'department',
-            extra: ['req_record' => 'program']
+            extra: ['req_record' => 'internship']
         );
     }
 
     public function render()
     {
-        return view('setup::livewire.setup-program')
+        return view('setup::livewire.setup-internship')
             ->layout('setup::components.layouts.setup', [
-                'title' => 'Atur Data PKL | Internara - Sistem Informasi Manajemen PKL',
+                'title' => __('Atur Data PKL | :site_title', [
+                    'site_title' => setting('site_title', 'Internara')
+                ]),
             ]);
     }
 }

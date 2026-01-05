@@ -21,7 +21,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $username
  * @property string|null $avatar_url
  * @property \Illuminate\Support\Carbon|null $email_verified_at
- * @property-read string $password
+ * @property string $password
  * @property-read string|null $remember_token
  * @property-read \Illuminate\Support\Carbon|null $created_at
  * @property-read \Illuminate\Support\Carbon|null $updated_at
