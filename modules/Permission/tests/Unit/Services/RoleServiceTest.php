@@ -8,7 +8,7 @@ use Modules\Permission\Services\RoleService;
 uses(Tests\TestCase::class, RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->service = new RoleService;
+    $this->service = new RoleService(new Role);
 });
 
 test('it can list and filter roles', function () {

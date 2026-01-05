@@ -8,7 +8,6 @@
  * available. This prevents fatal errors across the application if the
  * Setting module is disabled.
  */
-
 if (! function_exists('setting')) {
     /**
      * Fallback for the setting() helper function.
@@ -16,15 +15,11 @@ if (! function_exists('setting')) {
      * This ensures that calls to setting() do not cause a fatal error if the
      * Setting module is disabled. It logs a warning and returns the default
      * value.
-     *
-     * @param string|array $key
-     * @param mixed $default
-     * @return mixed
      */
     function setting(string|array $key = '', mixed $default = null): mixed
     {
         static $hasLogged = false;
-        if (!$hasLogged) {
+        if (! $hasLogged) {
             \Illuminate\Support\Facades\Log::warning(
                 'The setting() helper was called, but the Setting module is not available. A fallback was used.'
             );

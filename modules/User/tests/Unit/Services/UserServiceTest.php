@@ -7,7 +7,7 @@ use Modules\User\Services\UserService;
 uses(Tests\TestCase::class, RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->service = new UserService;
+    $this->service = new UserService(new User);
 });
 
 test('it can create a user', function () {
@@ -82,7 +82,7 @@ test('it can find by unique fields', function () {
         'username' => 'uniqueuser',
     ]);
 
-    expect($this->service->findById($user->id)->id)->toBe($user->id);
+    expect($this->service->find($user->id)->id)->toBe($user->id);
     expect($this->service->findByEmail('unique@example.com')->id)->toBe($user->id);
     expect($this->service->findByUsername('uniqueuser')->id)->toBe($user->id);
 });

@@ -3,10 +3,10 @@
 namespace Modules\User\Livewire\Auth;
 
 use Illuminate\View\View;
+use Livewire\Attributes\Rule;
 use Livewire\Component;
 use Modules\Shared\Exceptions\AppException;
 use Modules\User\Contracts\Services\AuthService;
-use Livewire\Attributes\Rule;
 
 class Login extends Component
 {
@@ -45,7 +45,7 @@ class Login extends Component
     {
         return view('user::livewire.auth.login')
             ->layout('user::components.layouts.auth', [
-                'title' => 'Masuk ke Dasbor | ' . setting('site_title', 'Internara - Sistem Informasi Manajemen PKL')
+                'title' => 'Masuk ke Dasbor | '.setting('site_title', 'Internara - Sistem Informasi Manajemen PKL'),
             ]);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Modules\Core\Console\Commands;
 
 use Illuminate\Support\Str;
 use Nwidart\Modules\Commands\Make\GeneratorCommand;
@@ -11,21 +11,24 @@ use Nwidart\Modules\Support\Stub;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class ModuleMakeClassCommand extends GeneratorCommand
+/**
+ * Class ModuleMakeInterfaceCommand
+ */
+class ModuleMakeInterfaceCommand extends GeneratorCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = 'module:make-class';
+    protected $name = 'module:make-interface';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new plain class for the specified module, with a direct namespace.';
+    protected $description = 'Create a new interface for the specified module, with a direct namespace.';
 
     /**
      * The argument name of the module.
@@ -39,7 +42,7 @@ class ModuleMakeClassCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return '/class.stub';
+        return '/interface.stub';
     }
 
     /**
@@ -49,15 +52,16 @@ class ModuleMakeClassCommand extends GeneratorCommand
     {
         $module = $this->getModule();
 
+        $interfaceName = Str::afterLast($this->argument('name'), '/');
+
         return (new Stub($this->getStub(), [
-            'NAMESPACE' => $this->getClassNamespace($module),
-            'CLASS' => $this->getClass(),
+            'CLASS_NAMESPACE' => $this->getClassNamespace($module),
+            'CLASS' => Str::studly($interfaceName),
         ]))->render();
     }
 
     /**
-     * Get the namespace of the module.
-     * It will be based on the module namespace and the optional sub-path from the input name.
+     * Get the namespace of the class.
      *
      * @param  ModuleModel  $module
      */
@@ -66,9 +70,9 @@ class ModuleMakeClassCommand extends GeneratorCommand
 
         $namespace = $this->getModuleNamespace($module);
 
-        $classNamespace = GenerateConfigReader::read('class')->getNamespace();
+        $interfaceNamespace = GenerateConfigReader::read('interfaces')->getNamespace();
 
-        $baseNamespace = $namespace.'\\'.$classNamespace;
+        $baseNamespace = $namespace.'\\'.$interfaceNamespace;
 
         $name = $this->argument('name');
 
@@ -84,6 +88,18 @@ class ModuleMakeClassCommand extends GeneratorCommand
     }
 
     /**
+     * Get the module's base namespace.
+     *
+     * @param  ModuleModel  $module
+     */
+    public function getModuleNamespace($module): string
+    {
+        $moduleBaseNamespace = config('modules.namespace');
+
+        return $moduleBaseNamespace.'\\'.$module->getStudlyName();
+    }
+
+    /**
      * Get the destination file path.
      */
     protected function getDestinationFilePath(): string
@@ -92,34 +108,19 @@ class ModuleMakeClassCommand extends GeneratorCommand
         $path = $module->getPath();
         $appFolder = config('modules.paths.app_folder', 'src/');
 
-        $classConfig = GenerateConfigReader::read('class');
-        $classPath = $classConfig->getPath();
+        $interfaceConfig = GenerateConfigReader::read('interfaces');
+        $interfacePath = $interfaceConfig->getPath();
 
-        $relativeClassPath = Str::after($classPath, $appFolder);
-        if ($relativeClassPath === $classPath) {
-            $finalRelativePath = $appFolder.$classPath;
+        $relativeInterfacePath = Str::after($interfacePath, $appFolder);
+        if ($relativeInterfacePath === $interfacePath) {
+
+            $finalRelativePath = $appFolder.$interfacePath;
         } else {
-            $finalRelativePath = $appFolder.$relativeClassPath;
+
+            $finalRelativePath = $appFolder.$relativeInterfacePath;
         }
 
         return $path.'/'.$finalRelativePath.'/'.$this->getFileName().'.php';
-    }
-
-    /**
-     * Get the file name.
-     * This will include any subdirectories from the 'name' argument.
-     * e.g., 'Services/MyService'
-     */
-    public function getFileName(): string
-    {
-        return Str::studly($this->argument('name'));
-    }
-
-    public function getModuleNamespace($module): string
-    {
-        $baseNamespace = config('modules.namespace') ?: 'Modules';
-
-        return $baseNamespace.'\\'.$module->getName();
     }
 
     /**
@@ -128,7 +129,7 @@ class ModuleMakeClassCommand extends GeneratorCommand
     protected function getArguments(): array
     {
         return [
-            ['name', InputArgument::REQUIRED, 'The name of the class.'],
+            ['name', InputArgument::REQUIRED, 'The name of the interface. Subdirectories are allowed (e.g., Services/SomeInterface).'],
             ['module', InputArgument::REQUIRED, 'The name of module will be used.'],
         ];
     }
@@ -139,12 +140,12 @@ class ModuleMakeClassCommand extends GeneratorCommand
     protected function getOptions(): array
     {
         return [
-            ['force', null, InputOption::VALUE_NONE, 'Create the class even if the class already exists.'],
+            ['force', null, InputOption::VALUE_NONE, 'Create the interface even if the interface already exists.'],
         ];
     }
 
     /**
-     * Get the default namespace for the class.
+     * Get the default namespace for the interface.
      */
     public function getDefaultNamespace(): string
     {
@@ -158,5 +159,14 @@ class ModuleMakeClassCommand extends GeneratorCommand
     protected function getModule(): ModuleModel
     {
         return Module::findOrFail($this->argument('module'));
+    }
+
+    /**
+     * Get the file name.
+     */
+    protected function getFileName(): string
+    {
+
+        return Str::studly($this->argument('name'));
     }
 }

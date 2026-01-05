@@ -7,7 +7,7 @@ use Modules\Permission\Services\PermissionService;
 uses(Tests\TestCase::class, RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->service = new PermissionService;
+    $this->service = new PermissionService(new Permission);
 });
 
 test('it can list and filter permissions', function () {

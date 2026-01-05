@@ -6,8 +6,10 @@
 
         <x-ui::main with-nav full-width>
             {{ $slot }}
-        </x-ui::main>
 
-        <x-ui::footer />
+            <x-slot:footer>
+                <x-ui::footer />
+            </x-slot:footer>
+        </x-ui::main>
     </div>
 </x-ui::layouts.base>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Modules\Core\Console\Commands;
 
 use Illuminate\Support\Str;
 use Nwidart\Modules\Commands\Make\GeneratorCommand;
@@ -12,23 +12,23 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class ModuleMakeInterfaceCommand
+ * Class ModuleMakeTraitCommand
  */
-class ModuleMakeInterfaceCommand extends GeneratorCommand
+class ModuleMakeTraitCommand extends GeneratorCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = 'module:make-interface';
+    protected $name = 'module:make-trait';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new interface for the specified module, with a direct namespace.';
+    protected $description = 'Create a new trait for the specified module, with a direct namespace.';
 
     /**
      * The argument name of the module.
@@ -42,7 +42,7 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return '/interface.stub';
+        return '/trait.stub';
     }
 
     /**
@@ -52,11 +52,12 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
     {
         $module = $this->getModule();
 
-        $interfaceName = Str::afterLast($this->argument('name'), '/');
+        // Extract the base class name from the full name argument
+        $traitName = Str::afterLast($this->argument('name'), '/');
 
         return (new Stub($this->getStub(), [
             'CLASS_NAMESPACE' => $this->getClassNamespace($module),
-            'CLASS' => Str::studly($interfaceName),
+            'CLASS' => Str::studly($traitName),
         ]))->render();
     }
 
@@ -67,15 +68,18 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
      */
     public function getClassNamespace($module): string
     {
-
+        // Modules\Example
         $namespace = $this->getModuleNamespace($module);
 
-        $interfaceNamespace = GenerateConfigReader::read('interfaces')->getNamespace();
+        // Get the base namespace for traits from the modules config
+        $traitNamespace = GenerateConfigReader::read('traits')->getNamespace();
 
-        $baseNamespace = $namespace.'\\'.$interfaceNamespace;
+        // Combine them to get the base trait namespace
+        $baseNamespace = $namespace.'\\'.$traitNamespace;
 
         $name = $this->argument('name');
 
+        // If the name argument includes a path, append it to the namespace
         if (Str::contains($name, '/')) {
             $subNamespace = Str::of($name)
                 ->beforeLast('/')
@@ -105,21 +109,22 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
     protected function getDestinationFilePath(): string
     {
         $module = $this->getModule();
-        $path = $module->getPath();
-        $appFolder = config('modules.paths.app_folder', 'src/');
+        $path = $module->getPath(); // e.g., /path/to/internara/modules/School
+        $appFolder = config('modules.paths.app_folder', 'src/'); // 'src/'
 
-        $interfaceConfig = GenerateConfigReader::read('interfaces');
-        $interfacePath = $interfaceConfig->getPath();
+        // Get the path from the generator config, e.g., 'src/Concerns' for traits
+        $traitConfig = GenerateConfigReader::read('traits');
+        $traitPath = $traitConfig->getPath(); // e.g., 'src/Concerns'
 
-        $relativeInterfacePath = Str::after($interfacePath, $appFolder);
-        if ($relativeInterfacePath === $interfacePath) {
-
-            $finalRelativePath = $appFolder.$interfacePath;
+        // Remove the appFolder prefix if it exists in the configured path
+        $relativeTraitPath = Str::after($traitPath, $appFolder);
+        if ($relativeTraitPath === $traitPath) { // if 'src/' was not in $traitPath
+            $finalRelativePath = $appFolder.$traitPath;
         } else {
-
-            $finalRelativePath = $appFolder.$relativeInterfacePath;
+            $finalRelativePath = $appFolder.$relativeTraitPath;
         }
 
+        // Construct the full path
         return $path.'/'.$finalRelativePath.'/'.$this->getFileName().'.php';
     }
 
@@ -129,7 +134,7 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
     protected function getArguments(): array
     {
         return [
-            ['name', InputArgument::REQUIRED, 'The name of the interface. Subdirectories are allowed (e.g., Services/SomeInterface).'],
+            ['name', InputArgument::REQUIRED, 'The name of the trait. Subdirectories are allowed (e.g., Concerns/MyTrait).'],
             ['module', InputArgument::REQUIRED, 'The name of module will be used.'],
         ];
     }
@@ -140,16 +145,16 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
     protected function getOptions(): array
     {
         return [
-            ['force', null, InputOption::VALUE_NONE, 'Create the interface even if the interface already exists.'],
+            ['force', null, InputOption::VALUE_NONE, 'Create the trait even if the trait already exists.'],
         ];
     }
 
     /**
-     * Get the default namespace for the interface.
+     * Get the default namespace for the trait.
      */
     public function getDefaultNamespace(): string
     {
-
+        // The namespace is constructed manually in getClassNamespace()
         return '';
     }
 
@@ -166,7 +171,7 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
      */
     protected function getFileName(): string
     {
-
+        // Returns the full name argument
         return Str::studly($this->argument('name'));
     }
 }

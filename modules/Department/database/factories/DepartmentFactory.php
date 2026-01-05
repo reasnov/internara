@@ -22,4 +22,3 @@ class DepartmentFactory extends Factory
         ];
     }
 }
-

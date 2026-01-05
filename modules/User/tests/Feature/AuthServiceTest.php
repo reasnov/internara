@@ -58,11 +58,18 @@ test('a user can log in with correct credentials', function () {
 test('login fails with incorrect credentials', function () {
     User::factory()->create(['email' => 'user@example.com', 'password' => Hash::make('password')]);
 
-    $this->authService->login([
-        'email' => 'user@example.com',
-        'password' => 'wrong-password',
-    ]);
-})->throws(AppException::class, 'Authentication attempt failed for email: user@example.com');
+    try {
+        $this->authService->login([
+            'email' => 'user@example.com',
+            'password' => 'wrong-password',
+        ]);
+        $this->fail('AppException was not thrown');
+    } catch (AppException $e) {
+        expect($e->getCode())->toBe(401);
+        expect($e->getMessage())->toBe('Authentication attempt failed for: user@example.com');
+        expect($e->getUserMessage())->toBe(__('user::exceptions.invalid_credentials'));
+    }
+});
 
 test('a user can be logged out', function () {
     $user = User::factory()->create();
@@ -101,8 +108,15 @@ test('a user can change their password with correct current password', function 
 test('a user cannot change their password with incorrect current password', function () {
     $user = User::factory()->create(['password' => Hash::make('current-password')]);
 
-    $this->authService->changePassword($user, 'wrong-password', 'new-password');
-})->throws(AppException::class, 'The provided current password does not match our records.');
+    try {
+        $this->authService->changePassword($user, 'wrong-password', 'new-password');
+        $this->fail('AppException was not thrown');
+    } catch (AppException $e) {
+        expect($e->getCode())->toBe(422);
+        expect($e->getMessage())->toBe('user::exceptions.password_mismatch');
+        expect($e->getUserMessage())->toBe(__('user::exceptions.password_mismatch'));
+    }
+});
 
 test('it sends a password reset link', function () {
     Notification::fake();
@@ -159,8 +173,15 @@ test('it does not resend verification if email is already verified', function ()
     Notification::fake();
     $user = User::factory()->create(); // email_verified_at is set by default
 
-    $this->authService->resendVerificationEmail($user);
-})->throws(AppException::class, 'This email address is already verified.');
+    try {
+        $this->authService->resendVerificationEmail($user);
+        $this->fail('AppException was not thrown');
+    } catch (AppException $e) {
+        expect($e->getCode())->toBe(422);
+        expect($e->getMessage())->toBe('user::exceptions.email_already_verified');
+        expect($e->getUserMessage())->toBe(__('user::exceptions.email_already_verified'));
+    }
+});
 
 test('it can verify an email with a valid hash', function () {
     Event::fake();

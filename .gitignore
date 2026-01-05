@@ -1,8 +1,8 @@
 /.fleet
-/.gemini/temp
 /.idea
 /.nova
 /.phpunit.cache
+/.temp
 /.vscode
 /.zed
 /auth.json
@@ -14,6 +14,7 @@
 /public/storage
 /storage/*.key
 /storage/pail
+/temp
 /vendor
 Homestead.json
 Homestead.yaml

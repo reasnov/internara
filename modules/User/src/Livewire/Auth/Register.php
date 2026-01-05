@@ -3,10 +3,10 @@
 namespace Modules\User\Livewire\Auth;
 
 use Illuminate\View\View;
+use Livewire\Attributes\Rule;
 use Livewire\Component;
 use Modules\Shared\Exceptions\AppException;
 use Modules\User\Contracts\Services\AuthService;
-use Livewire\Attributes\Rule;
 
 class Register extends Component
 {
@@ -51,7 +51,7 @@ class Register extends Component
     {
         return view('user::livewire.auth.register')
             ->layout('user::components.layouts.auth', [
-                'title' => 'Daftar Akun | ' . setting('site_title', 'Internara - Sistem Informasi Manajemen PKL')
+                'title' => 'Daftar Akun | '.setting('site_title', 'Internara - Sistem Informasi Manajemen PKL'),
             ]);
     }
 }

@@ -1,5 +1,9 @@
 <x-mary-nav {{ $attributes }}>
     <x-slot:brand>
+        @isset($hamburger)
+            {{ $hamburger }}
+        @endisset
+
         {{-- Brand --}}
         @slotRender('navbar.brand')
     </x-slot:brand>

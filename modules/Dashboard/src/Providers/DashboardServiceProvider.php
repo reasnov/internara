@@ -3,15 +3,16 @@
 namespace Modules\Dashboard\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Nwidart\Modules\Traits\PathNamespace;
 use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
+use Nwidart\Modules\Traits\PathNamespace;
 
 class DashboardServiceProvider extends ServiceProvider
 {
-    use PathNamespace;
     use ManagesModuleProvider;
+    use PathNamespace;
 
     protected string $name = 'Dashboard';
+
     protected string $nameLower = 'dashboard';
 
     /**

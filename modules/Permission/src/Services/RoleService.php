@@ -6,12 +6,31 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Permission\Contracts\Services\RoleService as RoleServiceContract;
 use Modules\Permission\Models\Role;
+use Modules\Shared\Concerns\EloquentQuery;
 
 class RoleService implements RoleServiceContract
 {
-    public function list(array $filters = [], int $perPage = 10): LengthAwarePaginator
+    use EloquentQuery;
+
+    /**
+     * RoleService constructor.
+     */
+    public function __construct(Role $model)
     {
-        return Role::query()
+        $this->setModel($model);
+    }
+
+    /**
+     * List roles with optional filtering and pagination.
+     *
+     * @param  array<string, mixed>  $filters  Filter criteria (e.g., 'search', 'module').
+     * @param  int  $perPage  Number of records per page.
+     * @param  array<int, string>  $columns  Columns to retrieve.
+     * @return LengthAwarePaginator Paginated list of roles.
+     */
+    public function list(array $filters = [], int $perPage = 10, array $columns = ['*']): LengthAwarePaginator
+    {
+        return $this->model->query()->select($columns)
             ->when($filters['search'] ?? null, function (Builder $query, string $search) {
                 $query->where('name', 'like', "%{$search}%")
                     ->orWhere('module', 'like', "%{$search}%");
@@ -23,32 +42,17 @@ class RoleService implements RoleServiceContract
             ->paginate($perPage);
     }
 
-    public function create(array $data): Role
+    /**
+     * Sync permissions to a role.
+     *
+     * @param  string  $id  The UUID of the role.
+     * @param  array<int, string>  $permissions  An array of permission names to sync.
+     * @return Role The role with updated permissions.
+     */
+    public function syncPermissions(string $id, array $permissions): Role
     {
-        return Role::create($data);
-    }
-
-    public function update(string|int $id, array $data): Role
-    {
-        $role = Role::findOrFail($id);
-        $role->update($data);
-
-        return $role;
-    }
-
-    public function delete(string|int $id): bool
-    {
-        return Role::findOrFail($id)->delete();
-    }
-
-    public function findById(string|int $id): ?Role
-    {
-        return Role::find($id);
-    }
-
-    public function syncPermissions(string|int $id, array $permissions): Role
-    {
-        $role = Role::findOrFail($id);
+        /** @var Role $role */
+        $role = $this->model->findOrFail($id);
         $role->syncPermissions($permissions);
 
         return $role;

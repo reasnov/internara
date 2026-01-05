@@ -2,8 +2,8 @@
 
 namespace Modules\Dashboard\Livewire;
 
-use Livewire\Component;
 use Illuminate\View\View;
+use Livewire\Component;
 
 class StudentDashboard extends Component
 {

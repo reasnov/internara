@@ -18,11 +18,9 @@ class SlotRender extends Component
     /**
      * Create a new component instance.
      *
-     * @param string $name The name of the slot to render.
+     * @param  string  $name  The name of the slot to render.
      */
-    public function __construct(protected readonly string $name)
-    {
-    }
+    public function __construct(protected readonly string $name) {}
 
     /**
      * Get the view/contents that represent the component.

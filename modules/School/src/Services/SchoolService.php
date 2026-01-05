@@ -4,28 +4,35 @@ namespace Modules\School\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\QueryException;
 use Modules\School\Contracts\Services\SchoolService as SchoolServiceContract;
 use Modules\School\Models\School;
+use Modules\Shared\Concerns\EloquentQuery;
 use Modules\Shared\Exceptions\AppException;
 
 class SchoolService implements SchoolServiceContract
 {
-    public function __construct()
+    use EloquentQuery;
+
+    /**
+     * SchoolService constructor.
+     */
+    public function __construct(School $model)
     {
-        //
+        $this->setModel($model);
     }
 
     /**
      * Retrieve schools based on conditions.
      * Returns a single School model if configured as single record, or a Collection otherwise.
      *
-     * @param  array<string, mixed>  $where
-     * @param  array<int, string>  $columns
-     * @return School|\Illuminate\Support\Collection
+     * @param  array<string, mixed>  $where  Conditions to filter the query.
+     * @param  array<int, string>  $columns  Columns to retrieve.
+     * @return School|\Illuminate\Support\Collection The found school or a collection of schools.
      */
     public function get(array $where = [], array $columns = ['*']): School|\Illuminate\Support\Collection
     {
-        $query = School::query();
+        $query = $this->model->query();
 
         foreach ($where as $column => $value) {
             $query->where($column, $value);
@@ -41,11 +48,14 @@ class SchoolService implements SchoolServiceContract
     /**
      * List schools with optional filtering and pagination.
      *
-     * @param  array<string, mixed>  $filters
+     * @param  array<string, mixed>  $filters  Filter criteria (e.g., 'search', 'sort').
+     * @param  int  $perPage  Number of records per page.
+     * @param  array<int, string>  $columns  Columns to retrieve.
+     * @return LengthAwarePaginator Paginated list of schools.
      */
-    public function list(array $filters = [], int $perPage = 10): LengthAwarePaginator
+    public function list(array $filters = [], int $perPage = 10, array $columns = ['*']): LengthAwarePaginator
     {
-        return School::query()
+        return $this->model->query()->select($columns)
             ->when($filters['search'] ?? null, function (Builder $query, string $search) {
                 $query->where(function (Builder $q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -61,50 +71,44 @@ class SchoolService implements SchoolServiceContract
     }
 
     /**
-     * Create a new school.
+     * Create a new school, respecting the single-record configuration.
      *
-     * @param  array<string, mixed>  $data
+     * @param  array<string, mixed>  $data  The data for creating the school.
+     * @return School The newly created school.
+     *
+     * @throws AppException If a school already exists and the system is in single-record mode.
      */
     public function create(array $data): School
     {
-        if (config('school.single_record') && School::count() > 0) {
+        try {
+            if (config('school.single_record') && $this->model->count() > 0) {
+                throw new AppException(
+                    userMessage: 'school::exceptions.single_record_exists',
+                    code: 409 // Conflict
+                );
+            }
+
+            /** @var School $school */
+            $school = $this->model->create($data);
+
+            return $school;
+        } catch (QueryException $e) {
+            if ($e->getCode() === '23000') { // Duplicate entry
+                throw new AppException(
+                    userMessage: 'shared::exceptions.name_exists',
+                    replace: ['record' => $this->recordName],
+                    logMessage: 'Attempted to create school with duplicate unique field.',
+                    code: 409,
+                    previous: $e
+                );
+            }
             throw new AppException(
-                userMessage: 'school::exceptions.single_record_exists',
-                code: 409 // Conflict
+                userMessage: 'shared::exceptions.creation_failed',
+                replace: ['record' => $this->recordName],
+                logMessage: 'School creation failed: '.$e->getMessage(),
+                code: 500,
+                previous: $e
             );
         }
-
-        return School::create($data);
-    }
-
-    /**
-     * Find a school by ID.
-     */
-    public function findById(string $id): ?School
-    {
-        return School::find($id);
-    }
-
-    /**
-     * Update a school's details.
-     *
-     * @param  array<string, mixed>  $data
-     */
-    public function update(string $id, array $data): School
-    {
-        $school = School::findOrFail($id);
-        $school->update($data);
-
-        return $school;
-    }
-
-    /**
-     * Delete a school.
-     */
-    public function delete(string $id): bool
-    {
-        $school = School::findOrFail($id);
-
-        return $school->delete();
     }
 }

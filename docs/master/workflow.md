@@ -77,14 +77,14 @@ Next, generate the concrete implementation for your service in `src/Services`:
 php artisan module:make-service UserService User
 ```
 
-**3.3.3 Extending EloquentService for Common CRUD Operations**
+**3.3.3 Using EloquentQuery Trait for Common CRUD Operations**
 
-For services that primarily deal with standard CRUD (Create, Read, Update, Delete) operations on a single Eloquent model, it is highly recommended to extend the `Modules\Shared\Services\EloquentService`. This abstract base class provides boilerplate implementations for common methods, reducing code duplication and enforcing consistency.
+For services that primarily deal with standard CRUD (Create, Read, Update, Delete) operations on a single Eloquent model, it is highly recommended to use the `Modules\Shared\Concerns\EloquentQuery` trait. This trait provides boilerplate implementations for common methods, reducing code duplication and enforcing consistency.
 
 **How to Implement:**
 
-1.  **Extend `EloquentService`**: Your service implementation class should extend `EloquentService`.
-2.  **Pass Model to Constructor**: In your service's constructor, call `parent::__construct()` and pass an instance of the Eloquent model your service manages.
+1.  **Use `EloquentQuery` Trait**: Your service implementation class should `use` the `EloquentQuery` trait.
+2.  **Set Model in Constructor**: In your service's constructor, call `parent::__construct()` (if extending another class) and then `setModel()` with an instance of the Eloquent model your service manages. This is crucial for initializing the trait.
 
 *Example for `modules/User/Services/UserService.php`:*
 
@@ -93,15 +93,17 @@ For services that primarily deal with standard CRUD (Create, Read, Update, Delet
 
 namespace Modules\User\Services;
 
-use Modules\Shared\Services\EloquentService;
+use Modules\Shared\Concerns\EloquentQuery;
 use Modules\User\Contracts\Services\UserService as UserServiceContract;
 use Modules\User\Models\User;
 
-class UserService extends EloquentService implements UserServiceContract
+class UserService implements UserServiceContract
 {
+    use EloquentQuery;
+
     public function __construct(User $userModel)
     {
-        parent::__construct($userModel);
+        $this->setModel($userModel); // Initialize the EloquentQuery trait with the model
     }
 
     // Add specific business logic methods here.

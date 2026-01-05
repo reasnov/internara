@@ -9,10 +9,6 @@ interface SlotRegistry
 {
     /**
      * Configure the slot registry with an initial set of slots.
-     *
-     * @param array $slots
-     *
-     * @return void
      */
     public function configure(array $slots = []): void;
 

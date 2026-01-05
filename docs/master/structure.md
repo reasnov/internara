@@ -22,7 +22,7 @@ To maintain a clean modular monolith, we categorize foundational modules based o
 The `Shared` module is the "toolbox" of the application. It contains components that are completely agnostic of Internara's specific business rules.
 
 -   **Requirement:** Every component in this module must be portable enough to function in a completely different project without modification.
--   **Key Principle:** Domain modules (like `User` or `Internship`) should only depend on the `Shared` module if they aim to remain portable.
+-   **Key Principle:** Business modules (such as `User`) should only depend on the `Shared` module if they aim to remain portable.
 
 ## 3. Core Module (The Business Architecture)
 

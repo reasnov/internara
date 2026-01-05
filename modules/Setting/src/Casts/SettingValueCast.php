@@ -12,7 +12,6 @@ class SettingValueCast implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        // If the 'type' attribute is not set, default to string
         $type = $attributes['type'] ?? 'string';
 
         return match ($type) {
@@ -20,7 +19,7 @@ class SettingValueCast implements CastsAttributes
             'boolean' => (bool) $value,
             'integer' => (int) $value,
             'float' => (float) $value,
-            default => $value, // string or other types
+            default => $value,
         };
     }
 
@@ -35,11 +34,10 @@ class SettingValueCast implements CastsAttributes
             $value = json_encode($value);
             $type = 'json';
         } elseif ($type === 'boolean') {
-            $value = (int) $value; // Store boolean as 0 or 1
+            $value = (int) $value;
             $type = 'boolean';
         }
 
-        // Store the original type and the stringified value
         return [
             'value' => (string) $value,
             'type' => $type,

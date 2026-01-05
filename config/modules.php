@@ -229,9 +229,9 @@ return [
     */
     'commands' => ConsoleServiceProvider::defaultCommands()
         ->merge([
-            \App\Console\Commands\ModuleMakeClassCommand::class,
-            \App\Console\Commands\ModuleMakeInterfaceCommand::class,
-            \App\Console\Commands\ModuleMakeTraitCommand::class,
+            \Modules\Core\Console\Commands\ModuleMakeClassCommand::class,
+            \Modules\Core\Console\Commands\ModuleMakeInterfaceCommand::class,
+            \Modules\Core\Console\Commands\ModuleMakeTraitCommand::class,
         ])->toArray(),
 
     /*
