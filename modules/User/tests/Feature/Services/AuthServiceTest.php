@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\User\Tests\Feature;
+namespace Modules\User\Tests\Feature\Services;
 
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,8 +12,7 @@ use Modules\Shared\Exceptions\AppException;
 use Modules\User\Contracts\Services\AuthService;
 use Modules\User\Models\User;
 
-// Use UserTestCase for feature testing in the User module
-uses(\Tests\TestCase::class, RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // We'll resolve the AuthService here to ensure we're testing the bound implementation

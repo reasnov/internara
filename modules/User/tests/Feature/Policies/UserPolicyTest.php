@@ -1,5 +1,7 @@
 <?php
 
+namespace Modules\User\Tests\Feature\Policies;
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
 use Modules\Permission\Models\Permission;

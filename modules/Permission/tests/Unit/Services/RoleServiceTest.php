@@ -5,7 +5,7 @@ use Modules\Permission\Models\Permission;
 use Modules\Permission\Models\Role;
 use Modules\Permission\Services\RoleService;
 
-uses(Tests\TestCase::class, RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->service = new RoleService(new Role);

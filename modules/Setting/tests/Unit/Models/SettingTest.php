@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Setting\Tests\Unit;
+namespace Modules\Setting\Tests\Unit\Models;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Setting\Models\Setting;
 
-uses(\Tests\TestCase::class, RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Add any setup needed before each test
