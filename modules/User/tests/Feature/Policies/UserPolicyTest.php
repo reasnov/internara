@@ -8,7 +8,7 @@ use Modules\Permission\Models\Permission;
 use Modules\Permission\Models\Role;
 use Modules\User\Models\User;
 
-uses(Tests\TestCase::class, RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Setup basic roles and permissions for testing

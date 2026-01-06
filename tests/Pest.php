@@ -11,12 +11,12 @@
 |
 */
 
-pest()->extend(Tests\TestCase::class)
+pest()->extend(\Tests\TestCase::class)
     ->in(
-        'Feature',
-        'Unit',
-        '../modules/*/tests/Feature',
-        '../modules/*/tests/Unit'
+        'Feature/*',
+        'Unit/*',
+        '../modules/*/tests/Feature/*',
+        '../modules/*/tests/Unit/*'
     );
 
 /*
