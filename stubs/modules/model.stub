@@ -15,6 +15,11 @@ class $CLASS$ extends Model
      */
     protected $fillable = $FILLABLE$;
 
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return $NAME$Factory
+     */
     // protected static function newFactory(): $NAME$Factory
     // {
     //     // return $NAME$Factory::new();

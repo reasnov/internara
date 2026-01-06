@@ -2,7 +2,7 @@
 
 namespace $NAMESPACE$;
 
-uses(Tests\TestCase::class);
+uses(\Tests\TestCase::class);
 
 test('returns a successfull response', function () {
     $response = $this->get('/');

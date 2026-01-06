@@ -15,7 +15,7 @@ class SettingValueCast implements CastsAttributes
         $type = $attributes['type'] ?? 'string';
 
         return match ($type) {
-            'json' => json_decode($value, true),
+            'json', 'array' => json_decode($value, true),
             'boolean' => (bool) $value,
             'integer' => (int) $value,
             'float' => (float) $value,

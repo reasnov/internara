@@ -4,8 +4,7 @@ namespace Modules\Setting\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-// use Modules\Setting\Database\Factories\SettingFactory;
+use Modules\Setting\Database\Factories\SettingFactory;
 
 class Setting extends Model
 {
@@ -38,6 +37,7 @@ class Setting extends Model
     protected $fillable = [
         'key',
         'value',
+        'type',
         'description',
         'group',
     ];
@@ -50,6 +50,14 @@ class Setting extends Model
     protected $casts = [
         'value' => \Modules\Setting\Casts\SettingValueCast::class,
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): SettingFactory
+    {
+        return SettingFactory::new();
+    }
 
     /**
      * Scope a query to only include settings belonging to a given group.
