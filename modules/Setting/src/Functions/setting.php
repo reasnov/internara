@@ -3,32 +3,22 @@
 use Modules\Setting\Facades\Setting;
 
 if (! function_exists('setting')) {
+
     /**
-     * Get / set the specified setting value.
+     * Get application settings.
      *
-     * If an array of key/value pairs is given, the settings will be set.
+     * @param string|array|null|null $key
+     * @param mixed|null $default
+     * @param bool $skipCache
      *
-     * If a key is given, the setting value will be returned.
-     *
-     * If no key is given, the Setting facade instance will be returned.
-     *
-     * @return mixed|\Modules\Setting\Facades\Setting
+     * @return mixed
      */
-    function setting(string|array $key = '', mixed $default = null): mixed
+    function setting(string|array|null $key = null, mixed $default = null, bool $skipCache = false): mixed
     {
-        if (empty($key)) {
-            return app(Setting::class); // Return the facade instance
+        if ($key === null) {
+            return app(Setting::class);
         }
 
-        if (is_array($key)) {
-            // Assume associative array for setting multiple values
-            foreach ($key as $k => $v) {
-                Setting::set($k, $v);
-            }
-
-            return true;
-        }
-
-        return Setting::get($key, $default);
+        return app(Setting::class)->get($key, $default, $skipCache);
     }
 }
