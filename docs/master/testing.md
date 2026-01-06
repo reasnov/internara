@@ -5,6 +5,7 @@ This document outlines the philosophy, conventions, and workflow for writing tes
 ## Table of Contents
 
 -   [Testing Philosophy](#testing-philosophy)
+    -   [Unit Tests vs. Feature Tests: Clear Responsibilities](#unit-tests-vs-feature-tests-clear-responsibilities)
 -   [Core Framework: Pest](#core-framework-pest)
 -   [Test Directory Structure](#test-directory-structure)
 -   [Writing Tests with Pest](#writing-tests-with-pest)
@@ -27,6 +28,24 @@ This document outlines the philosophy, conventions, and workflow for writing tes
 -   **Test-Driven Development (TDD) principles**: Embrace writing tests before or alongside new feature development. This approach fosters better design, more maintainable code, and clearer requirements.
 -   **Comprehensive Coverage**: Ensure every new feature, bug fix, or significant modification is accompanied by relevant tests. This practice verifies functionality and prevents regressions.
 -   **Maintain Test Suites**: Treat tests as first-class citizens. Avoid deleting existing tests; instead, update them to reflect changes in functionality.
+
+### Unit Tests vs. Feature Tests: Clear Responsibilities
+
+Understanding the distinct roles of Unit and Feature tests is crucial for an effective testing strategy.
+
+-   **Unit Tests**:
+    -   **Focus**: Isolated components (e.g., a single function, method, or small class).
+    -   **Goal**: Verify that each unit of code performs its specific task correctly in isolation.
+    -   **Characteristics**: Fast execution, mock external dependencies (database, HTTP requests, other services) to ensure only the unit under test is evaluated. They do not interact with the application's infrastructure.
+    -   **When to use**: For testing algorithms, helper functions, model logic (without database interaction), service methods (with mocked dependencies).
+
+-   **Feature Tests**:
+    -   **Focus**: Integration of multiple components, covering an entire feature or user story.
+    -   **Goal**: Verify that different parts of the application (e.g., controller, service, model, database, HTTP middleware) work together as expected to deliver a specific feature.
+    -   **Characteristics**: Slower execution compared to unit tests. They often interact with the database, simulate HTTP requests, and leverage the full Laravel application bootstrap.
+    -   **When to use**: For testing API endpoints, form submissions, user authentication flows, complex business processes involving multiple layers, and overall feature completeness.
+
+By maintaining this clear separation, we ensure that our codebase is both thoroughly tested at a granular level and that its integrated features function correctly end-to-end.
 
 ## Core Framework: Pest
 
