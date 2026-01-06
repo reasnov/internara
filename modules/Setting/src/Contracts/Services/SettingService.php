@@ -22,7 +22,7 @@ interface SettingService
      * @param  array  $extraAttributes  Additional attributes (type, description, group) for the setting.
      * @return bool True if the setting was successfully set, false otherwise.
      */
-    public function set(string|array $key, mixed $value, array $extraAttributes = []): bool;
+    public function set(string|array $key, mixed $value = null, array $extraAttributes = []): bool;
 
     /**
      * Get all settings belonging to a specific group.

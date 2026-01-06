@@ -3,7 +3,6 @@
 namespace Modules\Permission\Contracts\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model; // <--- ADDED THIS LINE
 use Modules\Permission\Models\Permission;
 
@@ -21,7 +20,7 @@ interface PermissionService
     /**
      * Create a new permission record.
      *
-     * @param  array<string, mixed>  $data The data for creating the permission.
+     * @param  array<string, mixed>  $data  The data for creating the permission.
      * @return Permission The newly created permission.
      */
     public function create(array $data): Permission;

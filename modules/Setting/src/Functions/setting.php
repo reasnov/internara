@@ -6,12 +6,6 @@ if (! function_exists('setting')) {
 
     /**
      * Get application settings.
-     *
-     * @param string|array|null|null $key
-     * @param mixed|null $default
-     * @param bool $skipCache
-     *
-     * @return mixed
      */
     function setting(string|array|null $key = null, mixed $default = null, bool $skipCache = false): mixed
     {

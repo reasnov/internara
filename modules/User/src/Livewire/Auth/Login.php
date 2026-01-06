@@ -46,7 +46,7 @@ class Login extends Component
         return view('user::livewire.auth.login')
             ->layout('user::components.layouts.auth', [
                 'title' => __('Masuk ke Dasbor | :site_title', [
-                    'site_title' => 'Internara'
+                    'site_title' => 'Internara',
                 ]),
             ]);
     }

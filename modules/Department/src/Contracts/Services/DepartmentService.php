@@ -3,8 +3,6 @@
 namespace Modules\Department\Contracts\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
-use Modules\Department\Models\Department;
 
 interface DepartmentService
 {
@@ -17,5 +15,12 @@ interface DepartmentService
      * @return LengthAwarePaginator Paginated list of departments.
      */
     public function list(array $filters = [], int $perPage = 10, array $columns = ['*']): LengthAwarePaginator;
-}
 
+    /**
+     * Check if a record exists based on the given conditions.
+     *
+     * @param  array<string, mixed>|callable  $where  Conditions for existence check.
+     * @return bool True if a record exists, false otherwise.
+     */
+    public function exists(array|callable $where = []): bool;
+}

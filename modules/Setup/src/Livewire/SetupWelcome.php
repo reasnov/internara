@@ -29,8 +29,8 @@ class SetupWelcome extends Component
         return view('setup::livewire.setup-welcome')
             ->layout('setup::components.layouts.setup', [
                 'title' => __('Mulai Instalasi | :site_title', [
-                    'site_title' => setting('site_title', 'Internara')
-                ])
+                    'site_title' => setting('site_title', 'Internara'),
+                ]),
             ]);
     }
 }

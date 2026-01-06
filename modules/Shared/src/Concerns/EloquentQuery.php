@@ -11,14 +11,14 @@ use Modules\Shared\Exceptions\AppException;
 trait EloquentQuery
 {
     protected Model $model;
+
     protected string $recordName = 'record';
 
     /**
      * Set the Eloquent model instance for the trait.
      * This method effectively replaces the constructor logic of EloquentService.
      *
-     * @param  Model  $model The Eloquent model instance.
-     * @return void
+     * @param  Model  $model  The Eloquent model instance.
      */
     protected function setModel(Model $model): void
     {
@@ -65,7 +65,7 @@ trait EloquentQuery
      * Create a new record.
      *
      * @param  array<string, mixed>  $data  The data for creating the record.
-     * @param array $columns Columns to retrieve after creation.
+     * @param  array  $columns  Columns to retrieve after creation.
      * @return Model The newly created record.
      *
      * @throws AppException If creation fails due to a database error.
@@ -108,6 +108,7 @@ trait EloquentQuery
     {
         /** @var Model $record */
         $record = $this->model->find($id, $columns);
+
         return $record;
     }
 

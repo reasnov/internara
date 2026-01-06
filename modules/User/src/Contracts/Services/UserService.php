@@ -3,8 +3,6 @@
 namespace Modules\User\Contracts\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Modules\User\Models\User;
 
 interface UserService
@@ -22,7 +20,7 @@ interface UserService
     /**
      * Create a new user record.
      *
-     * @param  array<string, mixed>  $data The data for creating the user.
+     * @param  array<string, mixed>  $data  The data for creating the user.
      * @return User The newly created user.
      */
     public function create(array $data): User;

@@ -24,6 +24,8 @@ class SetupDepartment extends Component
             prevStep: 'school',
             extra: ['req_record' => 'department']
         );
+
+        $this->ensurePrevStepCompleted();
     }
 
     public function render(): View
@@ -31,7 +33,7 @@ class SetupDepartment extends Component
         return view('setup::livewire.setup-department')
             ->layout('setup::components.layouts.setup', [
                 'title' => __('Atur Data Jurusan | :site_title', [
-                    'site_title' => setting('site_title', 'Internara')
+                    'site_title' => setting('site_title', 'Internara'),
                 ]),
             ]);
     }

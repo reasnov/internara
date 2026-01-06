@@ -24,6 +24,8 @@ class SetupAccount extends Component
             prevStep: 'welcome',
             extra: ['req_record' => 'owner']
         );
+
+        $this->ensurePrevStepCompleted();
     }
 
     public function render(): View
@@ -31,7 +33,7 @@ class SetupAccount extends Component
         return view('setup::livewire.setup-account')
             ->layout('setup::components.layouts.setup', [
                 'title' => __('Buat Akun Administrator | :site_title', [
-                    'site_title' => setting('site_title', 'Internara')
+                    'site_title' => setting('site_title', 'Internara'),
                 ]),
             ]);
     }

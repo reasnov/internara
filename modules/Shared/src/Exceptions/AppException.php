@@ -63,8 +63,6 @@ class AppException extends Exception
         return __($this->userMessage, $this->replace, $this->locale);
     }
 
-
-
     /**
      * Get the technical log message.
      *

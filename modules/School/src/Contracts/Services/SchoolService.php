@@ -3,7 +3,6 @@
 namespace Modules\School\Contracts\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
 use Modules\School\Models\School;
 
 interface SchoolService
@@ -30,8 +29,16 @@ interface SchoolService
     /**
      * Create a new school record.
      *
-     * @param  array<string, mixed>  $data The data for creating the school.
+     * @param  array<string, mixed>  $data  The data for creating the school.
      * @return School The newly created school.
      */
     public function create(array $data): School;
+
+    /**
+     * Check if a record exists based on the given conditions.
+     *
+     * @param  array<string, mixed>|callable  $where  Conditions for existence check.
+     * @return bool True if a record exists, false otherwise.
+     */
+    public function exists(array|callable $where = []): bool;
 }

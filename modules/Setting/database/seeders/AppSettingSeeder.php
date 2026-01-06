@@ -36,7 +36,7 @@ class AppSettingSeeder extends \Illuminate\Database\Seeder
                 'group' => 'general',
             ],
             [
-                'key' => 'is_installed',
+                'key' => 'app_installed',
                 'value' => true,
                 'type' => 'boolean',
                 'description' => 'Indicates whether the application is installed',

@@ -4,11 +4,11 @@ namespace Modules\Permission\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\QueryException;
 use Modules\Permission\Contracts\Services\PermissionService as PermissionServiceContract;
 use Modules\Permission\Models\Permission;
 use Modules\Shared\Concerns\EloquentQuery;
 use Modules\Shared\Exceptions\AppException;
-use Illuminate\Database\QueryException;
 
 class PermissionService implements PermissionServiceContract
 {
@@ -42,12 +42,11 @@ class PermissionService implements PermissionServiceContract
             ->paginate($perPage);
     }
 
-
     /**
      * Create a new permission record.
      * This method overrides the one from EloquentQuery trait to match the contract.
      *
-     * @param  array<string, mixed>  $data The data for creating the permission.
+     * @param  array<string, mixed>  $data  The data for creating the permission.
      * @return Permission The newly created permission.
      *
      * @throws \Modules\Shared\Exceptions\AppException If creation fails due to a database error.
@@ -79,7 +78,6 @@ class PermissionService implements PermissionServiceContract
         }
     }
 
-
     /**
      * Update a permission's details by its ID.
      * This method overrides the one from EloquentQuery trait to match the contract.
@@ -98,6 +96,7 @@ class PermissionService implements PermissionServiceContract
         $permission = $this->model->findOrFail($id, $columns);
         try {
             $permission->update($data);
+
             return $permission;
         } catch (QueryException $e) {
             if ($e->getCode() === '23000') { // Duplicate entry
@@ -118,6 +117,4 @@ class PermissionService implements PermissionServiceContract
             );
         }
     }
-
-
 }

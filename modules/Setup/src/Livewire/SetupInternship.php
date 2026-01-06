@@ -23,6 +23,8 @@ class SetupInternship extends Component
             prevStep: 'department',
             extra: ['req_record' => 'internship']
         );
+
+        $this->ensurePrevStepCompleted();
     }
 
     public function render()
@@ -30,7 +32,7 @@ class SetupInternship extends Component
         return view('setup::livewire.setup-internship')
             ->layout('setup::components.layouts.setup', [
                 'title' => __('Atur Data PKL | :site_title', [
-                    'site_title' => setting('site_title', 'Internara')
+                    'site_title' => setting('site_title', 'Internara'),
                 ]),
             ]);
     }

@@ -25,6 +25,8 @@ class SetupSchool extends Component
             prevStep: 'account',
             extra: ['req_record' => 'school']
         );
+
+        $this->ensurePrevStepCompleted();
     }
 
     #[On('school-updated')]
@@ -38,7 +40,7 @@ class SetupSchool extends Component
         return view('setup::livewire.setup-school')
             ->layout('setup::components.layouts.setup', [
                 'title' => __('Atur Data Sekolah | :site_title', [
-                    'site_title' => setting('site_title', 'Internara')
+                    'site_title' => setting('site_title', 'Internara'),
                 ]),
             ]);
     }

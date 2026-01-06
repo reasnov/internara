@@ -122,7 +122,7 @@ class AuthService implements AuthServiceContract
         }
 
         return $user->update([
-            'password' => Hash::make($newPassword)
+            'password' => Hash::make($newPassword),
         ]);
     }
 

@@ -52,7 +52,7 @@ class Register extends Component
         return view('user::livewire.auth.register')
             ->layout('user::components.layouts.auth', [
                 'title' => __('Daftar Akun | :site_title', [
-                    'site_title' => setting('site_title', 'Internara')
+                    'site_title' => setting('site_title', 'Internara'),
                 ]),
             ]);
     }

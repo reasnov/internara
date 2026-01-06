@@ -42,7 +42,7 @@ class SettingService implements SettingServiceContract
     /**
      * {@inheritDoc}
      */
-    public function set(string|array $key, mixed $value, array $extraAttributes = []): bool
+    public function set(string|array $key, mixed $value = null, array $extraAttributes = []): bool
     {
         if (is_array($key)) {
             $success = true;

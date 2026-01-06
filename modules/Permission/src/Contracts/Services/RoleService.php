@@ -3,7 +3,6 @@
 namespace Modules\Permission\Contracts\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
 use Modules\Permission\Models\Role;
 
 interface RoleService
