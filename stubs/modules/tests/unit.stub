@@ -2,8 +2,6 @@
 
 namespace $NAMESPACE$;
 
-uses(\Tests\TestCase::class);
-
 test('that true is true', function () {
     $this->assertTrue(true);
 });
