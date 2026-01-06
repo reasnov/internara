@@ -105,7 +105,7 @@ class SettingFactory extends Factory
             'value' => $value ?? $default,
             'type' => $type,
             'description' => $description ?? $this->faker->paragraph(),
-            'group' => $group ?? $this->faker->word(),
+            'group' => $group === null ? null : ($group ?? $this->faker->word()),
         ];
     }
 }

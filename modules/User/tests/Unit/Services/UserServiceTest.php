@@ -3,6 +3,7 @@
 namespace Modules\User\Tests\Unit\Services;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Modules\User\Models\User;
 use Modules\User\Services\UserService;
 
