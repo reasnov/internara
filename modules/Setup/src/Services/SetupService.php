@@ -3,14 +3,19 @@
 namespace Modules\Setup\Services;
 
 use Illuminate\Support\Facades\Session;
+use InvalidArgumentException;
 use Modules\Department\Contracts\Services\DepartmentService;
 use Modules\Internship\Contracts\Services\InternshipService;
 use Modules\School\Contracts\Services\SchoolService;
 use Modules\Setting\Contracts\Services\SettingService;
 use Modules\Setup\Contracts\Services\SetupService as SetupServiceContract;
+use Modules\Shared\Exceptions\AppException;
 use Modules\Shared\Exceptions\RecordNotFoundException;
 use Modules\User\Contracts\Services\OwnerService;
 
+/**
+ * Service implementation for handling the application setup process.
+ */
 class SetupService implements SetupServiceContract
 {
     public function __construct(
@@ -21,24 +26,35 @@ class SetupService implements SetupServiceContract
         protected InternshipService $internshipService,
     ) {}
 
+    /**
+     * {@inheritDoc}
+     */
     public function isStepCompleted(string $step): bool
     {
+        if (empty($step)) {
+            return true;
+        }
+
         return Session::get("setup:{$step}", false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function proceedSetupStep(string $step, ?string $requireRecord = null): bool
     {
-        // Validate requirements
         if (isset($requireRecord)) {
             $this->ensureRecordExists($requireRecord);
         }
 
-        // Logic to mark the step as completed, possibly involving $requireRecord
         $this->storeStep($step, true);
 
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function finalizeAppSetup(): bool
     {
         $schoolRecord = $this->schoolService->get();
@@ -55,11 +71,33 @@ class SetupService implements SetupServiceContract
         return $this->isAppInstalled();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function isAppInstalled(): bool
     {
         return $this->settingService->get('app_installed', false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function requireSetupAccess(): void
+    {
+        if ($this->isAppInstalled()) {
+            throw new AppException(userMessage: 'Setup already completed.', code: 403);
+        }
+    }
+
+    /**
+     * Ensures that a specific type of record exists in the database.
+     *
+     * @param  string  $record  The type of record to check (e.g., 'owner', 'school').
+     * @return bool True if the record exists.
+     *
+     * @throws \Modules\Shared\Exceptions\RecordNotFoundException
+     * @throws \InvalidArgumentException
+     */
     protected function ensureRecordExists(string $record = ''): bool
     {
         $isExists = match ($record) {
@@ -67,7 +105,7 @@ class SetupService implements SetupServiceContract
             'school' => $this->schoolService->exists(),
             'department' => $this->departmentService->exists(),
             'internship' => $this->internshipService->exists(),
-            default => false,
+            default => throw new InvalidArgumentException("Unknown record type '{$record}' requested."),
         };
 
         if (! $isExists) {
@@ -77,6 +115,12 @@ class SetupService implements SetupServiceContract
         return $isExists;
     }
 
+    /**
+     * Stores the completion status of a setup step in the session.
+     *
+     * @param  string  $name  The name of the step.
+     * @param  bool  $completed  The completion status.
+     */
     protected function storeStep(string $name, bool $completed = true): void
     {
         Session::put("setup:{$name}", $completed);

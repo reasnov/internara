@@ -42,7 +42,7 @@ class SetupFlowTest extends TestCase
     }
 
     /** @test */
-    public function welcome_step_proceeds_to_account_step()
+    public function test_welcome_step_proceeds_to_account_step()
     {
         $this->setupServiceMock->shouldReceive('isStepCompleted')->with('')->andReturn(true); // Should not be called for welcome
         $this->setupServiceMock->shouldReceive('proceedSetupStep')->with('welcome', null)->once();
@@ -53,7 +53,7 @@ class SetupFlowTest extends TestCase
     }
 
     /** @test */
-    public function account_step_redirects_if_previous_step_is_incomplete()
+    public function test_account_step_redirects_if_previous_step_is_incomplete()
     {
         $this->setupServiceMock->shouldReceive('isStepCompleted')->with('welcome')->andReturn(false);
 
@@ -62,7 +62,7 @@ class SetupFlowTest extends TestCase
     }
 
     /** @test */
-    public function account_step_proceeds_to_school_step()
+    public function test_account_step_proceeds_to_school_step()
     {
         $this->setupServiceMock->shouldReceive('isStepCompleted')->with('welcome')->andReturn(true);
         $this->setupServiceMock->shouldReceive('proceedSetupStep')->with('account', 'owner')->once();
@@ -73,7 +73,7 @@ class SetupFlowTest extends TestCase
     }
 
     /** @test */
-    public function school_step_proceeds_to_department_step()
+    public function test_school_step_proceeds_to_department_step()
     {
         $this->setupServiceMock->shouldReceive('isStepCompleted')->with('account')->andReturn(true);
         $this->setupServiceMock->shouldReceive('proceedSetupStep')->with('school', 'school')->once();
@@ -84,7 +84,7 @@ class SetupFlowTest extends TestCase
     }
 
     /** @test */
-    public function school_step_proceeds_on_event()
+    public function test_school_step_proceeds_on_event()
     {
         $this->setupServiceMock->shouldReceive('isStepCompleted')->with('account')->andReturn(true);
         $this->setupServiceMock->shouldReceive('proceedSetupStep')->with('school', 'school')->once();
@@ -95,7 +95,7 @@ class SetupFlowTest extends TestCase
     }
 
     /** @test */
-    public function department_step_proceeds_to_internship_step()
+    public function test_department_step_proceeds_to_internship_step()
     {
         $this->setupServiceMock->shouldReceive('isStepCompleted')->with('school')->andReturn(true);
         $this->setupServiceMock->shouldReceive('proceedSetupStep')->with('department', 'department')->once();
@@ -106,7 +106,7 @@ class SetupFlowTest extends TestCase
     }
 
     /** @test */
-    public function internship_step_proceeds_to_complete_step()
+    public function test_internship_step_proceeds_to_complete_step()
     {
         $this->setupServiceMock->shouldReceive('isStepCompleted')->with('department')->andReturn(true);
         $this->setupServiceMock->shouldReceive('proceedSetupStep')->with('internship', 'internship')->once();
@@ -117,7 +117,7 @@ class SetupFlowTest extends TestCase
     }
 
     /** @test */
-    public function complete_step_finalizes_setup_and_redirects_to_login()
+    public function test_complete_step_finalizes_setup_and_redirects_to_login()
     {
         $this->setupServiceMock->shouldReceive('isStepCompleted')->with('internship')->andReturn(true);
         $this->setupServiceMock->shouldReceive('proceedSetupStep')->with('complete', null)->once();

@@ -8,17 +8,32 @@ use Livewire\Component;
 use Modules\Setup\Contracts\Services\SetupService;
 
 /**
+ * Handles the core logic for multi-step application setup wizards.
+ * This trait manages step progression, completion state, and redirection,
+ * intended for use within Livewire components that represent a setup step.
+ *
  * @mixin Component
  */
 trait HandlesAppSetup
 {
+    /**
+     * The service responsible for handling setup business logic.
+     */
     protected SetupService $setupService;
 
+    /**
+     * Holds the properties of the current setup step.
+     */
     #[Locked]
     public array $setupProps = [];
 
     /**
      * Initializes the properties for the current setup step.
+     *
+     * @param  string  $currentStep  The identifier for the current step.
+     * @param  string  $nextStep  The identifier for the next step.
+     * @param  string  $prevStep  The identifier for the previous step.
+     * @param  array<string, mixed>  $extra  Additional data for the step.
      */
     protected function initSetupProps(string $currentStep, string $nextStep = '', string $prevStep = '', array $extra = []): void
     {
@@ -31,8 +46,7 @@ trait HandlesAppSetup
     }
 
     /**
-     * Ensures that the previous step was completed before proceeding.
-     * If not, it redirects the user back to the incomplete previous step.
+     * Ensures the previous step was completed, redirecting if it was not.
      */
     protected function ensurePrevStepCompleted(): void
     {
@@ -44,7 +58,7 @@ trait HandlesAppSetup
     }
 
     /**
-     * Proceeds to the next step in the setup process.
+     * Marks the current step as complete and proceeds to the next step.
      */
     public function nextStep(): void
     {
@@ -56,7 +70,7 @@ trait HandlesAppSetup
     }
 
     /**
-     * Marks the current step as completed and handles finalization.
+     * Executes the logic for the current step and handles finalization if applicable.
      */
     protected function proceedNextStep(): void
     {
@@ -71,7 +85,7 @@ trait HandlesAppSetup
     }
 
     /**
-     * Finalizes the application setup process.
+     * Finalizes the application setup and redirects to the landing page.
      */
     protected function finalizeAppSetup(): void
     {
@@ -81,6 +95,8 @@ trait HandlesAppSetup
 
     /**
      * Redirects to a named setup step route.
+     *
+     * @param  string  $name  The name of the step to redirect to.
      */
     protected function redirectToStep(string $name): void
     {

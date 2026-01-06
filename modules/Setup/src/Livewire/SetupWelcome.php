@@ -7,15 +7,27 @@ use Livewire\Component;
 use Modules\Setup\Concerns\Livewire\HandlesAppSetup;
 use Modules\Setup\Contracts\Services\SetupService;
 
+/**
+ * Represents the initial 'Welcome' screen of the application setup process.
+ * This is the first step in the installation wizard.
+ */
 class SetupWelcome extends Component
 {
     use HandlesAppSetup;
 
+    /**
+     * Boots the component and injects the SetupService.
+     *
+     * @param  \Modules\Setup\Contracts\Services\SetupService  $setupService  The service for handling setup logic.
+     */
     public function boot(SetupService $setupService): void
     {
         $this->setupService = $setupService;
     }
 
+    /**
+     * Mounts the component and initializes the properties for the first setup step.
+     */
     public function mount(): void
     {
         $this->initSetupProps(
@@ -24,6 +36,11 @@ class SetupWelcome extends Component
         );
     }
 
+    /**
+     * Renders the component's view.
+     *
+     * @return \Illuminate\View\View The view for the welcome step.
+     */
     public function render(): View
     {
         return view('setup::livewire.setup-welcome')

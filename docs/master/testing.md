@@ -4,24 +4,26 @@ This document outlines the philosophy, conventions, and workflow for writing tes
 
 ## Table of Contents
 
--   [Testing Philosophy](#testing-philosophy)
-    -   [Unit Tests vs. Feature Tests: Clear Responsibilities](#unit-tests-vs-feature-tests-clear-responsibilities)
--   [Core Framework: Pest](#core-framework-pest)
--   [Test Directory Structure](#test-directory-structure)
--   [Writing Tests with Pest](#writing-tests-with-pest)
-    -   [Basic Test Structure](#basic-test-structure)
-    -   [Global Test Configuration (`tests/Pest.php`)](#global-test-configuration-testspestphp)
-    -   [Feature Tests](#feature-tests)
-    -   [Unit Tests](#unit-tests)
--   [Creating & Running Tests](#creating-and-running-tests)
-    -   [Creating Application-Level Tests](#creating-application-level-tests)
-    -   [Creating Module-Level Tests](#creating-module-level-tests)
-    -   [Running Tests](#running-tests)
--   [Fakes & Mocks](#fakes-and-mocks)
--   [Appendix: Class-Based PHPUnit Style Tests](#appendix-class-based-phpunit-style-tests)
-    -   [Application Feature Test Example](#application-feature-test-example)
-    -   [Application Unit Test Example](#application-unit-test-example)
-    -   [Module Feature Test Example](#module-feature-test-example)
+-   [Internara - Testing Guide](#internara---testing-guide)
+    -   [Table of Contents](#table-of-contents)
+    -   [Testing Philosophy](#testing-philosophy)
+        -   [Unit Tests vs. Feature Tests: Clear Responsibilities](#unit-tests-vs-feature-tests-clear-responsibilities)
+    -   [Core Framework: Pest](#core-framework-pest)
+    -   [Test Directory Structure](#test-directory-structure)
+    -   [Writing Tests with Pest](#writing-tests-with-pest)
+        -   [Basic Test Structure](#basic-test-structure)
+        -   [Global Test Configuration (`tests/Pest.php`)](#global-test-configuration-testspestphp)
+        -   [Feature Tests](#feature-tests)
+        -   [Unit Tests](#unit-tests)
+    -   [Creating \& Running Tests](#creating--running-tests)
+        -   [Creating Application-Level Tests](#creating-application-level-tests)
+        -   [Creating Module-Level Tests](#creating-module-level-tests)
+        -   [Running Tests](#running-tests)
+    -   [Fakes \& Mocks](#fakes--mocks)
+    -   [Appendix: Class-Based PHPUnit Style Tests](#appendix-class-based-phpunit-style-tests)
+        -   [Application Feature Test Example](#application-feature-test-example)
+        -   [Application Unit Test Example](#application-unit-test-example)
+        -   [Module Feature Test Example](#module-feature-test-example)
 
 ## Testing Philosophy
 
@@ -34,6 +36,7 @@ This document outlines the philosophy, conventions, and workflow for writing tes
 Understanding the distinct roles of Unit and Feature tests is crucial for an effective testing strategy.
 
 -   **Unit Tests**:
+
     -   **Focus**: Isolated components (e.g., a single function, method, or small class).
     -   **Goal**: Verify that each unit of code performs its specific task correctly in isolation.
     -   **Characteristics**: Fast execution, mock external dependencies (database, HTTP requests, other services) to ensure only the unit under test is evaluated. They do not interact with the application's infrastructure.
@@ -344,7 +347,7 @@ class UserDashboardTest extends TestCase
     use RefreshDatabase; // Use this trait to refresh the database before each test
 
     /** @test */
-    public function an_authenticated_user_can_view_their_dashboard(): void
+    public function test_an_authenticated_user_can_view_their_dashboard(): void
     {
         $user = User::factory()->create();
         $this->actingAs($user);
@@ -355,3 +358,4 @@ class UserDashboardTest extends TestCase
         $response->assertSee("Welcome, {$user->name}");
     }
 }
+```

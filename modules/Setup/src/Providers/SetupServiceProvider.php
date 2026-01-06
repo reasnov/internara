@@ -45,6 +45,8 @@ class SetupServiceProvider extends ServiceProvider
      */
     protected function bindings(): array
     {
-        return [];
+        return [
+            \Modules\Setup\Contracts\Services\SetupService::class => \Modules\Setup\Services\SetupService::class,
+        ];
     }
 }
