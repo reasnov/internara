@@ -7,6 +7,9 @@ use Modules\Permission\Contracts\PermissionManager;
 
 class PermissionSeeder extends Seeder
 {
+    /**
+     * Create a new seeder instance.
+     */
     public function __construct(protected PermissionManager $permissionManager) {}
 
     /**

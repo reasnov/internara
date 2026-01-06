@@ -3,10 +3,8 @@
 namespace Modules\Core\Console\Commands;
 
 use Illuminate\Support\Str;
+use Modules\Core\Concerns\Console\Commands\GeneratesModulePaths;
 use Nwidart\Modules\Commands\Make\GeneratorCommand;
-use Nwidart\Modules\Facades\Module;
-use Nwidart\Modules\Module as ModuleModel;
-use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Nwidart\Modules\Support\Stub;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,6 +14,8 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class ModuleMakeInterfaceCommand extends GeneratorCommand
 {
+    use GeneratesModulePaths;
+
     /**
      * The name and signature of the console command.
      *
@@ -60,67 +60,16 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
         ]))->render();
     }
 
-    /**
-     * Get the namespace of the class.
-     *
-     * @param  ModuleModel  $module
-     */
     public function getClassNamespace($module): string
     {
-
-        $namespace = $this->getModuleNamespace($module);
-
-        $interfaceNamespace = GenerateConfigReader::read('interfaces')->getNamespace();
-
-        $baseNamespace = $namespace.'\\'.$interfaceNamespace;
-
-        $name = $this->argument('name');
-
-        if (Str::contains($name, '/')) {
-            $subNamespace = Str::of($name)
-                ->beforeLast('/')
-                ->replace('/', '\\');
-
-            return $baseNamespace.'\\'.$subNamespace;
-        }
-
-        return $baseNamespace;
+        return $this->getComponentNamespace($module, 'interfaces', $this->argument('name'));
     }
 
-    /**
-     * Get the module's base namespace.
-     *
-     * @param  ModuleModel  $module
-     */
-    public function getModuleNamespace($module): string
-    {
-        $moduleBaseNamespace = config('modules.namespace');
-
-        return $moduleBaseNamespace.'\\'.$module->getStudlyName();
-    }
-
-    /**
-     * Get the destination file path.
-     */
     protected function getDestinationFilePath(): string
     {
         $module = $this->getModule();
-        $path = $module->getPath();
-        $appFolder = config('modules.paths.app_folder', 'src/');
 
-        $interfaceConfig = GenerateConfigReader::read('interfaces');
-        $interfacePath = $interfaceConfig->getPath();
-
-        $relativeInterfacePath = Str::after($interfacePath, $appFolder);
-        if ($relativeInterfacePath === $interfacePath) {
-
-            $finalRelativePath = $appFolder.$interfacePath;
-        } else {
-
-            $finalRelativePath = $appFolder.$relativeInterfacePath;
-        }
-
-        return $path.'/'.$finalRelativePath.'/'.$this->getFileName().'.php';
+        return $this->getComponentDestinationFilePath($module, 'interfaces', $this->argument('name'));
     }
 
     /**
@@ -153,20 +102,8 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
         return '';
     }
 
-    /**
-     * Get the module being operated on.
-     */
-    protected function getModule(): ModuleModel
-    {
-        return Module::findOrFail($this->argument('module'));
-    }
-
-    /**
-     * Get the file name.
-     */
     protected function getFileName(): string
     {
-
-        return Str::studly($this->argument('name'));
+        return $this->getBaseFileName($this->argument('name'));
     }
 }

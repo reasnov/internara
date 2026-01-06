@@ -3,10 +3,8 @@
 namespace Modules\Core\Console\Commands;
 
 use Illuminate\Support\Str;
+use Modules\Core\Concerns\Console\Commands\GeneratesModulePaths;
 use Nwidart\Modules\Commands\Make\GeneratorCommand;
-use Nwidart\Modules\Facades\Module;
-use Nwidart\Modules\Module as ModuleModel;
-use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Nwidart\Modules\Support\Stub;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,6 +14,8 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class ModuleMakeTraitCommand extends GeneratorCommand
 {
+    use GeneratesModulePaths;
+
     /**
      * The name and signature of the console command.
      *
@@ -61,71 +61,16 @@ class ModuleMakeTraitCommand extends GeneratorCommand
         ]))->render();
     }
 
-    /**
-     * Get the namespace of the class.
-     *
-     * @param  ModuleModel  $module
-     */
     public function getClassNamespace($module): string
     {
-        // Modules\Example
-        $namespace = $this->getModuleNamespace($module);
-
-        // Get the base namespace for traits from the modules config
-        $traitNamespace = GenerateConfigReader::read('traits')->getNamespace();
-
-        // Combine them to get the base trait namespace
-        $baseNamespace = $namespace.'\\'.$traitNamespace;
-
-        $name = $this->argument('name');
-
-        // If the name argument includes a path, append it to the namespace
-        if (Str::contains($name, '/')) {
-            $subNamespace = Str::of($name)
-                ->beforeLast('/')
-                ->replace('/', '\\');
-
-            return $baseNamespace.'\\'.$subNamespace;
-        }
-
-        return $baseNamespace;
+        return $this->getComponentNamespace($module, 'traits', $this->argument('name'));
     }
 
-    /**
-     * Get the module's base namespace.
-     *
-     * @param  ModuleModel  $module
-     */
-    public function getModuleNamespace($module): string
-    {
-        $moduleBaseNamespace = config('modules.namespace');
-
-        return $moduleBaseNamespace.'\\'.$module->getStudlyName();
-    }
-
-    /**
-     * Get the destination file path.
-     */
     protected function getDestinationFilePath(): string
     {
         $module = $this->getModule();
-        $path = $module->getPath(); // e.g., /path/to/internara/modules/School
-        $appFolder = config('modules.paths.app_folder', 'src/'); // 'src/'
 
-        // Get the path from the generator config, e.g., 'src/Concerns' for traits
-        $traitConfig = GenerateConfigReader::read('traits');
-        $traitPath = $traitConfig->getPath(); // e.g., 'src/Concerns'
-
-        // Remove the appFolder prefix if it exists in the configured path
-        $relativeTraitPath = Str::after($traitPath, $appFolder);
-        if ($relativeTraitPath === $traitPath) { // if 'src/' was not in $traitPath
-            $finalRelativePath = $appFolder.$traitPath;
-        } else {
-            $finalRelativePath = $appFolder.$relativeTraitPath;
-        }
-
-        // Construct the full path
-        return $path.'/'.$finalRelativePath.'/'.$this->getFileName().'.php';
+        return $this->getComponentDestinationFilePath($module, 'traits', $this->argument('name'));
     }
 
     /**
@@ -158,20 +103,8 @@ class ModuleMakeTraitCommand extends GeneratorCommand
         return '';
     }
 
-    /**
-     * Get the module being operated on.
-     */
-    protected function getModule(): ModuleModel
-    {
-        return Module::findOrFail($this->argument('module'));
-    }
-
-    /**
-     * Get the file name.
-     */
     protected function getFileName(): string
     {
-        // Returns the full name argument
-        return Str::studly($this->argument('name'));
+        return $this->getBaseFileName($this->argument('name'));
     }
 }

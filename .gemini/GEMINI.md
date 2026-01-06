@@ -86,6 +86,9 @@ These directives guide all technical workflows for the Internara project. For de
 7. **Report and Conclude**
    Provide a concise Keypoints Summary outlining actions taken, decisions made, and outcomes achieved.
 
+8. **Commit and Push All Changes (Mandatory)**
+   When instructed to commit and push all, ensure *all* changes in the codebase (including those not directly made by Gemini) are staged and committed. Craft professional commit messages by thoroughly reviewing *all actual* changes in the codebase, understanding that significant and minor alterations might exist in files not directly touched by the immediate task.
+
 ---
 
 ## Foundational Technical Context
