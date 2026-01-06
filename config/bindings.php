@@ -68,7 +68,6 @@ return [
 
     'ignored_namespaces' => [
         'Modules\Core',
-        'App\Services\Secret',
     ],
 
     /*
