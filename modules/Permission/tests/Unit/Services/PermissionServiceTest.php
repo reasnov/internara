@@ -1,5 +1,7 @@
 <?php
 
+namespace Modules\Permission\Tests\Unit\Services;
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Permission\Models\Permission;
 use Modules\Permission\Services\PermissionService;

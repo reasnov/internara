@@ -36,10 +36,12 @@ Internara utilizes [Pest](https://pestphp.com/) as its primary testing framework
 
 Tests are organized into two main locations: the root `/tests` directory for application-wide tests and a dedicated `tests` directory within each module. The project's `phpunit.xml` is pre-configured to automatically discover tests from all these locations.
 
--   `/tests/Feature/{SubDir}`: For application-level Feature Tests.
--   `/tests/Unit/{SubDir}`: For application-level Unit Tests.
--   `modules/{ModuleName}/tests/Feature/{SubDir}`: For module-specific Feature Tests.
--   `modules/{ModuleName}/tests/Unit/{SubDir}`: For module-specific Unit Tests.
+**Crucially, test files should always be placed in a dedicated subdirectory within `Feature/` or `Unit/`, reflecting the layer they are testing.** For example, `Unit/Models`, `Feature/Services`, `Feature/Http/Controllers`, or `Feature/Policies`. **Avoid placing test files directly under `Feature/` or `Unit/`.**
+
+-   `/tests/Feature/{Layer}/{SubDir}`: For application-level Feature Tests (e.g., `tests/Feature/Http/Controllers`).
+-   `/tests/Unit/{Layer}/{SubDir}`: For application-level Unit Tests (e.g., `tests/Unit/Models`).
+-   `modules/{ModuleName}/tests/Feature/{Layer}/{SubDir}`: For module-specific Feature Tests (e.g., `modules/User/tests/Feature/Auth`).
+-   `modules/{ModuleName}/tests/Unit/{Layer}/{SubDir}`: For module-specific Unit Tests (e.g., `modules/User/tests/Unit/Models`).
 
 ## Writing Tests with Pest
 
@@ -109,7 +111,7 @@ Feature tests focus on how different components of your application interact, te
 ```php
 <?php
 
-// modules/User/tests/Feature/AuthenticationTest.php
+// modules/User/tests/Feature/Auth/LoginTest.php
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\User\Models\User;
@@ -142,7 +144,7 @@ Unit tests verify small, isolated parts of your code, such as individual functio
 ```php
 <?php
 
-// tests/Unit/StringHelperTest.php
+// tests/Unit/Support/StringHelperTest.php
 
 // Assuming a helper function `str_title` exists globally or is loaded.
 if (! function_exists('str_title')) {
@@ -168,28 +170,26 @@ test('the helper function correctly formats a string to title case', function ()
 
 ### Creating Application-Level Tests
 
-Use these Artisan commands to generate tests for the main application, which will be stored in the `/tests` directory.
+Use these Artisan commands to generate tests for the main application, which will be stored in the `/tests` directory. Remember to specify the desired subdirectory structure.
 
 ```bash
-# Create a new Feature Test (e.g., tests/Feature/UserRegistrationTest.php)
-php artisan make:test UserRegistrationTest
+# Create a new Feature Test (e.g., tests/Feature/Http/Controllers/UserRegistrationTest.php)
+php artisan make:test Feature/Http/Controllers/UserRegistrationTest
 
-# Create a new Unit Test (e.g., tests/Unit/StringHelperTest.php)
-php artisan make:test StringHelperTest --unit
+# Create a new Unit Test (e.g., tests/Unit/Support/StringHelperTest.php)
+php artisan make:test Unit/Support/StringHelperTest --unit
 ```
 
 ### Creating Module-Level Tests
 
-Use the `module:make-test` Artisan command to generate tests within a specific module's `tests` directory.
+Use the `module:make-test` Artisan command to generate tests within a specific module's `tests` directory. Ensure you include the desired subdirectory structure.
 
 ```bash
-# Create a new Feature test for the "User" module
-# (e.g., modules/User/tests/Feature/UserCanLoginTest.php)
-php artisan module:make-test UserCanLoginTest User --feature
+# Create a new Feature test for the "User" module (e.g., modules/User/tests/Feature/Auth/LoginTest.php)
+php artisan module:make-test Auth/LoginTest User --feature
 
-# Create a new Unit test for the "User" module
-# (e.g., modules/User/tests/Unit/UserDataTest.php)
-php artisan module:make-test UserDataTest User
+# Create a new Unit test for the "User" module (e.g., modules/User/tests/Unit/Models/UserDataTest.php)
+php artisan module:make-test Models/UserDataTest User
 ```
 
 ### Running Tests
@@ -206,8 +206,8 @@ php artisan test --parallel
 # Run all tests for a specific module (e.g., the "User" module)
 php artisan test --filter=User
 
-# Run a single, specific test file
-php artisan test tests/Feature/UserRegistrationTest.php
+# Run a single, specific test file (using its full path or a pattern)
+php artisan test tests/Feature/Http/Controllers/UserRegistrationTest.php
 
 # Run tests whose names contain a specific string (e.g., "homepage")
 php artisan test --filter=homepage
@@ -262,7 +262,7 @@ While Pest's functional style is preferred, the project fully supports tradition
 ```php
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Http\Controllers;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -289,7 +289,7 @@ class ExampleFeatureTest extends TestCase
 ```php
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Models;
 
 use PHPUnit\Framework\TestCase as PHPUnitTestCase; // Alias to avoid conflict with Tests\TestCase
 
@@ -309,12 +309,12 @@ class ExampleUnitTest extends PHPUnitTestCase
 
 ### Module Feature Test Example
 
-This example demonstrates a class-based feature test for a module. Its location (`modules/User/tests/Feature/UserDashboardTest.php`) and namespace are the primary distinctions from an application-level test.
+This example demonstrates a class-based feature test for a module. Its location (`modules/User/tests/Feature/Auth/UserDashboardTest.php`) and namespace are the primary distinctions from an application-level test.
 
 ```php
 <?php
 
-namespace Modules\User\Tests\Feature;
+namespace Modules\User\Tests\Feature\Auth;
 
 use App\Models\User; // Assuming App\Models\User exists in the main application
 use Illuminate\Foundation\Testing\RefreshDatabase;

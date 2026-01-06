@@ -1,5 +1,7 @@
 <?php
 
+namespace Modules\User\Tests\Unit\Support;
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\User\Models\User;
 use Modules\User\Support\UsernameGenerator;
