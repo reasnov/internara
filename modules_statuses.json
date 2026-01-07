@@ -14,5 +14,6 @@
     "StudentReport": true,
     "Support": true,
     "UI": true,
-    "User": true
+    "User": true,
+    "Media": true
 }

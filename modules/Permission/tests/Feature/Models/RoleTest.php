@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Permission\Tests\Unit\Models;
+namespace Modules\Permission\Tests\Feature\Models;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -26,6 +26,13 @@ test('it can create a role using factory', function () {
     } else {
         expect($role->id)->toBeInt();
     }
+
+    $this->assertDatabaseHas('roles', [
+        'id' => $role->id,
+        'name' => 'admin',
+        'guard_name' => 'web',
+        'module' => 'User',
+    ]);
 });
 
 test('it enforces unique name per guard', function () {
@@ -34,6 +41,8 @@ test('it enforces unique name per guard', function () {
     // Attempting to create duplicate should fail
     expect(fn () => Role::factory()->create(['name' => 'editor', 'guard_name' => 'web']))
         ->toThrow(\Illuminate\Database\QueryException::class);
+
+    $this->assertDatabaseCount('roles', 1);
 });
 
 test('it allows same name on different guards', function () {
@@ -41,4 +50,6 @@ test('it allows same name on different guards', function () {
     $apiRole = Role::factory()->create(['name' => 'editor', 'guard_name' => 'api']);
 
     expect($apiRole)->exists->toBeTrue();
+    $this->assertDatabaseCount('roles', 2);
+    $this->assertDatabaseHas('roles', ['name' => 'editor', 'guard_name' => 'api']);
 });

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Permission\Tests\Unit\Models;
+namespace Modules\Permission\Tests\Feature\Models;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -26,6 +26,13 @@ test('it can create a permission using factory', function () {
     } else {
         expect($permission->id)->toBeInt();
     }
+
+    $this->assertDatabaseHas('permissions', [
+        'id' => $permission->id,
+        'name' => 'edit_posts',
+        'guard_name' => 'web',
+        'module' => 'Post',
+    ]);
 });
 
 test('it enforces unique permission name per guard', function () {
@@ -34,6 +41,8 @@ test('it enforces unique permission name per guard', function () {
     // Attempting to create duplicate should fail
     expect(fn () => Permission::factory()->create(['name' => 'delete_users', 'guard_name' => 'web']))
         ->toThrow(\Illuminate\Database\QueryException::class);
+
+    $this->assertDatabaseCount('permissions', 1);
 });
 
 test('it allows same permission name on different guards', function () {
@@ -41,4 +50,6 @@ test('it allows same permission name on different guards', function () {
     $apiPerm = Permission::factory()->create(['name' => 'delete_users', 'guard_name' => 'api']);
 
     expect($apiPerm)->exists->toBeTrue();
+    $this->assertDatabaseCount('permissions', 2);
+    $this->assertDatabaseHas('permissions', ['name' => 'delete_users', 'guard_name' => 'api']);
 });
