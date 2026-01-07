@@ -28,13 +28,13 @@ test('a user can log in with correct credentials and be redirected to dashboard'
     $this->authServiceMock->shouldReceive('login')
         ->once()
         ->with([
-            'email' => 'test@example.com',
+            'identifier' => 'test@example.com',
             'password' => 'password',
         ], false)
         ->andReturn($this->user);
 
     Livewire::test(Login::class)
-        ->set('email', 'test@example.com')
+        ->set('identifier', 'test@example.com')
         ->set('password', 'password')
         ->call('login')
         ->assertRedirect(route('dashboard'));
@@ -47,10 +47,10 @@ test('login fails with incorrect credentials and displays an error', function ()
         ->andThrow(new AppException(userMessage: $errorMessage, code: 401));
 
     Livewire::test(Login::class)
-        ->set('email', 'test@example.com')
+        ->set('identifier', 'test@example.com')
         ->set('password', 'wrong-password')
         ->call('login')
-        ->assertHasErrors(['email' => $errorMessage])
+        ->assertHasErrors(['identifier' => $errorMessage])
         ->assertNoRedirect();
 
     $this->assertGuest();
@@ -60,13 +60,13 @@ test('login with remember me option works correctly', function () {
     $this->authServiceMock->shouldReceive('login')
         ->once()
         ->with([
-            'email' => 'test@example.com',
+            'identifier' => 'test@example.com',
             'password' => 'password',
         ], true)
         ->andReturn($this->user);
 
     Livewire::test(Login::class)
-        ->set('email', 'test@example.com')
+        ->set('identifier', 'test@example.com')
         ->set('password', 'password')
         ->set('remember', true)
         ->call('login')
@@ -77,10 +77,10 @@ test('validation errors are displayed for empty credentials', function () {
     $this->authServiceMock->shouldNotReceive('login');
 
     Livewire::test(Login::class)
-        ->set('email', '')
+        ->set('identifier', '')
         ->set('password', '')
         ->call('login')
-        ->assertHasErrors(['email' => 'required', 'password' => 'required']);
+        ->assertHasErrors(['identifier' => 'required', 'password' => 'required']);
 
     $this->assertGuest();
 
@@ -91,16 +91,16 @@ test('validation passes for invalid email format since only string rule is prese
     $this->authServiceMock->shouldReceive('login')
         ->once()
         ->with([
-            'email' => 'invalid-email-format',
+            'identifier' => 'invalid-email-format',
             'password' => 'password',
         ], false)
         ->andThrow(new AppException(userMessage: $errorMessage, code: 401));
 
     Livewire::test(Login::class)
-        ->set('email', 'invalid-email-format')
+        ->set('identifier', 'invalid-email-format')
         ->set('password', 'password')
         ->call('login')
-        ->assertHasErrors(['email' => $errorMessage])
+        ->assertHasErrors(['identifier' => $errorMessage])
         ->assertNoRedirect();
 
     $this->assertGuest();
@@ -109,8 +109,8 @@ test('validation passes for invalid email format since only string rule is prese
 test('validation errors are displayed for empty email', function () {
     Livewire::test(Login::class)
 
-        ->set('email', '')
+        ->set('identifier', '')
         ->set('password', 'password')
         ->call('login')
-        ->assertHasErrors(['email' => 'required']);
+        ->assertHasErrors(['identifier' => 'required']);
 });

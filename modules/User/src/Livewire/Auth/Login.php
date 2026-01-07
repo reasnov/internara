@@ -19,7 +19,7 @@ class Login extends Component
     protected AuthService $authService;
 
     #[Rule('required|string')]
-    public string $email = '';
+    public string $identifier = '';
 
     /**
      * The user's password for login.
@@ -32,6 +32,30 @@ class Login extends Component
      * Indicates whether the user should be remembered.
      */
     public bool $remember = false;
+
+    /**
+     * Define the validation rules for the component properties.
+     *
+     * @return array<string, string>
+     */
+    protected function rules(): array
+    {
+        return [
+            'identifier' => ['required', 'string', $this->isEmail($this->identifier) ? 'email' : null],
+            'password' => 'required|string',
+        ];
+    }
+
+    /**
+     * Check if the given identifier string is likely an email address.
+     *
+     * @param  string  $value
+     * @return bool
+     */
+    protected function isEmail(string $value): bool
+    {
+        return str_contains($value, '@');
+    }
 
     /**
      * Initializes the component with the AuthService.
@@ -55,13 +79,13 @@ class Login extends Component
 
         try {
             $this->authService->login([
-                'email' => $this->email,
+                'identifier' => $this->identifier,
                 'password' => $this->password,
             ], $this->remember);
 
             $this->redirect(route('dashboard'), navigate: true);
         } catch (AppException $e) {
-            $this->addError('email', $e->getUserMessage());
+            $this->addError('identifier', $e->getUserMessage());
         }
     }
 
