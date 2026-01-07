@@ -44,17 +44,18 @@ interface UserService
     /**
      * Update a user's details by their ID.
      *
-     * @param  string  $id  The UUID of the user.
+     * @param  mixed  $id  The UUID of the user.
      * @param  array<string, mixed>  $data  The data for updating the user.
+     * @param  array<int, string>  $columns  Columns to retrieve after update.
      * @return User The updated user.
      */
-    public function update(string $id, array $data): User;
+    public function update(mixed $id, array $data, array $columns = ['*']): User;
 
     /**
      * Delete a user by their ID.
      *
-     * @param  string  $id  The UUID of the user.
+     * @param  mixed  $id  The UUID of the user.
      * @return bool True if deletion was successful.
      */
-    public function delete(string $id): bool;
+    public function delete(mixed $id): bool;
 }

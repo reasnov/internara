@@ -15,13 +15,13 @@ uses(RefreshDatabase::class);
 beforeEach(function () {
     // Ensure the 'owner' role exists for testing
     Role::updateOrCreate(
-        ['name' => 'owner', 'guard_name' => 'web'],
+        ['id' => (string) Str::uuid(), 'name' => 'owner', 'guard_name' => 'web'],
         ['description' => 'Full system access and ownership', 'module' => 'Core']
     );
 
     // Ensure the 'admin' role exists for testing other users
     Role::updateOrCreate(
-        ['name' => 'admin', 'guard_name' => 'web'],
+        ['id' => (string) Str::uuid(), 'name' => 'admin', 'guard_name' => 'web'],
         ['description' => 'Admin role for testing', 'module' => 'Core']
     );
 
@@ -187,11 +187,13 @@ test('it can delete the owner account', function () {
 
     expect(User::owner()->count())->toBe(1);
 
-    $deleted = $this->ownerService->delete($owner->id);
+    expect(fn () => $this->ownerService->delete($owner->id))
+        ->toThrow(AppException::class)
+        ->and(fn (AppException $e) => expect($e->getUserMessage())->toBe('user::exceptions.owner_cannot_be_deleted'));
 
-    expect($deleted)->toBeTrue();
-    expect(User::owner()->count())->toBe(0);
-    $this->assertDatabaseMissing('users', ['id' => $owner->id]);
+    // Assert owner still exists (cannot be deleted)
+    expect(User::owner()->count())->toBe(1);
+    $this->assertDatabaseHas('users', ['id' => $owner->id]);
 });
 
 test('it throws RecordNotFoundException if deleting a non-existent owner', function () {
@@ -202,7 +204,7 @@ test('it throws RecordNotFoundException if deleting a non-existent owner', funct
 
     expect(fn () => $this->ownerService->delete($nonExistentId))
         ->toThrow(RecordNotFoundException::class)
-        ->and(fn (RecordNotFoundException $e) => expect($e->getMessage())->toContain('owner account with ID '.$nonExistentId.' could not be found.'));
+        ->and(fn (RecordNotFoundException $e) => expect($e->getMessage())->toContain('The requested record could not be found.'));
 });
 
 test('it throws RecordNotFoundException if deleting with an ID that is not the actual owner', function () {
@@ -216,5 +218,5 @@ test('it throws RecordNotFoundException if deleting with an ID that is not the a
 
     expect(fn () => $this->ownerService->delete($regularUser->id))
         ->toThrow(RecordNotFoundException::class)
-        ->and(fn (RecordNotFoundException $e) => expect($e->getMessage())->toContain('owner account with ID '.$regularUser->id.' could not be found.'));
+        ->and(fn (RecordNotFoundException $e) => expect($e->getMessage())->toContain('The requested record could not be found.'));
 });

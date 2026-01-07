@@ -2,13 +2,48 @@
 
 namespace Modules\User\Contracts\Services;
 
+use Modules\User\Models\User;
+
 interface OwnerService
 {
     /**
-     * Check if a record exists based on the given conditions.
+     * Create a new owner user.
      *
-     * @param  array<string, mixed>|callable  $where  Conditions for existence check.
-     * @return bool True if a record exists, false otherwise.
+     * @param  array<string, mixed>  $data  The data for creating the owner user.
+     * @return \Modules\User\Models\User The newly created owner user.
      */
-    public function exists(array|callable $where = []): bool;
+    public function create(array $data): User;
+
+    /**
+     * Update the existing owner user.
+     *
+     * @param  mixed  $id  The primary key of the owner user.
+     * @param  array<string, mixed>  $data  The data for updating the owner user.
+     * @param  array<int, string>  $columns  Columns to retrieve after update.
+     * @return \Modules\User\Models\User The updated owner user.
+     */
+    public function update(mixed $id, array $data, array $columns = ['*']): User;
+
+    /**
+     * Delete an owner user.
+     *
+     * @param  mixed  $id  The primary key of the owner user.
+     * @return bool True if deletion was successful.
+     */
+    public function delete(mixed $id): bool;
+
+    /**
+     * Get the single owner user.
+     *
+     * @param  array<int, string>  $columns  Columns to retrieve.
+     * @return \Modules\User\Models\User|null The owner user or null if not found.
+     */
+    public function get(array $columns = ['*']): ?User;
+
+    /**
+     * Check if an owner account already exists.
+     *
+     * @return bool True if an owner account exists, false otherwise.
+     */
+    public function exists(): bool;
 }

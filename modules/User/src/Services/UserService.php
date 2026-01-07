@@ -7,6 +7,7 @@ use Illuminate\Support\Arr;
 use Modules\Shared\Concerns\EloquentQuery;
 use Modules\Shared\Exceptions\AppException;
 use Modules\Shared\Exceptions\RecordNotFoundException;
+use Modules\User\Contracts\Services\OwnerService;
 use Modules\User\Contracts\Services\UserService as UserServiceContract;
 use Modules\User\Models\User;
 
@@ -22,10 +23,19 @@ class UserService implements UserServiceContract
     /**
      * UserService constructor.
      */
-    public function __construct(User $userModel)
+    /**
+     * UserService constructor.
+     *
+     * @param  \Modules\User\Models\User  $userModel
+     * @param  \Modules\User\Contracts\Services\OwnerService  $ownerService
+     */
+    protected OwnerService $ownerService;
+
+    public function __construct(User $userModel, OwnerService $ownerService)
     {
         $this->setModel($userModel);
         $this->setSearchable('name', 'email', 'username');
+        $this->ownerService = $ownerService;
     }
 
     /**
@@ -52,25 +62,28 @@ class UserService implements UserServiceContract
     public function create(array $data): User
     {
         $roles = $data['roles'] ?? null;
+        $originalRoles = $roles;
         unset($data['roles']);
 
         if ($roles !== null) {
             $roles = Arr::wrap($roles);
             if (in_array('owner', $roles)) {
-                if ($this->model->role('owner')->exists()) {
+                if ($this->ownerService->exists()) {
                     throw new AppException(
                         userMessage: 'user::exceptions.owner_already_exists',
                         code: 403
                     );
                 }
+
+                return $this->ownerService->create($data); // OwnerService::create handles role assignment and checks
             }
         }
 
         /** @var User $user */
         $user = $this->eloquentCreate($data);
 
-        if ($roles !== null) {
-            $user->assignRole($roles);
+        if ($originalRoles !== null) { // Use originalRoles here to prevent double assignment in OwnerService case
+            $user->assignRole($originalRoles);
         }
 
         return $user;
@@ -119,25 +132,22 @@ class UserService implements UserServiceContract
         }
 
         $roles = $data['roles'] ?? null;
+        $originalRoles = $roles; // Store original roles for later assignment if not owner
         unset($data['roles']);
 
-        if ($roles !== null) {
-            $roles = Arr::wrap($roles);
+        if ($user->hasRole('owner')) {
+            return $this->ownerService->update($id, $data, $columns);
         }
 
-        if ($user->hasRole('owner') && ($roles === null || ! in_array('owner', $roles))) {
-            throw new AppException(
-                userMessage: 'user::exceptions.owner_role_cannot_be_removed',
-                code: 403
-            );
-        }
-
-        if (($roles !== null) && in_array('owner', $roles) && ! $user->hasRole('owner')) {
-            if ($this->model->role('owner')->exists()) {
-                throw new AppException(
-                    userMessage: 'user::exceptions.owner_cannot_be_transferred',
-                    code: 403
-                );
+        if ($originalRoles !== null) {
+            $roles = Arr::wrap($originalRoles);
+            if (in_array('owner', $roles) && ! $user->hasRole('owner')) {
+                if ($this->ownerService->exists()) {
+                    throw new AppException(
+                        userMessage: 'user::exceptions.owner_cannot_be_transferred',
+                        code: 403
+                    );
+                }
             }
         }
 
@@ -147,8 +157,8 @@ class UserService implements UserServiceContract
 
         $updatedUser = $this->eloquentUpdate($id, $data, $columns);
 
-        if ($roles !== null) {
-            $updatedUser->syncRoles($roles);
+        if ($originalRoles !== null) {
+            $updatedUser->syncRoles($originalRoles);
         }
 
         return $updatedUser;
@@ -172,10 +182,7 @@ class UserService implements UserServiceContract
         }
 
         if ($user->hasRole('owner')) {
-            throw new AppException(
-                userMessage: 'user::exceptions.owner_cannot_be_deleted',
-                code: 403
-            );
+            return $this->ownerService->delete($id); // OwnerService::delete handles the exception
         }
 
         return $this->eloquentDelete($id);

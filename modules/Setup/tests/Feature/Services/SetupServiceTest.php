@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Setup\Tests\Unit\Services;
+namespace Modules\Setup\Tests\Feature\Services;
 
 use Illuminate\Support\Facades\Session;
 use InvalidArgumentException;

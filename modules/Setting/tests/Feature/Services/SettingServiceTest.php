@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Setting\Tests\Unit\Services;
+namespace Modules\Setting\Tests\Feature\Services;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;

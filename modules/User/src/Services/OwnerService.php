@@ -2,8 +2,7 @@
 
 namespace Modules\User\Services;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\QueryException; // Added for exception handling
+// Added for exception handling
 use Modules\Shared\Concerns\EloquentQuery;
 use Modules\Shared\Exceptions\AppException;
 use Modules\Shared\Exceptions\RecordNotFoundException;
@@ -27,12 +26,13 @@ class OwnerService implements OwnerServiceContract
     use EloquentQuery {
         create as eloquentCreate;
         update as eloquentUpdate;
+        delete as eloquentDelete;
     }
 
     public function __construct(User $user)
     {
         $this->setModel($user);
-        $this->setQuery($user->owner());
+        $this->setQuery(fn ($q) => $q->owner());
         $this->setSearchable(['name', 'email', 'username']);
     }
 
@@ -44,9 +44,9 @@ class OwnerService implements OwnerServiceContract
      *
      * @throws \Modules\Shared\Exceptions\AppException If an owner already exists or creation fails.
      */
-    public function create(array $data): Model
+    public function create(array $data): User
     {
-        if ($this->ownerExists()) {
+        if ($this->exists()) {
             throw new AppException(
                 userMessage: 'shared::exceptions.owner_exists',
                 logMessage: 'Attempted to create a second owner account.',
@@ -54,33 +54,13 @@ class OwnerService implements OwnerServiceContract
             );
         }
 
-        // Use the Eloquent model directly since OwnerService is specific to User and we need to assign role.
-        try {
-            /** @var \Modules\User\Models\User $owner */
-            $owner = $this->model->newQuery()->create($data); // Directly create the user model
+        /** @var \Modules\User\Models\User $owner */
+        $owner = $this->eloquentCreate($data);
 
-            $owner->assignRole('owner');
-            $owner->loadMissing(['roles', 'permissions']); // Load relations after role assignment
+        $owner->assignRole('owner');
+        $owner->loadMissing(['roles', 'permissions']);
 
-            return $owner;
-        } catch (QueryException $e) {
-            if ($e->getCode() === '23000') { // Duplicate entry
-                throw new AppException(
-                    userMessage: 'shared::exceptions.name_exists', // or email_exists, more generic
-                    replace: ['record' => $this->recordName],
-                    logMessage: sprintf('Attempted to create %s with duplicate unique field: %s', $this->recordName, $e->getMessage()),
-                    code: 409,
-                    previous: $e
-                );
-            }
-            throw new AppException(
-                userMessage: 'shared::exceptions.creation_failed',
-                replace: ['record' => $this->recordName],
-                logMessage: sprintf('Creation of %s failed: %s', $this->recordName, $e->getMessage()),
-                code: 500,
-                previous: $e
-            );
-        }
+        return $owner;
     }
 
     /**
@@ -94,7 +74,7 @@ class OwnerService implements OwnerServiceContract
      * @throws \Modules\Shared\Exceptions\RecordNotFoundException If no owner exists or the provided ID does not match the owner.
      * @throws \Modules\Shared\Exceptions\AppException If the update fails.
      */
-    public function update(mixed $id, array $data, array $columns = ['*']): Model
+    public function update(mixed $id, array $data, array $columns = ['*']): User
     {
         /** @var User|null $existingOwner */
         $existingOwner = $this->query(columns: ['id'])->first(); // Use the owner scope to get the single owner
@@ -120,29 +100,26 @@ class OwnerService implements OwnerServiceContract
         unset($data['roles']);
         unset($data['role']);
 
-        try {
-            $existingOwner->update($data); // Directly update the owner model
-            $existingOwner->loadMissing(['roles', 'permissions']); // Load relations after update
+        /** @var \Modules\User\Models\User $updatedOwner */
+        $updatedOwner = $this->eloquentUpdate($existingOwner->id, $data, $columns);
+        $updatedOwner->loadMissing(['roles', 'permissions']);
 
-            return $existingOwner;
-        } catch (QueryException $e) {
-            if ($e->getCode() === '23000') { // Duplicate entry
-                throw new AppException(
-                    userMessage: 'shared::exceptions.name_exists', // or email_exists, more generic
-                    replace: ['record' => $this->recordName],
-                    logMessage: sprintf('Attempted to update %s with duplicate unique field: %s', $this->recordName, $e->getMessage()),
-                    code: 409,
-                    previous: $e
-                );
-            }
-            throw new AppException(
-                userMessage: 'shared::exceptions.update_failed',
-                replace: ['record' => $this->recordName],
-                logMessage: sprintf('Update of %s failed: %s', $this->recordName, $e->getMessage()),
-                code: 500,
-                previous: $e
-            );
+        return $updatedOwner;
+    }
+
+    public function delete(mixed $id): bool
+    {
+        /** @var User|null $owner */
+        $owner = $this->find($id);
+
+        if (! $owner) {
+            throw new RecordNotFoundException(replace: ['record' => $this->recordName, 'id' => $id]);
         }
+
+        throw new AppException(
+            userMessage: 'user::exceptions.owner_cannot_be_deleted',
+            code: 403
+        );
     }
 
     /**
@@ -151,7 +128,7 @@ class OwnerService implements OwnerServiceContract
      * @param  array<int, string>  $columns  Columns to retrieve.
      * @return \Modules\User\Models\User|null The owner user or null if not found.
      */
-    public function get(array $columns = ['*']): ?Model
+    public function get(array $columns = ['*']): ?User
     {
         /** @var User|null $owner */
         $owner = $this->query($columns)->first();
@@ -160,13 +137,5 @@ class OwnerService implements OwnerServiceContract
         }
 
         return $owner;
-    }
-
-    /**
-     * Check if an owner account already exists.
-     */
-    protected function ownerExists(): bool
-    {
-        return $this->query(columns: ['id'])->exists();
     }
 }
