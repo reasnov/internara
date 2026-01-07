@@ -86,12 +86,24 @@ test('validation errors are displayed for empty credentials', function () {
 
 });
 
-test('validation errors are displayed for invalid email format', function () {
+test('validation passes for invalid email format since only string rule is present', function () {
+    $errorMessage = 'Invalid credentials provided.';
+    $this->authServiceMock->shouldReceive('login')
+        ->once()
+        ->with([
+            'email' => 'invalid-email-format',
+            'password' => 'password',
+        ], false)
+        ->andThrow(new AppException(userMessage: $errorMessage, code: 401));
+
     Livewire::test(Login::class)
         ->set('email', 'invalid-email-format')
         ->set('password', 'password')
         ->call('login')
-        ->assertHasErrors(['email' => 'email']);
+        ->assertHasErrors(['email' => $errorMessage])
+        ->assertNoRedirect();
+
+    $this->assertGuest();
 });
 
 test('validation errors are displayed for empty email', function () {

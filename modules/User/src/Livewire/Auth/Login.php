@@ -18,11 +18,12 @@ class Login extends Component
 {
     protected AuthService $authService;
 
-    /**
-     * The user's email address or username for login.
-     */
-    #[Rule('required|string|email')]
+    #[Rule('required|string')]
     public string $email = '';
+
+    /**
+     * The user's password for login.
+     */
 
     #[Rule('required|string')]
     public string $password = '';
