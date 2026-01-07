@@ -42,31 +42,55 @@ interface AuthService
 
     /**
      * Change the password for a user.
+     *
+     * @param  \Modules\User\Models\User  $user  The user whose password is to be changed.
+     * @param  string  $currentPassword  The user's current password.
+     * @param  string  $newPassword  The new password for the user.
+     * @return bool True if the password was successfully changed, false otherwise.
+     *
+     * @throws \Modules\Shared\Exceptions\AppException If the current password does not match.
      */
     public function changePassword(User $user, string $currentPassword, string $newPassword): bool;
 
     /**
      * Send the password reset link to a user.
+     *
+     * @param  string  $email  The email address of the user.
      */
     public function sendPasswordResetLink(string $email): void;
 
     /**
      * Reset the password for a user.
+     *
+     * @param  array  $credentials  Contains 'token', 'email', 'password', 'password_confirmation'.
+     * @return bool True if the password was successfully reset, false otherwise.
      */
     public function resetPassword(array $credentials): bool;
 
     /**
      * Verify a user's email address.
+     *
+     * @param  string  $id  The user ID.
+     * @param  string  $hash  The email verification hash.
+     * @return bool True if the email was successfully verified, false otherwise.
      */
     public function verifyEmail(string $id, string $hash): bool;
 
     /**
      * Resend the email verification notification.
+     *
+     * @param  \Modules\User\Models\User  $user  The user to resend the verification email to.
+     *
+     * @throws \Modules\Shared\Exceptions\AppException If the email is already verified.
      */
     public function resendVerificationEmail(User $user): void;
 
     /**
      * Confirm a user's password.
+     *
+     * @param  \Modules\User\Models\User  $user  The user to confirm the password for.
+     * @param  string  $password  The password to confirm.
+     * @return bool True if the password matches, false otherwise.
      */
     public function confirmPassword(User $user, string $password): bool;
 }
