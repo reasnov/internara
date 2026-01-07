@@ -4,12 +4,15 @@ namespace Modules\User\Models;
 
 use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder; // Added this import
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Modules\User\Database\Factories\UserFactory;
 use Modules\User\Support\UsernameGenerator;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -19,7 +22,6 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $name
  * @property string $email
  * @property string $username
- * @property string|null $avatar_url
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string $password
  * @property-read string|null $remember_token
@@ -28,11 +30,14 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
  * @property-read \Illuminate\Database\Eloquent\Collection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static> owner()
  */
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements HasMedia, MustVerifyEmail
 {
     use HasFactory;
     use HasRoles;
+    use InteractsWithMedia;
     use MustVerifyEmailTrait;
     use Notifiable;
 
@@ -46,7 +51,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'username',
         'password',
-        'avatar_url',
     ];
 
     /**
@@ -119,5 +123,33 @@ class User extends Authenticatable implements MustVerifyEmail
             ->take(2)
             ->map(fn (string $word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    /**
+     * Register the media collections for the user's avatar.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('user_avatar')
+            ->singleFile();
+    }
+
+    /**
+     * Get the URL of the user's avatar.
+     */
+    public function getAvatarUrlAttribute(): ?string
+    {
+        return $this->getFirstMediaUrl('user_avatar') ?: null;
+    }
+
+    /**
+     * Scope a query to only include users with the 'owner' role.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<static>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<static>
+     */
+    public function scopeOwner(Builder $query): Builder
+    {
+        return $query->role('owner');
     }
 }

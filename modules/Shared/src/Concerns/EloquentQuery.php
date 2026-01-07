@@ -6,19 +6,29 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Arr;
 use Modules\Shared\Exceptions\AppException;
+use Modules\Shared\Exceptions\RecordNotFoundException;
 
 trait EloquentQuery
 {
     protected Model $model;
 
+    protected ?Builder $query = null;
+
     protected string $recordName = 'record';
+
+    /**
+     * Define the columns that can be searched when the `list` method is called.
+     * Consuming classes can override this property.
+     *
+     * @var array<int, string>
+     */
+    protected array $searchableColumns = [];
 
     /**
      * Set the Eloquent model instance for the trait.
      * This method effectively replaces the constructor logic of EloquentService.
-     *
-     * @param  Model  $model  The Eloquent model instance.
      */
     protected function setModel(Model $model): void
     {
@@ -27,14 +37,23 @@ trait EloquentQuery
     }
 
     /**
-     * Get a new query builder instance for the model.
+     * Set the query builder instance.
+     *
+     * @param  (callable(Builder $query))|Builder  $query
+     */
+    protected function setQuery(callable|Builder $query): void
+    {
+        $this->query = is_callable($query) ? $query($this->model->newQuery()) : $query;
+    }
+
+    /**
+     * Get a query builder instance for the model.
      *
      * @param  array<int, string>  $columns  Columns to select.
-     * @return Builder The Eloquent query builder.
      */
     public function query(array $columns = ['*']): Builder
     {
-        return $this->query($columns)->select($columns);
+        return $this->query ?? $this->model->newQuery()->select($columns);
     }
 
     /**
@@ -43,46 +62,61 @@ trait EloquentQuery
      * @param  array<string, mixed>  $filters  Filter criteria.
      * @param  int  $perPage  Number of records per page.
      * @param  array<int, string>  $columns  Columns to retrieve.
-     * @return LengthAwarePaginator Paginated list of records.
      */
     public function list(array $filters = [], int $perPage = 10, array $columns = ['*']): LengthAwarePaginator
     {
-        return $this->query($columns)
-            ->when($filters['search'] ?? null, function (Builder $query, string $search) {
-                if ($this->model->getConnection()->getSchemaBuilder()->hasColumn($this->model->getTable(), 'name')) {
-                    $query->where('name', 'like', "%{$search}%");
+        $query = $this->query($columns);
+
+        if (isset($filters['search']) && ! empty($filters['search'])) {
+            $this->applySearchFilter($query, $filters['search']);
+        }
+
+        if (isset($filters['sort'])) {
+            $query->orderBy($filters['sort'], $filters['direction'] ?? 'asc');
+        } else {
+            $query->latest();
+        }
+
+        return $query->paginate($perPage, $columns);
+    }
+
+    /**
+     * Apply search filter to the query.
+     */
+    protected function applySearchFilter(Builder $query, string $search): void
+    {
+        $searchableColumns = ! empty($this->searchableColumns) ? $this->searchableColumns : ['name'];
+
+        $query->where(function (Builder $query) use ($search, $searchableColumns) {
+            $first = true;
+            foreach ($searchableColumns as $column) {
+                if ($this->model->getConnection()->getSchemaBuilder()->hasColumn($this->model->getTable(), $column)) {
+                    if ($first) {
+                        $query->where($column, 'like', sprintf('%%%s%%', $search));
+                        $first = false;
+                    } else {
+                        $query->orWhere($column, 'like', sprintf('%%%s%%', $search));
+                    }
                 }
-            })
-            ->when($filters['sort'] ?? null, function (Builder $query, string $sort) {
-                $query->orderBy($sort, $filters['direction'] ?? 'asc');
-            }, function (Builder $query) {
-                $query->latest();
-            })
-            ->paginate($perPage, $columns);
+            }
+        });
     }
 
     /**
      * Create a new record.
      *
      * @param  array<string, mixed>  $data  The data for creating the record.
-     * @param  array  $columns  Columns to retrieve after creation.
-     * @return Model The newly created record.
-     *
-     * @throws AppException If creation fails due to a database error.
      */
-    public function create(array $data, array $columns = ['*']): Model
+    public function create(array $data): Model
     {
         try {
-            /** @var Model $record */
-            $record = $this->model->create($data);
-
-            return $this->model->findOrFail($record->getKey(), $columns);
+            return $this->query()->create($data);
         } catch (QueryException $e) {
             if ($e->getCode() === '23000') { // Duplicate entry
                 throw new AppException(
                     userMessage: 'shared::exceptions.name_exists',
                     replace: ['record' => $this->recordName],
-                    logMessage: 'Attempted to create '.$this->recordName.' with duplicate unique field.',
+                    logMessage: sprintf('Attempted to create %s with duplicate unique field: %s', $this->recordName, $e->getMessage()),
                     code: 409,
                     previous: $e
                 );
@@ -90,7 +124,7 @@ trait EloquentQuery
             throw new AppException(
                 userMessage: 'shared::exceptions.creation_failed',
                 replace: ['record' => $this->recordName],
-                logMessage: 'Creation of '.$this->recordName.' failed: '.$e->getMessage(),
+                logMessage: sprintf('Creation of %s failed: %s', $this->recordName, $e->getMessage()),
                 code: 500,
                 previous: $e
             );
@@ -102,12 +136,11 @@ trait EloquentQuery
      *
      * @param  mixed  $id  The primary key of the record.
      * @param  array<int, string>  $columns  Columns to retrieve.
-     * @return Model|null The found record or null if not found.
      */
     public function find(mixed $id, array $columns = ['*']): ?Model
     {
-        /** @var Model $record */
-        $record = $this->model->find($id, $columns);
+        /** @var Model|null $record */
+        $record = $this->query()->find($id, $columns);
 
         return $record;
     }
@@ -116,7 +149,6 @@ trait EloquentQuery
      * Check if a record exists based on the given conditions.
      *
      * @param  array<string, mixed>|callable  $where  Conditions for existence check.
-     * @return bool True if a record exists, false otherwise.
      */
     public function exists(array|callable $where = []): bool
     {
@@ -131,15 +163,18 @@ trait EloquentQuery
      * @param  mixed  $id  The primary key of the record.
      * @param  array<string, mixed>  $data  The data for updating the record.
      * @param  array<int, string>  $columns  Columns to retrieve after update.
-     * @return Model The updated record.
      *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If the record is not found.
+     * @throws RecordNotFoundException If the record is not found.
      * @throws AppException If the update fails due to a database error.
      */
     public function update(mixed $id, array $data, array $columns = ['*']): Model
     {
         /** @var Model $record */
-        $record = $this->model->findOrFail($id, $columns);
+        $record = $this->query()->find($id, $columns);
+
+        if (! $record) {
+            throw new RecordNotFoundException(replace: ['record' => $this->recordName, 'id' => $id]);
+        }
 
         try {
             $record->update($data);
@@ -150,7 +185,7 @@ trait EloquentQuery
                 throw new AppException(
                     userMessage: 'shared::exceptions.name_exists',
                     replace: ['record' => $this->recordName],
-                    logMessage: 'Attempted to update '.$this->recordName.' with duplicate unique field.',
+                    logMessage: sprintf('Attempted to update %s with duplicate unique field: %s', $this->recordName, $e->getMessage()),
                     code: 409,
                     previous: $e
                 );
@@ -158,7 +193,7 @@ trait EloquentQuery
             throw new AppException(
                 userMessage: 'shared::exceptions.update_failed',
                 replace: ['record' => $this->recordName],
-                logMessage: 'Update of '.$this->recordName.' failed: '.$e->getMessage(),
+                logMessage: sprintf('Update of %s failed: %s', $this->recordName, $e->getMessage()),
                 code: 500,
                 previous: $e
             );
@@ -169,14 +204,17 @@ trait EloquentQuery
      * Delete a record by its ID.
      *
      * @param  mixed  $id  The primary key of the record.
-     * @return bool True if the record was deleted.
      *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If the record is not found.
+     * @throws RecordNotFoundException If the record is not found.
      * @throws AppException If deletion fails due to a foreign key constraint.
      */
     public function delete(mixed $id): bool
     {
-        $record = $this->model->findOrFail($id);
+        $record = $this->query()->find($id);
+
+        if (! $record) {
+            throw new RecordNotFoundException(replace: ['record' => $this->recordName, 'id' => $id]);
+        }
 
         try {
             return $record->delete();
@@ -185,7 +223,7 @@ trait EloquentQuery
                 throw new AppException(
                     userMessage: 'shared::exceptions.cannot_delete_associated',
                     replace: ['record' => $this->recordName],
-                    logMessage: 'Attempted to delete '.$this->recordName.' with associated records.',
+                    logMessage: sprintf('Attempted to delete %s with associated records: %s', $this->recordName, $e->getMessage()),
                     code: 409,
                     previous: $e
                 );
@@ -193,10 +231,19 @@ trait EloquentQuery
             throw new AppException(
                 userMessage: 'shared::exceptions.deletion_failed',
                 replace: ['record' => $this->recordName],
-                logMessage: 'Deletion of '.$this->recordName.' failed: '.$e->getMessage(),
+                logMessage: sprintf('Deletion of %s failed: %s', $this->recordName, $e->getMessage()),
                 code: 500,
                 previous: $e
             );
         }
+    }
+
+    /**
+     * Set the columns that should be used for searching.
+     */
+    public function setSearchable(string|array ...$columns): void
+    {
+        $flattenedColumns = Arr::flatten($columns);
+        $this->searchableColumns = array_unique($flattenedColumns);
     }
 }

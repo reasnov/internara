@@ -3,16 +3,21 @@
 namespace Modules\User\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\QueryException;
+use Illuminate\Support\Arr;
 use Modules\Shared\Concerns\EloquentQuery;
 use Modules\Shared\Exceptions\AppException;
+use Modules\Shared\Exceptions\RecordNotFoundException;
 use Modules\User\Contracts\Services\UserService as UserServiceContract;
 use Modules\User\Models\User;
 
 class UserService implements UserServiceContract
 {
-    use EloquentQuery;
+    use EloquentQuery {
+        list as eloquentList;
+        create as eloquentCreate;
+        update as eloquentUpdate;
+        delete as eloquentDelete;
+    }
 
     /**
      * UserService constructor.
@@ -20,6 +25,7 @@ class UserService implements UserServiceContract
     public function __construct(User $userModel)
     {
         $this->setModel($userModel);
+        $this->setSearchable('name', 'email', 'username');
     }
 
     /**
@@ -32,20 +38,7 @@ class UserService implements UserServiceContract
      */
     public function list(array $filters = [], int $perPage = 10, array $columns = ['*']): LengthAwarePaginator
     {
-        return $this->model->query()
-            ->when($filters['search'] ?? null, function (Builder $query, string $search) {
-                $query->where(function (Builder $q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhere('username', 'like', "%{$search}%");
-                });
-            })
-            ->when($filters['sort'] ?? null, function (Builder $query, string $sort) {
-                $query->orderBy($sort, $filters['direction'] ?? 'asc');
-            }, function (Builder $query) {
-                $query->latest();
-            })
-            ->paginate($perPage, $columns);
+        return $this->eloquentList($filters, $perPage, $columns);
     }
 
     /**
@@ -58,11 +51,12 @@ class UserService implements UserServiceContract
      */
     public function create(array $data): User
     {
-        try {
-            $roles = $data['roles'] ?? null;
-            unset($data['roles']);
+        $roles = $data['roles'] ?? null;
+        unset($data['roles']);
 
-            if (is_array($roles) && in_array('owner', $roles)) {
+        if ($roles !== null) {
+            $roles = Arr::wrap($roles);
+            if (in_array('owner', $roles)) {
                 if ($this->model->role('owner')->exists()) {
                     throw new AppException(
                         userMessage: 'user::exceptions.owner_already_exists',
@@ -70,33 +64,16 @@ class UserService implements UserServiceContract
                     );
                 }
             }
-
-            /** @var User $user */
-            $user = $this->model->create($data);
-
-            if (is_array($roles)) {
-                $user->assignRole($roles);
-            }
-
-            return $user;
-        } catch (QueryException $e) {
-            if ($e->getCode() === '23000') { // Duplicate entry
-                throw new AppException(
-                    userMessage: 'shared::exceptions.name_exists',
-                    replace: ['record' => $this->recordName],
-                    logMessage: 'Attempted to create user with duplicate unique field.',
-                    code: 409,
-                    previous: $e
-                );
-            }
-            throw new AppException(
-                userMessage: 'shared::exceptions.creation_failed',
-                replace: ['record' => $this->recordName],
-                logMessage: 'User creation failed: '.$e->getMessage(),
-                code: 500,
-                previous: $e
-            );
         }
+
+        /** @var User $user */
+        $user = $this->eloquentCreate($data);
+
+        if ($roles !== null) {
+            $user->assignRole($roles);
+        }
+
+        return $user;
     }
 
     /**
@@ -134,58 +111,47 @@ class UserService implements UserServiceContract
      */
     public function update(mixed $id, array $data, array $columns = ['*']): User
     {
-        /** @var User $user */
-        $user = $this->model->findOrFail($id);
+        /** @var User|null $user */
+        $user = $this->find($id);
 
-        try {
-            $roles = $data['roles'] ?? null;
-            unset($data['roles']);
+        if (! $user) {
+            throw new RecordNotFoundException(replace: ['record' => $this->recordName, 'id' => $id]);
+        }
 
-            if ($user->hasRole('owner') && (! is_array($roles) || ! in_array('owner', $roles))) {
+        $roles = $data['roles'] ?? null;
+        unset($data['roles']);
+
+        if ($roles !== null) {
+            $roles = Arr::wrap($roles);
+        }
+
+        if ($user->hasRole('owner') && ($roles === null || ! in_array('owner', $roles))) {
+            throw new AppException(
+                userMessage: 'user::exceptions.owner_role_cannot_be_removed',
+                code: 403
+            );
+        }
+
+        if (($roles !== null) && in_array('owner', $roles) && ! $user->hasRole('owner')) {
+            if ($this->model->role('owner')->exists()) {
                 throw new AppException(
-                    userMessage: 'user::exceptions.owner_role_cannot_be_removed',
+                    userMessage: 'user::exceptions.owner_cannot_be_transferred',
                     code: 403
                 );
             }
-
-            if (is_array($roles) && in_array('owner', $roles) && ! $user->hasRole('owner')) {
-                if ($this->model->role('owner')->exists()) {
-                    throw new AppException(
-                        userMessage: 'user::exceptions.owner_cannot_be_transferred',
-                        code: 403
-                    );
-                }
-            }
-
-            if (array_key_exists('password', $data) && empty($data['password'])) {
-                unset($data['password']);
-            }
-
-            $user->update($data);
-
-            if (is_array($roles)) {
-                $user->syncRoles($roles);
-            }
-
-            return $user;
-        } catch (QueryException $e) {
-            if ($e->getCode() === '23000') { // Duplicate entry
-                throw new AppException(
-                    userMessage: 'shared::exceptions.name_exists',
-                    replace: ['record' => $this->recordName],
-                    logMessage: 'Attempted to update user with duplicate unique field.',
-                    code: 409,
-                    previous: $e
-                );
-            }
-            throw new AppException(
-                userMessage: 'shared::exceptions.update_failed',
-                replace: ['record' => $this->recordName],
-                logMessage: 'User update failed: '.$e->getMessage(),
-                code: 500,
-                previous: $e
-            );
         }
+
+        if (array_key_exists('password', $data) && empty($data['password'])) {
+            unset($data['password']);
+        }
+
+        $updatedUser = $this->eloquentUpdate($id, $data, $columns);
+
+        if ($roles !== null) {
+            $updatedUser->syncRoles($roles);
+        }
+
+        return $updatedUser;
     }
 
     /**
@@ -199,34 +165,19 @@ class UserService implements UserServiceContract
     public function delete(mixed $id): bool
     {
         /** @var User $user */
-        $user = $this->model->findOrFail($id);
+        $user = $this->find($id);
 
-        try {
-            if ($user->hasRole('owner')) {
-                throw new AppException(
-                    userMessage: 'user::exceptions.owner_cannot_be_deleted',
-                    code: 403
-                );
-            }
+        if (! $user) {
+            throw new RecordNotFoundException(replace: ['record' => $this->recordName, 'id' => $id]);
+        }
 
-            return $user->delete();
-        } catch (QueryException $e) {
-            if ($e->getCode() === '23000') { // Foreign key constraint
-                throw new AppException(
-                    userMessage: 'shared::exceptions.cannot_delete_associated',
-                    replace: ['record' => $this->recordName],
-                    logMessage: 'Attempted to delete user with associated records.',
-                    code: 409,
-                    previous: $e
-                );
-            }
+        if ($user->hasRole('owner')) {
             throw new AppException(
-                userMessage: 'shared::exceptions.deletion_failed',
-                replace: ['record' => $this->recordName],
-                logMessage: 'User deletion failed: '.$e->getMessage(),
-                code: 500,
-                previous: $e
+                userMessage: 'user::exceptions.owner_cannot_be_deleted',
+                code: 403
             );
         }
+
+        return $this->eloquentDelete($id);
     }
 }

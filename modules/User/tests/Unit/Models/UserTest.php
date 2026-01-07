@@ -22,7 +22,6 @@ test('it has fillable attributes', function () {
         'email',
         'username',
         'password',
-        'avatar_url',
     ];
 
     $user = new User;
@@ -69,4 +68,21 @@ test('it automatically generates a username if not provided', function () {
         ->not->toBeNull()
         ->toBeString()
         ->toMatch('/^u\d{8}$/');
+});
+
+test('it can manage avatar using medialibrary', function () {
+    $user = User::factory()->create();
+    $avatarUrl = 'https://example.com/avatar.jpg';
+
+    $user->addMediaFromString('dummy content')
+        ->usingFileName('avatar.jpg')
+        ->toMediaCollection('user_avatar');
+
+    expect($user->avatar_url)
+        ->not->toBeNull()
+        ->toContain('avatar.jpg');
+
+    // Ensure that the avatar_url attribute returns the correct URL
+    expect($user->getFirstMediaUrl('user_avatar'))
+        ->toEqual($user->avatar_url);
 });

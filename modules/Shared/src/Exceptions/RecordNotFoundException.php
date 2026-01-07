@@ -21,6 +21,7 @@ class RecordNotFoundException extends AppException
      * @param  array  $replace  Parameters to pass to the translator for replacement.
      * @param  string|null  $locale  Specific locale to use for the user message.
      * @param  array  $record  The record identifier(s) that were not found, for logging context.
+     * @param  string  $logMessage  The log message to use for logging purposes.
      * @param  int  $code  The HTTP status code, defaulting to 404 (Not Found).
      * @param  Throwable|null  $previous  The previous exception used for chaining.
      */
@@ -29,6 +30,7 @@ class RecordNotFoundException extends AppException
         array $replace = [],
         ?string $locale = null,
         array $record = [],
+        string $logMessage = 'Record not found.',
         int $code = 404,
         ?Throwable $previous = null
     ) {
@@ -42,7 +44,7 @@ class RecordNotFoundException extends AppException
             userMessage: $userMessage,
             replace: $replace,
             locale: $locale,
-            logMessage: 'Record not found.', // Log message can remain fixed or be a trans key if needed
+            logMessage: $logMessage,
             code: $code,
             previous: $previous,
             context: $context

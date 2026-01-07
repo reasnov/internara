@@ -60,6 +60,10 @@ class UserServiceProvider extends ServiceProvider
      */
     protected function bindings(): array
     {
-        return [];
+        return [
+            \Modules\User\Contracts\Services\UserService::class => \Modules\User\Services\UserService::class,
+            \Modules\User\Contracts\Services\OwnerService::class => \Modules\User\Services\OwnerService::class,
+            \Modules\User\Contracts\Services\AuthService::class => \Modules\User\Services\AuthService::class,
+        ];
     }
 }
