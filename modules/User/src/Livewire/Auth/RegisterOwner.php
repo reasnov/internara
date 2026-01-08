@@ -37,6 +37,11 @@ class RegisterOwner extends Component
 
     public function render()
     {
-        return view('user::livewire.auth.register-owner');
+        return view('user::livewire.auth.register-owner')
+            ->layout('user::components.layouts.auth', [
+                'title' => __('Buat Akun Utama | :site_title', [
+                    'site_title' => setting('site_title', 'Internara')
+                ])
+            ]);
     }
 }

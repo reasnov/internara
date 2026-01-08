@@ -42,7 +42,7 @@ class SetupSchool extends Component
     }
 
     /**
-     * Listens for the 'school-updated' event and proceeds to the next step.
+     * Handles the 'school-updated' event to proceed to the next setup step.
      */
     #[On('school-updated')]
     public function handleSchoolUpdated(): void

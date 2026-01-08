@@ -41,6 +41,9 @@ class SetupAccount extends Component
         $this->ensurePrevStepCompleted();
     }
 
+    /**
+     * Handles the 'owner-registered' event to proceed to the next setup step.
+     */
     #[On('owner-registered')]
     public function handleOwnerRegistered(): void
     {

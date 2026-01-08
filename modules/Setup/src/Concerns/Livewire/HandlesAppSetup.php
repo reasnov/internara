@@ -28,6 +28,10 @@ trait HandlesAppSetup
     #[Locked]
     public array $setupProps = [];
 
+    /**
+     * Determines if the 'next step' button should be disabled.
+     * The button is disabled if a required record for the current step does not exist.
+     */
     #[Computed()]
     public function disableNextStep(): bool
     {
@@ -68,34 +72,40 @@ trait HandlesAppSetup
 
     /**
      * Marks the current step as complete and proceeds to the next step.
+     * Orchestrates the step progression, handling finalization if it's the 'complete' step.
      */
     public function nextStep(): void
     {
-        $this->proceedNextStep();
+        if ($this->setupProps['currentStep'] === 'complete') {
+            $this->finalizeAppSetup();
+            return; // Stop execution after finalization
+        }
+
+        $this->processCurrentStep();
 
         if (! empty($this->setupProps['nextStep'])) {
             $this->redirectToStep($this->setupProps['nextStep']);
         }
     }
 
+    /**
+     * Redirects the user to the previous step in the setup process.
+     */
     public function back(): void
     {
         $this->redirectToStep($this->setupProps['prevStep'] ?? 'welcome');
     }
 
     /**
-     * Executes the logic for the current step and handles finalization if applicable.
+     * Executes the logic for the current step.
+     * This method delegates the actual processing of the current step to the SetupService.
      */
-    protected function proceedNextStep(): void
+    protected function processCurrentStep(): void
     {
         $this->setupService->proceedSetupStep(
             $this->setupProps['currentStep'],
             $this->setupProps['extra']['req_record'] ?? null
         );
-
-        if ($this->setupProps['currentStep'] === 'complete') {
-            $this->finalizeAppSetup();
-        }
     }
 
     /**
