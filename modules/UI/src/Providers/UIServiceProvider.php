@@ -38,7 +38,7 @@ class UIServiceProvider extends ServiceProvider
             return "<?php echo \Modules\UI\Facades\SlotManager::render({$expression}); ?>";
         });
 
-        $this->registerDefaultViewSlots();
+        $this->registerViewSlots();
     }
 
     /**
@@ -64,18 +64,15 @@ class UIServiceProvider extends ServiceProvider
         ];
     }
 
-    /**
-     * Register default components for the main navbar slots.
-     */
-    private function registerDefaultViewSlots(): void
+    protected function viewSlots(): array
     {
-        SlotRegistryFacade::configure([
+        return [
             'navbar.brand' => 'ui::components.brand',
             'navbar.actions' => [
                 'ui::components.user-menu',
                 'ui::components.theme-toggle',
             ],
             'footer.app-credit' => 'ui::components.app-credit',
-        ]);
+        ];
     }
 }

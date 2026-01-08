@@ -8,9 +8,13 @@
     </head>
 
     <body class="max-w-screen size-full overflow-x-hidden font-sans antialiased">
+        <!-- Page Content --->
         <div class="flex size-full min-h-screen flex-col">
             {{ $slot }}
+        </div>
 
+        <!-- Toast Area --->
+        <div class="fixed z-20">
             <x-mary-toast />
         </div>
 

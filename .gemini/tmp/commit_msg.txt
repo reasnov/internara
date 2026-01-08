@@ -1,0 +1,37 @@
+feat: Enhance setup wizard UI/UX and consolidate core system improvements
+
+This commit introduces a comprehensive set of improvements across the application, focusing on the setup wizard's user experience, thematic consistency, and various core system refactorings.
+
+Key changes include:
+
+- **Setup Wizard UI/UX Refinement:**
+  - Revamped all Livewire setup wizard Blade components for enhanced visual appeal and engaging, story-driven copywriting in Bahasa Indonesia.
+  - Implemented a more visually dynamic "welcome" screen with a responsive 3-column layout.
+  - Added empathetic reassurance messages to data entry steps (`school`, `department`, `internship`) to improve user experience.
+  - Ensured all UI elements adhere to the updated `ui-guide.md` principles, including responsive design and light/dark mode support.
+
+- **Theming System Overhaul:**
+  - Redefined `light` and `dark` themes in `modules/UI/resources/css/app.css` to establish a clear monochrome color hierarchy for `base`, `primary`, and `secondary` colors.
+  - Introduced softer `base-content` colors for improved readability, while maintaining pure black/white for `primary` and high contrast on buttons.
+  - Kept emerald as the `accent` color, and status colors (`info`, `success`, `warning`, `error`) as is.
+  - Updated theme configuration documentation in `ui-guide.md` with a consolidated, comprehensive table.
+
+- **Documentation & UI Standards:**
+  - Expanded `ui-guide.md` with detailed sections on "Core Principles & Philosophy," "Mobile-First & Responsiveness," and "Light & Dark Mode Support."
+  - Clarified semantic color usage policy, emphasizing prioritization while allowing flexibility for specific cases.
+  - Updated `--depth` variable to 1 across CSS and documentation.
+
+- **Core System & Service Enhancements:**
+  - Refactored `Setting` module's service and helper functions for improved caching and method consistency (e.g., `delete`, `rememberKey`, `forgetKey`).
+  - Enhanced `Setup` module's services and middleware with `isRecordExists` logic and generalized request bypassing.
+  - Consolidated slot management within `ManagesModuleProvider` and `UIServiceProvider` for better modularity.
+  - Refined authentication and owner services (`AuthService`, `OwnerService`, `UserService`) with new `updateOrCreate` functionality and role assignment during registration, crucial for the setup flow.
+
+- **Layout & Component Refactorings:**
+  - Significant changes to base layouts (`modules/Setup/resources/views/components/layouts/setup.blade.php`, `modules/UI/resources/views/components/layouts/base.blade.php`, `modules/UI/resources/views/components/layouts/base/with-navbar.blade.php`) for improved structure and MaryUI integration.
+  - Deprecated or refactored `modules/UI/resources/views/components/main.blade.php`.
+  - Fix for Livewire slot mounting in `SlotManager`.
+
+- **New Features & Module Foundations:**
+  - Added new migration, models, and services for the `Internship` module.
+  - Introduced `setup-wizard.blade.php` layout and `User/Livewire/Auth/RegisterOwner.php` component, supporting the new setup flow.

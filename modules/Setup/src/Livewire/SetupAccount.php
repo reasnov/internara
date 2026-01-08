@@ -3,6 +3,7 @@
 namespace Modules\Setup\Livewire;
 
 use Illuminate\View\View;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Modules\Setup\Concerns\Livewire\HandlesAppSetup;
 use Modules\Setup\Contracts\Services\SetupService;
@@ -38,6 +39,12 @@ class SetupAccount extends Component
         );
 
         $this->ensurePrevStepCompleted();
+    }
+
+    #[On('owner-registered')]
+    public function handleOwnerRegistered(): void
+    {
+        $this->nextStep();
     }
 
     /**

@@ -47,7 +47,7 @@ class SetupComplete extends Component
     {
         return view('setup::livewire.setup-complete')
             ->layout('setup::components.layouts.setup', [
-                'title' => __('Satu Langkah Lagi | :site_title', [
+                'title' => __('Setup Selesai | :site_title', [
                     'site_title' => setting('site_title', 'Internara'),
                 ]),
             ]);

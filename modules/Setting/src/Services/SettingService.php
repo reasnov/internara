@@ -22,13 +22,11 @@ class SettingService implements SettingServiceContract
             return $results;
         }
 
-        $cacheKey = 'settings.'.$key;
-
         if ($skipCached) {
-            Cache::forget($cacheKey);
+            $this->forgetKey($key);
         }
 
-        return Cache::remember($cacheKey, now()->addDay(), function () use ($key, $default) {
+        return $this->rememberKey($key, function () use ($key, $default) {
             $setting = Setting::find($key);
 
             if (! $setting) {
@@ -65,10 +63,7 @@ class SettingService implements SettingServiceContract
             )
         );
 
-        // Clear cache for this specific setting
-        Cache::forget('settings.'.$key);
-        // Invalidate cache for any group this setting might belong to
-        Cache::forget('settings.group.'.($setting->group ?? ''));
+        $this->forgetKey($key, $setting->group ?? null);
 
         return (bool) $setting;
     }
@@ -78,10 +73,38 @@ class SettingService implements SettingServiceContract
      */
     public function getByGroup(string $name): \Illuminate\Support\Collection
     {
-        $cacheKey = 'settings.group.'.$name;
+        return $this->rememberKey($name, fn () => Setting::group($name)->get(), isGroup: true);
+    }
 
-        return Cache::remember($cacheKey, now()->addDay(), function () use ($name) {
-            return Setting::group($name)->get();
+    public function delete(string $key): bool
+    {
+        $setting = Setting::findOrFail($key);
+
+        if ($deleted = $setting->delete()) {
+            $this->forgetKey($key);
+        }
+
+        return $deleted;
+    }
+
+    private function rememberKey(string $key, mixed $callback = null, bool $isGroup = false): mixed
+    {
+        $cacheKey = $isGroup ? "settings.group.{$key}" : "settings.{$key}";
+
+        return Cache::remember($cacheKey, now()->addDay(), function () use ($callback) {
+            if (is_callable($callback)) {
+                return $callback();
+            }
+
+            return $callback;
         });
+    }
+
+    private function forgetKey(string $key, ?string $group = null): void
+    {
+        // Clear cache for this specific setting
+        Cache::forget('settings.'.$key);
+        // Invalidate cache for any group this setting might belong to
+        Cache::forget('settings.group.'.($group ?? ''));
     }
 }

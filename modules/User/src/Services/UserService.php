@@ -68,6 +68,12 @@ class UserService implements UserServiceContract
         if ($roles !== null) {
             $roles = Arr::wrap($roles);
             if (in_array('owner', $roles)) {
+
+                // Use for owner account setup
+                if (!setting('app_installed', true)) {
+                    return $this->ownerService->updateOrCreate($data);
+                }
+
                 if ($this->ownerService->exists()) {
                     throw new AppException(
                         userMessage: 'user::exceptions.owner_already_exists',
@@ -75,7 +81,7 @@ class UserService implements UserServiceContract
                     );
                 }
 
-                return $this->ownerService->create($data); // OwnerService::create handles role assignment and checks
+                return $this->ownerService->create($data);
             }
         }
 

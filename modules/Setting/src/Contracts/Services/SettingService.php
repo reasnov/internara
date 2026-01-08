@@ -31,4 +31,6 @@ interface SettingService
      * @return \Illuminate\Support\Collection|\Modules\Setting\Models\Setting[] A collection of Setting models.
      */
     public function getByGroup(string $name): \Illuminate\Support\Collection;
+
+    public function delete(string $key): bool;
 }

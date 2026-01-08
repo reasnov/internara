@@ -34,6 +34,8 @@ interface SetupService
      */
     public function finalizeAppSetup(): bool;
 
+    public function isRecordExists(string $record): bool;
+
     /**
      * Checks if the application is marked as installed.
      *

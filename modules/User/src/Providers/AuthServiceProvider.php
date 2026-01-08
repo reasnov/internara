@@ -2,13 +2,13 @@
 
 namespace Modules\User\Providers;
 
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as BaseAuthServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
 use Modules\User\Models\User;
 use Modules\User\Policies\UserPolicy; // New Use Statement
 
-class AuthServiceProvider extends ServiceProvider
+class AuthServiceProvider extends BaseAuthServiceProvider
 {
     use ManagesModuleProvider; // Use the trait
 
@@ -22,14 +22,6 @@ class AuthServiceProvider extends ServiceProvider
     ];
 
     /**
-     * Register any authentication / authorization services.
-     */
-    public function register(): void
-    {
-        $this->registerBindings();
-    }
-
-    /**
      * Boot the authentication / authorization services.
      */
     public function boot(): void
@@ -40,6 +32,16 @@ class AuthServiceProvider extends ServiceProvider
         Gate::before(function (User $user, string $ability) {
             return $user->hasRole('owner') ? true : null;
         });
+
+        $this->registerViewSlots();
+    }
+
+    /**
+     * Register any authentication / authorization services.
+     */
+    public function register(): void
+    {
+        $this->registerBindings();
     }
 
     /**
@@ -50,5 +52,12 @@ class AuthServiceProvider extends ServiceProvider
     protected function bindings(): array
     {
         return [];
+    }
+
+    protected function viewSlots(): array
+    {
+        return [
+            'register.owner' => 'livewire:user::auth.register-owner'
+        ];
     }
 }

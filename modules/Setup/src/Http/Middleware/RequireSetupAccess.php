@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 use Modules\Setup\Contracts\Services\SetupService;
+use Symfony\Component\HttpFoundation\Response;
 
 class RequireSetupAccess
 {
@@ -20,14 +21,12 @@ class RequireSetupAccess
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
         // Bypass specific requests
-        if (app()->runningInConsole() || $this->isLivewireRequest($request)) {
+        if ($this->bypassSpecificRequests($request)) {
             return $next($request);
         }
 
@@ -41,6 +40,11 @@ class RequireSetupAccess
         }
 
         return $next($request);
+    }
+
+    protected function bypassSpecificRequests(Request $request): bool
+    {
+        return app()->runningInConsole() || $this->isLivewireRequest($request);
     }
 
     /**

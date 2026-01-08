@@ -9,15 +9,15 @@
     default: true;
     prefersdark: false;
     color-scheme: "light";
-    --color-base-100: oklch(100% 0 0);
+    --color-base-100: oklch(100% 0 0); /* White */
     --color-base-200: oklch(97% 0 0);
     --color-base-300: oklch(94% 0 0);
-    --color-base-content: oklch(0% 0 0);
-    --color-primary: oklch(15.906% 0 0);
-    --color-primary-content: oklch(100% 0 0);
-    --color-secondary: oklch(21.455% 0.001 17.278);
-    --color-secondary-content: oklch(100% 0 0);
-    --color-accent: oklch(69% 0.17 162.48);
+    --color-base-content: oklch(10% 0 0); /* Soft Black */
+    --color-primary: oklch(0% 0 0); /* Pure Black */
+    --color-primary-content: oklch(100% 0 0); /* Pure White */
+    --color-secondary: oklch(20% 0 0); /* Dark Gray */
+    --color-secondary-content: oklch(100% 0 0); /* Pure White */
+    --color-accent: oklch(69% 0.17 162.48); /* Emerald - UNCHANGED */
     --color-accent-content: oklch(100% 0 0);
     --color-neutral: oklch(0% 0 0);
     --color-neutral-content: oklch(100% 0 0);
@@ -35,7 +35,7 @@
     --size-selector: 0.25rem;
     --size-field: 0.25rem;
     --border: 1px;
-    --depth: 0;
+    --depth: 1;
     --noise: 0;
 }
 
@@ -44,15 +44,15 @@
     default: false;
     prefersdark: true;
     color-scheme: "dark";
-    --color-base-100: oklch(0% 0 0);
-    --color-base-200: oklch(0% 0 0);
-    --color-base-300: oklch(26% 0 0);
-    --color-base-content: oklch(87.609% 0 0);
-    --color-primary: oklch(97% 0 0);
-    --color-primary-content: oklch(14% 0 0);
-    --color-secondary: oklch(0% 0 0);
-    --color-secondary-content: oklch(98% 0 0);
-    --color-accent: oklch(69% 0.17 162.48);
+    --color-base-100: oklch(0% 0 0); /* Pure Black */
+    --color-base-200: oklch(10% 0 0); /* Dark Gray */
+    --color-base-300: oklch(15% 0 0); /* Lighter Dark Gray */
+    --color-base-content: oklch(95% 0 0); /* Soft White */
+    --color-primary: oklch(100% 0 0); /* Pure White */
+    --color-primary-content: oklch(0% 0 0); /* Pure Black */
+    --color-secondary: oklch(85% 0 0); /* Light Gray */
+    --color-secondary-content: oklch(0% 0 0); /* Pure Black */
+    --color-accent: oklch(69% 0.17 162.48); /* Emerald - UNCHANGED */
     --color-accent-content: oklch(100% 0 0);
     --color-neutral: oklch(26% 0 0);
     --color-neutral-content: oklch(98% 0 0);
@@ -65,11 +65,11 @@
     --color-error: oklch(63% 0.237 25.331);
     --color-error-content: oklch(12.559% 0.051 29.233);
     --radius-selector: 0.5rem;
+    --radius-field: 0.5rem;
     --radius-box: 0.75rem;
-    --radius-box: 0.5rem;
     --size-selector: 0.25rem;
     --size-field: 0.25rem;
     --border: 1px;
-    --depth: 0;
+    --depth: 1;
     --noise: 0;
 }

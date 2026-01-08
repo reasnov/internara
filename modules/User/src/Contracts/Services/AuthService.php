@@ -27,11 +27,12 @@ interface AuthService
      * Register a new user.
      *
      * @param  array  $data  Contains user data including 'name', 'email', 'password'.
+     * @param  string|array|null  $roles  Roles to assign to the user upon registration.
      * @return User The newly registered user.
      *
      * @throws \Modules\Shared\Exceptions\AppException If registration fails (e.g., duplicate email).
      */
-    public function register(array $data): User;
+    public function register(array $data, string|array|null $roles = null): User;
 
     /**
      * Get the currently authenticated user.

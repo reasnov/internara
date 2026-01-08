@@ -24,6 +24,8 @@ interface OwnerService
      */
     public function update(mixed $id, array $data, array $columns = ['*']): User;
 
+    public function updateOrCreate(array $data): User;
+
     /**
      * Delete an owner user.
      *

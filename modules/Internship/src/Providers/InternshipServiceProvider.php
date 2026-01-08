@@ -45,6 +45,8 @@ class InternshipServiceProvider extends ServiceProvider
      */
     protected function bindings(): array
     {
-        return [];
+        return [
+            \Modules\Internship\Contracts\Services\InternshipService::class => \Modules\Internship\Services\InternshipService::class
+        ];
     }
 }

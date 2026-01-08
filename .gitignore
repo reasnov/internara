@@ -3,6 +3,7 @@
 /.nova
 /.phpunit.cache
 /.temp
+/.tmp
 /.vscode
 /.zed
 /auth.json

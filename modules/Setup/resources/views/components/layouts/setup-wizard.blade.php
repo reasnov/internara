@@ -1,0 +1,16 @@
+@props([
+    'header' => null,
+    'content' => null,
+])
+
+<div class="container flex h-full w-full flex-1 flex-col gap-8 py-24 lg:flex-row">
+    <div class="order-1 flex h-full w-full flex-1 flex-col lg:order-2 lg:pt-24">
+        {{ $header }}
+    </div>
+
+    @isset($content)
+        <div class="order-2 flex h-full w-full flex-1 flex-col lg:order-1">
+            {{ $content }}
+        </div>
+    @endisset
+</div>

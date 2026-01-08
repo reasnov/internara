@@ -4,11 +4,17 @@ This guide provides the core UI/UX principles, standards, and detailed technical
 
 ---
 
-## 1. Core Principles
+## 1. Core Principles & Philosophy
 
--   **Minimalist & Modern:** Prioritize a clean, uncluttered aesthetic. Focus on essential functionality.
--   **User-Friendly:** The interface must be intuitive and easy to navigate for all user roles.
--   **Consistent:** Adhere to the guidelines and components defined here to maintain a cohesive look and feel.
+The development of Internara's UI/UX is rooted in a strong philosophy to create an experience that is not only functional but also embodies the following core characteristics. Every design and implementation choice must align with these principles.
+
+-   **Minimalist, Elegant, and Clean:** We prioritize a modern aesthetic that is clean, uncluttered, and visually calming. The design should feel intentional, with a focus on essential functionality and generous use of whitespace to reduce cognitive load.
+
+-   **User-Friendly and Professional:** The interface must be intuitive, predictable, and easy to navigate for all user roles. Professionalism is maintained through consistency in design, typography, and interaction patterns as defined in this guide.
+
+-   **Empathetic and Story-Driven:** We build with empathy for our users' challenges. This is reflected in a friendly tone and a narrative-driven approach to copywriting. The UI should tell a story that resonates with the user's journey, transforming complex tasks into a guided, meaningful experience.
+
+-   **Consistent and Cohesive:** Adherence to the guidelines, components, and patterns defined here is mandatory. This ensures a cohesive look, feel, and behavior across the entire application, making it a reliable and trustworthy tool.
 
 ---
 
@@ -39,7 +45,9 @@ We use DaisyUI's theme system to manage colors for both light and dark modes.
 
 ### 4.1. Semantic Colors
 
-Use DaisyUI's semantic color classes instead of hard-coded color utilities. This ensures that elements adapt correctly to theming.
+Prioritize the use of DaisyUI's semantic color classes (e.g., `primary`, `secondary`, `success`, `error`) over hard-coded Tailwind color utilities. Using semantic classes is **highly recommended** as it helps elements adapt correctly to the theming system, ensuring overall consistency.
+
+However, given that Internara currently utilizes a limited set of themes and color schemes, the use of semantic classes is **not strictly mandatory**. If a specific UI need is better served by standard Tailwind color utilities (e.g., `text-gray-500` for minor details that do not require theme adaptation), it is permissible. Nonetheless, exercise careful consideration before deviating from semantic classes.
 
 | Class Name  | Role                   | Example Usage                                 |
 | :---------- | :--------------------- | :-------------------------------------------- |
@@ -51,80 +59,59 @@ Use DaisyUI's semantic color classes instead of hard-coded color utilities. This
 | `error`     | Error states, danger   | `<div class="alert alert-error">`             |
 | `info`      | Informational messages | `<div class="alert alert-info">`              |
 
-### 4.2. CSS & Theme Configuration (modules/UI/resources/css/app.css)
+### 4.2. Theme Configuration Summary
 
-All theme and Tailwind CSS configurations are managed directly within the `UI` module's primary CSS file.
+All theme configurations are managed directly within the `UI` module's primary CSS file (`modules/UI/resources/css/app.css`). The application defines a default "light" theme and a "dark" theme. The following table summarizes and compares their key-value pairs as configured via the `@plugin "daisyui/theme"` directive.
 
-```css
-// modules/UI/resources/css/app.css
-@import "tailwindcss";
+| Variable Name           | Light Theme Value            | Dark Theme Value             |
+| :---------------------- | :--------------------------- | :--------------------------- |
+| `name`                  | `"light"`                    | `"dark"`                     |
+| `default`               | `true`                       | `false`                      |
+| `prefersdark`           | `false`                      | `true`                       |
+| `color-scheme`          | `"light"`                    | `"dark"`                     |
+| `--color-base-100`      | `oklch(100% 0 0)`            | `oklch(0% 0 0)`              |
+| `--color-base-200`      | `oklch(97% 0 0)`             | `oklch(10% 0 0)`             |
+| `--color-base-300`      | `oklch(94% 0 0)`             | `oklch(15% 0 0)`             |
+| `--color-base-content`  | `oklch(10% 0 0)`             | `oklch(95% 0 0)`             |
+| `--color-primary`       | `oklch(0% 0 0)`              | `oklch(100% 0 0)`            |
+| `--color-primary-content`| `oklch(100% 0 0)`            | `oklch(0% 0 0)`              |
+| `--color-secondary`     | `oklch(20% 0 0)`             | `oklch(85% 0 0)`             |
+| `--color-secondary-content`| `oklch(100% 0 0)`            | `oklch(0% 0 0)`              |
+| `--color-accent`        | `oklch(69% 0.17 162.48)`     | `oklch(69% 0.17 162.48)`     |
+| `--color-accent-content`| `oklch(100% 0 0)`            | `oklch(100% 0 0)`            |
+| `--color-neutral`       | `oklch(0% 0 0)`              | `oklch(26% 0 0)`             |
+| `--color-neutral-content`| `oklch(100% 0 0)`            | `oklch(98% 0 0)`             |
+| `--color-info`          | `oklch(79.54% 0.103 205.9)`  | `oklch(54% 0.245 262.881)`   |
+| `--color-info-content`  | `oklch(15.908% 0.02 205.9)`  | `oklch(89.04% 0.062 264.052)`|
+| `--color-success`       | `oklch(90.13% 0.153 164.14)` | `oklch(59% 0.145 163.225)`   |
+| `--color-success-content`| `oklch(18.026% 0.03 164.14)`  | `oklch(90.395% 0.035 142.495)`|
+| `--color-warning`       | `oklch(88.37% 0.135 79.94)`  | `oklch(82% 0.189 84.429)`    |
+| `--color-warning-content`| `oklch(17.674% 0.027 79.94)`  | `oklch(19.359% 0.042 109.769)`|
+| `--color-error`         | `oklch(78.66% 0.15 28.47)`   | `oklch(63% 0.237 25.331)`    |
+| `--color-error-content` | `oklch(15.732% 0.03 28.47)`  | `oklch(12.559% 0.051 29.233)`|
+| `--radius-selector`     | `0.5rem`                     | `0.5rem`                     |
+| `--radius-field`        | `0.5rem`                     | `0.5rem`                     |
+| `--radius-box`          | `0.75rem`                    | `0.75rem`                    |
+| `--size-selector`       | `0.25rem`                    | `0.25rem`                    |
+| `--size-field`          | `0.25rem`                    | `0.25rem`                    |
+| `--border`              | `1px`                        | `1px`                        |
+| `--depth`               | `1`                          | `1`                          |
+| `--noise`               | `0`                          | `0`                          |
 
-@source '../views';
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+For other configurations like font (`@theme`) or plugin sources (`@source`), please refer directly to the `modules/UI/resources/css/app.css` file.
 
-@theme {
-    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-        "Noto Color Emoji";
-}
+### 4.3. Light & Dark Mode Support
 
-/** daisyUI */
-@plugin "daisyui";
+All UI components **must** support both light and dark modes to provide a consistent user experience.
 
-@plugin "daisyui/theme" {
-    name: "light";
-    default: true;
-    prefersdark: false;
-    color-scheme: "light";
-    --color-base-100: oklch(100% 0 0);
-    --color-base-200: oklch(97% 0 0);
-    --color-base-300: oklch(94% 0 0);
-    --color-base-content: oklch(0% 0 0);
-    --color-primary: oklch(15.906% 0 0);
-    --color-primary-content: oklch(100% 0 0);
-    --color-secondary: oklch(21.455% 0.001 17.278);
-    --color-secondary-content: oklch(100% 0 0);
-    --color-accent: oklch(26.861% 0 0);
-    --color-accent-content: oklch(100% 0 0);
-    --color-neutral: oklch(0% 0 0);
-    --color-neutral-content: oklch(100% 0 0);
-    --color-info: oklch(79.54% 0.103 205.9);
-    --color-info-content: oklch(15.908% 0.02 205.9);
-    --color-success: oklch(90.13% 0.153 164.14);
-    --color-success-content: oklch(18.026% 0.03 164.14);
-    --color-warning: oklch(88.37% 0.135 79.94);
-    --color-warning-content: oklch(17.674% 0.027 79.94);
-    --color-error: oklch(78.66% 0.15 28.47);
-    --color-error-content: oklch(15.732% 0.03 28.47);
-    --radius-selector: 0.5rem;
-    --radius-field: 0.5rem;
-    --radius-box: 0.5rem;
-    --size-selector: 0.25rem;
-    --size-field: 0.25rem;
-    --border: 1px;
-    --depth: 0;
-    --noise: 0;
-}
+-   **DaisyUI & MaryUI Components:** Components from these libraries typically adapt to the current theme automatically. Semantic colors (e.g., `bg-primary`, `text-base-content`) will adjust without extra work.
+-   **Custom Tailwind Components:** When building custom components or applying specific styles with Tailwind utilities, you **must** provide styles for dark mode using the `dark:` variant.
 
-/* maryUI */
-@source "../../vendor/robsontenorio/mary/src/View/Components/**/*.php";
-
-/* Theme toggle */
-@custom-variant dark (&:where(.dark, .dark *));
-
-/**
-* Paginator - Traditional style
-* Because Laravel defaults does not match well the design of daisyUI.
-*/
-
-.mary-table-pagination span[aria-current="page"] > span {
-    @apply bg-primary text-base-100;
-}
-
-.mary-table-pagination button {
-    @apply cursor-pointer;
-}
-```
+> **DO:** Use the `dark:` prefix for custom styles:
+> `<div class="bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700">`
+>
+> **DON'T:** Create styles that only work in one mode:
+> `<div class="bg-white border-gray-200"> <!-- This will look wrong in dark mode -->`
 
 ---
 
@@ -136,6 +123,20 @@ All theme and Tailwind CSS configurations are managed directly within the `UI` m
 
 > **DO:** Use spacing scale classes: `<div class="p-4 m-8">`
 > **DON'T:** Use arbitrary values: `<div style="padding: 15px; margin: 30px;">`
+
+### 5.1. Mobile-First & Responsiveness
+
+All UI components **must** be developed using a **mobile-first** approach, which is the default methodology for Tailwind CSS. Styles applied without a screen-size prefix (e.g., `w-full`) target all screen sizes, starting with mobile. Use responsive prefixes to adapt layouts for larger screens.
+
+-   **Required Breakpoints:** At a minimum, ensure components are responsive and well-adapted for `md` (medium) and `lg` (large) viewports.
+-   **Example:** A component might have a single-column layout on mobile and switch to a two-column layout on medium screens and up.
+
+```html
+<!-- Mobile: Single-column stack -->
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+    <!-- Items -->
+</div>
+```
 
 ---
 

@@ -69,7 +69,7 @@ class SlotManager implements SlotManagerContract
                 if (is_string($view) && Str::startsWith($view, 'livewire:')) {
                     $component = Str::after($view, 'livewire:');
 
-                    return $this->livewireManager->mount($component, $data)->toHtml();
+                    return $this->livewireManager->mount($component, $data, uniqid($component));
                 }
 
                 if (is_string($view)) {

@@ -8,7 +8,7 @@
  * available. This prevents fatal errors across the application if the
  * Setting module is disabled.
  */
-if (! function_exists('setting')) {
+if (!class_exists('\\Modules\\Setting\\Providers\\SettingServiceProvider') && !function_exists('setting')) {
     /**
      * Fallback for the setting() helper function.
      *

@@ -3,6 +3,7 @@
 namespace Modules\Setup\Concerns\Livewire;
 
 use Illuminate\Support\Facades\Session;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Modules\Setup\Contracts\Services\SetupService;
@@ -26,6 +27,14 @@ trait HandlesAppSetup
      */
     #[Locked]
     public array $setupProps = [];
+
+    #[Computed()]
+    public function disableNextStep(): bool
+    {
+        $record = $this->setupProps['extra']['req_record'] ?? null;
+
+        return $record ? !$this->setupService->isRecordExists($record) : false;
+    }
 
     /**
      * Initializes the properties for the current setup step.
@@ -67,6 +76,11 @@ trait HandlesAppSetup
         if (! empty($this->setupProps['nextStep'])) {
             $this->redirectToStep($this->setupProps['nextStep']);
         }
+    }
+
+    public function back(): void
+    {
+        $this->redirectToStep($this->setupProps['prevStep'] ?? 'welcome');
     }
 
     /**

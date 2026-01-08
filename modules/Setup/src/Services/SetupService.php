@@ -24,7 +24,8 @@ class SetupService implements SetupServiceContract
         protected SchoolService $schoolService,
         protected DepartmentService $departmentService,
         protected InternshipService $internshipService,
-    ) {}
+    ) {
+    }
 
     /**
      * {@inheritDoc}
@@ -89,6 +90,17 @@ class SetupService implements SetupServiceContract
         }
     }
 
+    public function isRecordExists(string $record): bool
+    {
+        return match ($record) {
+            'owner' => $this->ownerService->exists(),
+            'school' => $this->schoolService->exists(),
+            'department' => $this->departmentService->exists(),
+            'internship' => $this->internshipService->exists(),
+            default => throw new InvalidArgumentException("Unknown record type '{$record}' requested."),
+        };
+    }
+
     /**
      * Ensures that a specific type of record exists in the database.
      *
@@ -100,13 +112,7 @@ class SetupService implements SetupServiceContract
      */
     protected function ensureRecordExists(string $record = ''): bool
     {
-        $isExists = match ($record) {
-            'owner' => $this->ownerService->exists(),
-            'school' => $this->schoolService->exists(),
-            'department' => $this->departmentService->exists(),
-            'internship' => $this->internshipService->exists(),
-            default => throw new InvalidArgumentException("Unknown record type '{$record}' requested."),
-        };
+        $isExists = $this->isRecordExists($record);
 
         if (! $isExists) {
             throw new RecordNotFoundException('shared::exceptions.record_not_found');

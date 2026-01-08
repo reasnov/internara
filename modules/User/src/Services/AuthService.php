@@ -12,10 +12,16 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Modules\Shared\Exceptions\AppException;
 use Modules\User\Contracts\Services\AuthService as AuthServiceContract;
+use Modules\User\Contracts\Services\UserService;
 use Modules\User\Models\User;
 
 class AuthService implements AuthServiceContract
 {
+    public function __construct(protected UserService $userService)
+    {
+
+    }
+
     /**
      * Attempt to log in a user with the given credentials.
      *
@@ -27,8 +33,8 @@ class AuthService implements AuthServiceContract
      */
     public function login(array $credentials, bool $remember = false): Authenticatable|User
     {
-        // The 'email' field from the form can be either an email or a username.
-        $identifier = $credentials['email'];
+        // The 'identifier' field from the form can be either an email or a username.
+        $identifier = $credentials['identifier'] ?? $credentials['email'] ?? $credentials['username'] ?? '';
 
         // Determine if the identifier is an email or a username.
         $loginField = Str::contains($identifier, '@') ? 'email' : 'username';
@@ -61,20 +67,20 @@ class AuthService implements AuthServiceContract
      * Register a new user.
      *
      * @param  array  $data  Contains user data including 'name', 'email', 'password'.
+     * @param  string|array|null  $roles  Roles to assign to the user upon registration.
      * @return User The newly registered user.
      *
      * @throws AppException If registration fails (e.g., duplicate email).
      */
-    public function register(array $data): User
+    public function register(array $data, string|array|null $roles = null): User
     {
         try {
-            $user = User::create([
+            $user = $this->userService->create([
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
+                'roles' => $roles
             ]);
-
-            event(new Registered($user));
 
             return $user;
         } catch (QueryException $e) {

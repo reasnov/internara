@@ -4,6 +4,7 @@ namespace Modules\Shared\Concerns\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\UI\Facades\SlotRegistry;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -157,5 +158,18 @@ trait ManagesModuleProvider
         }
 
         return $paths;
+    }
+
+    /**
+     * Register components for the main navbar slots.
+     */
+    protected function registerViewSlots(): void
+    {
+        SlotRegistry::configure($this->viewSlots());
+    }
+
+    protected function viewSlots(): array
+    {
+        return [];
     }
 }

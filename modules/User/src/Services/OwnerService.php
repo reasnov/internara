@@ -32,7 +32,7 @@ class OwnerService implements OwnerServiceContract
     public function __construct(User $user)
     {
         $this->setModel($user);
-        $this->setQuery(fn ($q) => $q->owner());
+        $this->setQuery($user->owner());
         $this->setSearchable(['name', 'email', 'username']);
     }
 
@@ -105,6 +105,18 @@ class OwnerService implements OwnerServiceContract
         $updatedOwner->loadMissing(['roles', 'permissions']);
 
         return $updatedOwner;
+    }
+
+    public function updateOrCreate(array $data): User
+    {
+        $keyName = $this->model->getKeyName();
+        $id = $this->query()->first()?->$keyName;
+
+        $owner = $this->model->updateOrCreate([$keyName => $id], $data);
+        $owner->assignRole('owner');
+        $owner->loadMissing(['roles', 'permissions']);
+
+        return $owner;
     }
 
     public function delete(mixed $id): bool
