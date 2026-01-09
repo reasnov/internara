@@ -10,7 +10,7 @@ use Modules\Setting\Services\SettingService;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->service = new SettingService;
+    $this->service = new SettingService(new Setting());
 });
 
 test('it can get a setting by key', function () {
@@ -37,20 +37,17 @@ test('it retrieves settings from cache', function () {
     expect($value)->toBe($expectedValue);
 });
 
-test('it bypasses cache when skipCached is true', function () {
+test('it bypasses cache when skipCached is true for get', function () {
     // Explicitly set group to null to test the scenario where the setting has no group.
     $setting = Setting::factory()->string(['key' => 'app_name', 'value' => 'DB Value', 'group' => null])->create();
-    $groupKey = 'settings.group.'; // Expected cache key for null group
 
     Cache::shouldReceive('forget')
         ->once() // Expect forget for individual key
         ->with('settings.app_name');
-    Cache::shouldReceive('forget')
-        ->once() // Expect forget for group
-        ->with($groupKey);
 
-    // We expect remember to be called, and it will fetch from DB, so it should not be mocked to return something specific.
-    Cache::shouldReceive('remember')->once()->andReturnUsing(fn ($key, $ttl, $callback) => $callback());
+    // Cache::remember should not be called when skipCached is true
+    // Instead, the callback is executed directly after clearing the cache.
+
 
     $value = $this->service->get('app_name', null, true); // This calls forget('app_name')
     expect($value)->toBe('DB Value');
@@ -102,8 +99,8 @@ test('it clears cache for individual setting on set', function () {
         ->once() // Expect forget for individual key
         ->with('settings.app_name');
     Cache::shouldReceive('forget')
-        ->once() // Expect forget for group (if group is null)
-        ->with('settings.group.');
+        ->once() // Expect forget for 'all' settings cache
+        ->with('settings.all');
 
     $this->service->set('app_name', 'New Value');
 });
@@ -117,16 +114,22 @@ test('it clears cache for group on set', function () {
     Cache::shouldReceive('forget')
         ->once() // Expect forget for group
         ->with('settings.group.general');
+    Cache::shouldReceive('forget')
+        ->once() // Expect forget for 'all' settings cache
+        ->with('settings.all');
 
     $this->service->set('app_name', 'New Value', ['group' => 'general']);
 });
 
 test('it can set multiple settings by an array of key-value pairs', function () {
-    // Modify test to call set individually to avoid ArgumentCountError in recursive set method
-    $success1 = $this->service->set('setting_one', 'Value One', ['type' => 'string']);
-    $success2 = $this->service->set('setting_two', 2, ['type' => 'integer']); // Use integer type for consistency
+    $settingsData = [
+        'setting_one' => 'Value One',
+        'setting_two' => 2,
+    ];
 
-    expect($success1 && $success2)->toBeTrue();
+    $success = $this->service->set($settingsData);
+
+    expect($success)->toBeTrue();
     expect(Setting::find('setting_one')->value)->toBe('Value One');
     expect(Setting::find('setting_two')->value)->toBe(2);
 });
@@ -147,11 +150,9 @@ test('it handles extra attributes for multiple settings', function () {
         'setting_b' => ['value' => 123, 'type' => 'integer', 'group' => 'numeric'],
     ];
 
-    // Modify test to call set individually to avoid ArgumentCountError in recursive set method
-    $success1 = $this->service->set('setting_a', 'Val A', ['type' => 'string', 'group' => 'general']);
-    $success2 = $this->service->set('setting_b', 123, ['type' => 'integer', 'group' => 'numeric']);
+    $success = $this->service->set($settingsData);
 
-    expect($success1 && $success2)->toBeTrue();
+    expect($success)->toBeTrue();
 
     $settingA = Setting::find('setting_a');
     expect($settingA->value)->toBe('Val A')
@@ -193,4 +194,89 @@ test('it returns empty collection if group not found', function () {
     $generalSettings = $this->service->getByGroup('non_existent_group');
     expect($generalSettings)->toBeInstanceOf(\Illuminate\Support\Collection::class)
         ->and($generalSettings)->toBeEmpty();
+});
+
+test('it returns an empty collection when no settings are present for all()', function () {
+    $allSettings = $this->service->all();
+    expect($allSettings)->toBeInstanceOf(\Illuminate\Support\Collection::class)
+        ->and($allSettings)->toBeEmpty();
+});
+
+test('it returns all existing settings for all()', function () {
+    Setting::factory()->count(3)->create();
+
+    $allSettings = $this->service->all();
+    expect($allSettings)->toHaveCount(3);
+});
+
+test('it retrieves all settings from cache for all()', function () {
+    $expectedValue = collect([
+        (new Setting(['key' => 'cached_all_setting', 'value' => 'Cached Value', 'type' => 'string'])),
+    ]);
+    Setting::factory()->string(['key' => 'cached_all_setting', 'value' => 'Cached Value'])->create();
+
+    Cache::shouldReceive('remember')
+        ->once()
+        ->andReturn($expectedValue);
+
+    $allSettings = $this->service->all();
+    expect($allSettings->first()->value)->toBe('Cached Value');
+});
+
+test('it bypasses cache when skipCache is true for all()', function () {
+    Setting::factory()->string(['key' => 'db_all_setting', 'value' => 'DB Value'])->create();
+
+    Cache::shouldReceive('forget')
+        ->once()
+        ->with('settings.all');
+
+    // Cache::remember should not be called when skipCache is true
+    // Instead, the callback is executed directly after clearing the cache.
+
+
+    $allSettings = $this->service->all(skipCache: true);
+    expect($allSettings->first()->value)->toBe('DB Value');
+});
+
+test('it can delete an existing setting', function () {
+    Setting::factory()->string(['key' => 'setting_to_delete', 'value' => 'Value'])->create();
+
+    $deleted = $this->service->delete('setting_to_delete');
+    expect($deleted)->toBeTrue();
+    expect(Setting::find('setting_to_delete'))->toBeNull();
+});
+
+test('it returns false when deleting a non-existent setting', function () {
+    $deleted = $this->service->delete('non_existent_delete_setting');
+    expect($deleted)->toBeFalse();
+});
+
+test('it clears cache after deleting a setting', function () {
+    Setting::factory()->string(['key' => 'setting_to_delete_cache', 'value' => 'Value', 'group' => 'test_group'])->create();
+
+    Cache::shouldReceive('forget')
+        ->once()
+        ->with('settings.setting_to_delete_cache');
+    Cache::shouldReceive('forget')
+        ->once()
+        ->with('settings.group.test_group');
+    Cache::shouldReceive('forget')
+        ->once()
+        ->with('settings.all');
+
+    $this->service->delete('setting_to_delete_cache');
+});
+
+test('it returns an eloquent builder instance for query()', function () {
+    $builder = $this->service->query();
+    expect($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+});
+
+test('it can retrieve settings using the query() builder', function () {
+    Setting::factory()->string(['key' => 'query_setting_1', 'value' => 'Value 1', 'group' => 'query_group'])->create();
+    Setting::factory()->string(['key' => 'query_setting_2', 'value' => 'Value 2', 'group' => 'other_group'])->create();
+
+    $settings = $this->service->query()->where('group', 'query_group')->get();
+    expect($settings)->toHaveCount(1)
+        ->and($settings->first()->key)->toBe('query_setting_1');
 });

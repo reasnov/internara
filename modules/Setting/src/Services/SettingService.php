@@ -2,12 +2,43 @@
 
 namespace Modules\Setting\Services;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Modules\Setting\Contracts\Services\SettingService as SettingServiceContract;
 use Modules\Setting\Models\Setting;
 
 class SettingService implements SettingServiceContract
 {
+    /**
+     * The Setting model instance.
+     *
+     * @var \Modules\Setting\Models\Setting
+     */
+    protected Setting $model;
+
+    /**
+     * Create a new SettingService instance.
+     *
+     * @param  \Modules\Setting\Models\Setting  $model The Setting model instance.
+     */
+    public function __construct(Setting $model)
+    {
+        $this->model = $model;
+    }
+
+    /**
+     * Get all settings.
+     *
+     * @param  array  $columns  The columns to select.
+     * @param  bool  $skipCache  Whether to bypass the cache and fetch directly from the database.
+     * @return \Illuminate\Support\Collection A collection of all Setting models.
+     */
+    public function all(array $columns = ['*'], bool $skipCache = false): Collection
+    {
+        return $this->remember('settings.all', fn () => $this->model->all($columns), $skipCache);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -22,19 +53,15 @@ class SettingService implements SettingServiceContract
             return $results;
         }
 
-        if ($skipCached) {
-            $this->forgetKey($key);
-        }
-
-        return $this->rememberKey($key, function () use ($key, $default) {
-            $setting = Setting::find($key);
+        return $this->remember('settings.'.$key, function () use ($key, $default) {
+            $setting = $this->model->find($key);
 
             if (! $setting) {
                 return $default;
             }
 
             return $setting->value;
-        });
+        }, $skipCached);
     }
 
     /**
@@ -45,7 +72,9 @@ class SettingService implements SettingServiceContract
         if (is_array($key)) {
             $success = true;
             foreach ($key as $k => $v) {
-                if (! $this->set($k, $v, $extraAttributes[$k] ?? [])) {
+                $value = $v['value'] ?? $v;
+                $extraAttributes = is_array($v) ? array_diff_key($v, ['value' => null]) : [];
+                if (! $this->set($k, $value, $extraAttributes)) {
                     $success = false;
                 }
             }
@@ -53,17 +82,15 @@ class SettingService implements SettingServiceContract
             return $success;
         }
 
-        // The cast handles value stringification and type attribute setting.
-        // We only pass the raw value and any other extra attributes.
-        $setting = Setting::updateOrCreate(
+        $setting = $this->model->updateOrCreate(
             ['key' => $key],
             array_merge(
-                ['value' => $value], // Pass the raw value, cast will process it
+                ['value' => $value],
                 $extraAttributes
             )
         );
 
-        $this->forgetKey($key, $setting->group ?? null);
+        $this->clearCache($key, $setting->group);
 
         return (bool) $setting;
     }
@@ -71,40 +98,74 @@ class SettingService implements SettingServiceContract
     /**
      * {@inheritDoc}
      */
-    public function getByGroup(string $name): \Illuminate\Support\Collection
+    public function getByGroup(string $name, bool $skipCache = false): Collection
     {
-        return $this->rememberKey($name, fn () => Setting::group($name)->get(), isGroup: true);
+        return $this->remember('settings.group.'.$name, fn () => $this->model->group($name)->get(), $skipCache);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function delete(string $key): bool
     {
-        $setting = Setting::findOrFail($key);
+        $setting = $this->model->find($key);
+
+        if (! $setting) {
+            return false;
+        }
 
         if ($deleted = $setting->delete()) {
-            $this->forgetKey($key);
+            $this->clearCache($key, $setting->group);
         }
 
         return $deleted;
     }
 
-    private function rememberKey(string $key, mixed $callback = null, bool $isGroup = false): mixed
+    /**
+     * {@inheritDoc}
+     */
+    public function query(array $columns = ['*']): Builder
     {
-        $cacheKey = $isGroup ? "settings.group.{$key}" : "settings.{$key}";
-
-        return Cache::remember($cacheKey, now()->addDay(), function () use ($callback) {
-            if (is_callable($callback)) {
-                return $callback();
-            }
-
-            return $callback;
-        });
+        return $this->model->query()->select($columns);
     }
 
-    private function forgetKey(string $key, ?string $group = null): void
+    /**
+     * Retrieve an item from the cache or store the result of a callback forever.
+     *
+     * @param string $cacheKey The key for the cache item.
+     * @param callable $callback The callback to execute if the item is not in the cache.
+     * @param bool $skipCache Whether to skip the cache and execute the callback directly.
+     * @return mixed
+     */
+    protected function remember(string $cacheKey, callable $callback, bool $skipCache = false): mixed
+    {
+        if ($skipCache) {
+            Cache::forget($cacheKey);
+
+            return $callback();
+        }
+
+        return Cache::remember($cacheKey, now()->addDay(), $callback);
+    }
+
+    /**
+     * Clear the cache for a specific setting and its related groups.
+     *
+     * @param string $key The key of the setting whose cache to clear.
+     * @param string|null $group The group name the setting belongs to, if any.
+     * @return void
+     */
+    protected function clearCache(string $key, ?string $group = null): void
     {
         // Clear cache for this specific setting
         Cache::forget('settings.'.$key);
-        // Invalidate cache for any group this setting might belong to
-        Cache::forget('settings.group.'.($group ?? ''));
+
+        // Clear cache for the group this setting belongs to, if any
+        if ($group) {
+            Cache::forget('settings.group.'.$group);
+        }
+
+        // Clear cache for all settings, as this setting might affect the 'all' collection
+        Cache::forget('settings.all');
     }
 }
