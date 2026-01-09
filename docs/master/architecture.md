@@ -77,6 +77,11 @@ The entry point for user interaction with the application. Livewire components s
     php artisan module:make-livewire CreateUser User --view
     ```
 
+#### Dependency Injection Convention
+A critical convention for Livewire components is that all dependency injection **must** be performed in the `boot()` method, not the constructor. This is due to Livewire's component lifecycle. Using the constructor for DI can lead to unexpected behavior.
+
+For more details and code examples, refer to the [Livewire Integration Guide](packages/livewire.md#3-dependency-injection-in-livewire-components).
+
 #### Livewire Component Naming in Modular Monolith
 
 When embedding Livewire components within Blade views in a modular monolith (using `nwidart/laravel-modules`), it is crucial to use the correct naming convention to ensure auto-discovery and proper rendering.

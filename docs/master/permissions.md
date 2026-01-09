@@ -240,7 +240,12 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        // Checks for the 'user.delete' or the master 'user.manage' permission.
+        // First, explicitly prevent the owner account from being deleted.
+        if ($model->hasRole('owner')) {
+            return false;
+        }
+
+        // Then, check if the acting user has the required permission.
         return $user->can('user.delete') || $user->can('user.manage');
     }
 }

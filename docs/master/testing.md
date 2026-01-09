@@ -161,72 +161,73 @@ test('a user can log in with correct credentials', function () {
 
 ### Asserting Exceptions
 
-When testing code that is expected to throw exceptions under certain conditions, Pest provides the `toThrow` expectation to gracefully assert these scenarios. This is crucial for ensuring that error handling mechanisms work as intended.
+When testing code that is expected to throw exceptions, Pest provides the `toThrow` expectation to gracefully assert these scenarios. This is crucial for ensuring your error handling mechanisms, especially the custom `AppException`, work as intended with the localization system.
 
-To assert an exception, wrap the code that is expected to throw an exception within a closure, and then use `expect()` with `toThrow()`. You can specify both the expected exception class and, optionally, the exact message of the exception.
+To assert an exception, wrap the code that is expected to throw it within a closure and use `expect()->toThrow()`. You can specify both the expected exception class and the exact exception message.
 
+**Practical Example: Testing a Service Method with `AppException`**
+
+This example demonstrates a full-circle test for a service method that throws a project-specific `AppException` with a namespaced translation key.
+
+**1. The Service Method**
+Assume the `UserService` has a method to delete a user, which throws an exception if you try to delete the protected 'owner'.
+
+*File: `modules/User/src/Services/UserService.php`*
 ```php
-use Modules\Shared\Exceptions\AppException;
-use InvalidArgumentException; // Example of a generic exception
-
-// Assume a hypothetical service method that might throw an AppException
-class MyService
+class UserService
 {
-    public function performAction(bool $shouldFail, string $customLogMessage = null): string
+    public function delete(User $userToDelete): bool
     {
-        if ($shouldFail) {
-            // Simulate throwing an AppException
-            // If customLogMessage is provided, it will be the message returned by getMessage()
-            // Otherwise, userMessage (after translation) will be the message returned by getMessage() if no logMessage is explicitly set.
-            throw new AppException(
-                userMessage: 'shared::exceptions.action_failed',
-                logMessage: $customLogMessage, // Will be the default message for getMessage()
-                code: 400
+        if ($userToDelete->hasRole('owner')) {
+            throw new \Modules\Shared\Exceptions\AppException(
+                userMessage: 'user::exceptions.owner_cannot_be_deleted',
+                code: 403
             );
         }
-        return "Action performed successfully.";
-    }
-
-    public function processGenericInput(int $value): string
-    {
-        if ($value < 0) {
-            throw new InvalidArgumentException('Input value cannot be negative.');
-        }
-        return "Processed: {$value}";
+        // ... deletion logic
     }
 }
+```
 
-test('it throws an InvalidArgumentException for negative input', function () {
-    $service = new MyService();
+**2. The Language File**
+The corresponding translation key must exist in the module's language file.
 
-    // Act & Assert for a generic exception:
-    expect(fn () => $service->processGenericInput(-5))
-        ->toThrow(InvalidArgumentException::class, 'Input value cannot be negative.');
-});
+*File: `modules/User/lang/en/exceptions.php`*
+```php
+<?php
+return [
+    'owner_cannot_be_deleted' => 'The owner account cannot be deleted.',
+];
+```
 
-test('it throws an AppException with a specific log message', function () {
-    $service = new MyService();
-    $expectedLogMessage = 'Specific log detail for failure.';
+**3. The Pest Test**
+The test should assert that calling the method with the owner user throws an `AppException` with the correctly translated message.
 
-    // Act & Assert for AppException with logMessage:
-    // When logMessage is provided in AppException, it becomes the default message
-    // returned by $exception->getMessage().
-    expect(fn () => $service->performAction(true, $expectedLogMessage))
-        ->toThrow(AppException::class, $expectedLogMessage);
-});
+*File: `modules/User/tests/Feature/Services/UserServiceTest.php`*
+```php
+<?php
 
-test('it throws an AppException and getMessage() defaults to userMessage if logMessage is empty', function () {
-    $service = new MyService();
-    // Assuming 'shared::exceptions.action_failed' translates to 'The action could not be performed.'
-    // For this test to be accurate, ensure 'shared::exceptions.action_failed' exists and is translated.
-    $expectedUserMessage = __('shared::exceptions.action_failed');
+use Modules\User\Models\User;
+use Modules\User\Services\UserService;
+use Modules\Shared\Exceptions\AppException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-    // Act & Assert for AppException when logMessage is null/empty:
-    // If logMessage is null, the AppException constructor will use the userMessage as its default message.
-    expect(fn () => $service->performAction(true, null))
-        ->toThrow(AppException::class, $expectedUserMessage);
+uses(RefreshDatabase::class);
+
+test('it throws an exception when trying to delete the owner user', function () {
+    // Arrange: Create an owner user and the service
+    $owner = User::factory()->create()->assignRole('owner');
+    $userService = app(UserService::class);
+
+    // Retrieve the expected translated message
+    $expectedMessage = __('user::exceptions.owner_cannot_be_deleted');
+
+    // Act & Assert: Expect the specific exception with the correct translated message
+    expect(fn () => $userService->delete($owner))
+        ->toThrow(AppException::class, $expectedMessage);
 });
 ```
+This approach ensures that your test not only validates the exception logic but also confirms that your localization is correctly configured and being used.
 
 ### Unit Tests
 

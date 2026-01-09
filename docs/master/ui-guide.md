@@ -196,6 +196,24 @@ For complex UI interactions within Livewire, prefer MaryUI wrappers where availa
 
 To maintain the project's modular architecture, components that are specific to a single module (e.g., a "Create User" form in the `User` module) must be fully **isolated and portable**. They should not have direct dependencies on other modules.
 
+### 6.5. UI Module Component Conventions
+
+The `UI` module serves as the central library for all global, application-wide UI components. To simplify usage, it follows a flatter structure.
+
+*   **Location:** All generic, reusable components (like navbars, buttons, cards, etc.) should be placed directly in:
+    `modules/UI/resources/views/components/`
+
+*   **Usage:** Since these components are registered under the `ui` namespace, they can be called directly without any subdirectory prefix.
+    ```blade
+    {{-- CORRECT --}}
+    <x-ui::navbar />
+    <x-ui::button />
+
+    {{-- INCORRECT --}}
+    <x-ui::ui.navbar />
+    ```
+This convention keeps component tags clean and acknowledges that the `UI` module itself is the designated "ui" library for the project.
+
 ---
 
 ## 7. Cross-Module UI Communication
