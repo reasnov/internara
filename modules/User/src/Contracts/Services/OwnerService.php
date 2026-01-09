@@ -24,6 +24,12 @@ interface OwnerService
      */
     public function update(mixed $id, array $data, array $columns = ['*']): User;
 
+    /**
+     * Update an existing owner or create a new one if not found.
+     *
+     * @param  array<string, mixed>  $data  The data for creating or updating the owner.
+     * @return \Modules\User\Models\User The created or updated owner user.
+     */
     public function updateOrCreate(array $data): User;
 
     /**

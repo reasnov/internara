@@ -15,8 +15,16 @@ use Modules\User\Contracts\Services\AuthService as AuthServiceContract;
 use Modules\User\Contracts\Services\UserService;
 use Modules\User\Models\User;
 
+/**
+ * Service to manage user authentication, registration, password management, and email verification.
+ */
 class AuthService implements AuthServiceContract
 {
+    /**
+     * Create a new AuthService instance.
+     *
+     * @param  \Modules\User\Contracts\Services\UserService  $userService
+     */
     public function __construct(protected UserService $userService)
     {
 
@@ -64,15 +72,9 @@ class AuthService implements AuthServiceContract
     }
 
     /**
-     * Register a new user.
-     *
-     * @param  array  $data  Contains user data including 'name', 'email', 'password'.
-     * @param  string|array|null  $roles  Roles to assign to the user upon registration.
-     * @return User The newly registered user.
-     *
-     * @throws AppException If registration fails (e.g., duplicate email).
+     * @inheritDoc
      */
-    public function register(array $data, string|array|null $roles = null): User
+    public function register(array $data, string|array|null $roles = null, bool $sendEmailVerification = false): User
     {
         try {
             $user = $this->userService->create([
@@ -81,6 +83,10 @@ class AuthService implements AuthServiceContract
                 'password' => Hash::make($data['password']),
                 'roles' => $roles
             ]);
+
+            if ($sendEmailVerification) {
+                $user->sendEmailVerificationNotification();
+            }
 
             return $user;
         } catch (QueryException $e) {

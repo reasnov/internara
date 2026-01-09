@@ -19,4 +19,10 @@ Route::prefix('auth')->group(function () {
 
     Route::get('register', Modules\User\Livewire\Auth\Register::class)
         ->middleware('guest')->name('register');
+
+    Route::get('email/verify/{id}/{hash}', Modules\User\Livewire\Auth\VerifyEmail::class)
+        ->middleware(['auth', 'signed'])->name('verification.verify');
+
+    Route::get('email/verify', Modules\User\Livewire\Auth\VerificationNotice::class)
+        ->middleware('auth')->name('verification.notice');
 });

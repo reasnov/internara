@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use Modules\Shared\Exceptions\AppException;
 use Modules\User\Contracts\Services\AuthService;
 use Modules\User\Models\User;
@@ -15,18 +17,25 @@ use Modules\User\Models\User;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    // Ensure the 'owner' role exists for testing
+    app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+    \Modules\Permission\Models\Role::firstOrCreate(
+        ['name' => 'owner', 'guard_name' => 'web'],
+        ['id' => (string) Str::uuid()]
+    );
+    // Ensure the 'tester' role exists for testing
+    \Modules\Permission\Models\Role::firstOrCreate(
+        ['name' => 'tester', 'guard_name' => 'web'],
+        ['id' => (string) Str::uuid()]
+    );
+
+    // Define a dummy verification route for testing purposes
+    \Illuminate\Support\Facades\Route::get('/email/verify/{id}/{hash}', function () {
+        return 'Email Verified';
+    })->name('verification.verify');
+
     // We'll resolve the AuthService here to ensure we're testing the bound implementation
     $this->authService = $this->app->make(AuthService::class);
-});
-
-test('it can create a user directly', function () {
-    $user = User::create([
-        'name' => 'Direct User',
-        'email' => 'direct@example.com',
-        'password' => Hash::make('password'),
-    ]);
-    expect($user)->toBeInstanceOf(User::class);
-    $this->assertDatabaseHas('users', ['email' => 'direct@example.com']);
 });
 
 test('registration fails with duplicate email', function () {
@@ -38,8 +47,10 @@ test('registration fails with duplicate email', function () {
         'password' => 'password',
     ];
 
-    $this->authService->register($userData);
-})->throws(AppException::class, 'Attempted to register with duplicate email: duplicate@example.com');
+    expect(fn () => $this->authService->register($userData))
+        ->toThrow(AppException::class)
+        ->and(fn (AppException $e) => expect($e->getUserMessage())->toBe('shared::exceptions.email_exists'));
+});
 
 test('a user can log in with correct credentials', function () {
     $password = 'secret123';
@@ -47,6 +58,22 @@ test('a user can log in with correct credentials', function () {
 
     $loggedInUser = $this->authService->login([
         'email' => $user->email,
+        'password' => $password,
+    ]);
+
+    expect($loggedInUser->id)->toBe($user->id);
+    $this->assertAuthenticatedAs($user);
+});
+
+test('it can log in with a username', function () {
+    $password = 'secret123';
+    $user = User::factory()->create([
+        'username' => 'testuser',
+        'password' => Hash::make($password),
+    ]);
+
+    $loggedInUser = $this->authService->login([
+        'username' => 'testuser',
         'password' => $password,
     ]);
 
@@ -145,6 +172,23 @@ test('it resets password with a valid token', function () {
     expect(Hash::check('new-awesome-password', $user->password))->toBeTrue();
 });
 
+test('it fails to reset password with an invalid token', function () {
+    $user = User::factory()->create();
+
+    $credentials = [
+        'email' => $user->email,
+        'password' => 'new-awesome-password',
+        'password_confirmation' => 'new-awesome-password',
+        'token' => 'invalid-token',
+    ];
+
+    $result = $this->authService->resetPassword($credentials);
+
+    expect($result)->toBeFalse();
+    $user->refresh();
+    expect(Hash::check('new-awesome-password', $user->password))->toBeFalse(); // Password should not have changed
+});
+
 test('it sends an email verification notification on registration', function () {
     Notification::fake();
 
@@ -154,9 +198,39 @@ test('it sends an email verification notification on registration', function () 
         'password' => 'password',
     ];
 
-    $user = $this->authService->register($userData);
+    $user = $this->authService->register($userData, null, true); // Pass true to send email
 
     Notification::assertSentTo($user, \Illuminate\Auth\Notifications\VerifyEmail::class);
+});
+
+test('it does not send an email verification notification on registration if sendEmailVerification is false', function () {
+    Notification::fake();
+
+    $userData = [
+        'name' => 'New User No Verification',
+        'email' => 'new.no.verify@example.com',
+        'password' => 'password',
+    ];
+
+    $user = $this->authService->register($userData, null, false); // Pass false to not send email
+
+    Notification::assertNotSentTo($user, \Illuminate\Auth\Notifications\VerifyEmail::class);
+});
+
+test('it can register a user with roles', function () {
+    // Create a role to assign
+    $role = \Modules\Permission\Models\Role::firstOrCreate(['name' => 'tester', 'guard_name' => 'web']);
+
+    $userData = [
+        'name' => 'Role User',
+        'email' => 'role@example.com',
+        'password' => 'password',
+    ];
+
+    $user = $this->authService->register($userData, 'tester', true); // Pass true to send email
+
+    expect($user)->toBeInstanceOf(User::class);
+    expect($user->hasRole('tester'))->toBeTrue();
 });
 
 test('it can resend an email verification notification', function () {

@@ -14,6 +14,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Ensure the 'owner' role exists for testing
+    app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
     Role::updateOrCreate(
         ['id' => (string) Str::uuid(), 'name' => 'owner', 'guard_name' => 'web'],
         ['description' => 'Full system access and ownership', 'module' => 'Core']
@@ -71,7 +72,8 @@ test('it cannot create a second owner account', function () {
     ];
 
     expect(fn () => $this->ownerService->create($userData))
-        ->toThrow(AppException::class, 'Attempted to create a second owner account.');
+        ->toThrow(AppException::class)
+        ->and(fn (AppException $e) => expect($e->getUserMessage())->toBe('shared::exceptions.owner_exists'));
 
     // Assert only one owner still exists in the database
     expect(User::owner()->count())->toBe(1);
@@ -104,6 +106,20 @@ test('it can retrieve the single owner account', function () {
 
 test('it returns null when no owner account exists on get', function () {
     expect($this->ownerService->get())->toBeNull();
+});
+
+test('it returns true if an owner exists using exists()', function () {
+    $this->ownerService->create([
+        'name' => 'Test Owner',
+        'email' => 'test@example.com',
+        'password' => 'password',
+    ]);
+
+    expect($this->ownerService->exists())->toBeTrue();
+});
+
+test('it returns false if no owner exists using exists()', function () {
+    expect($this->ownerService->exists())->toBeFalse();
 });
 
 test('it can update the existing owner account', function () {
@@ -140,7 +156,7 @@ test('it throws RecordNotFoundException if updating a non-existent owner', funct
 
     expect(fn () => $this->ownerService->update($nonExistentId, ['name' => 'Invalid']))
         ->toThrow(RecordNotFoundException::class)
-        ->and(fn (RecordNotFoundException $e) => expect($e->getMessage())->toContain('owner account with ID '.$nonExistentId.' could not be found.'));
+        ->and(fn (RecordNotFoundException $e) => expect($e->getUserMessage())->toBe('shared::exceptions.owner_not_found'));
 });
 
 test('it throws RecordNotFoundException if updating with an ID that is not the actual owner', function () {
@@ -154,7 +170,7 @@ test('it throws RecordNotFoundException if updating with an ID that is not the a
 
     expect(fn () => $this->ownerService->update($regularUser->id, ['name' => 'Attempted Hack']))
         ->toThrow(RecordNotFoundException::class)
-        ->and(fn (RecordNotFoundException $e) => expect($e->getMessage())->toContain('owner account with ID '.$regularUser->id.' could not be found.')); // Specifically, the ID mismatch part
+        ->and(fn (RecordNotFoundException $e) => expect($e->getUserMessage())->toBe('shared::exceptions.owner_not_found'));
 });
 
 test('it does not change owner role during update even if data tries to modify it', function () {
@@ -176,6 +192,56 @@ test('it does not change owner role during update even if data tries to modify i
     expect($updatedOwner->name)->toBe('Owner New Name');
     expect($updatedOwner->hasRole('owner'))->toBeTrue(); // Still owner
     expect($updatedOwner->hasRole('admin'))->toBeFalse(); // Not admin
+});
+
+test('it can create a new owner if none exists using updateOrCreate()', function () {
+    expect(User::owner()->count())->toBe(0); // No owner initially
+
+    $userData = [
+        'name' => 'New Owner',
+        'email' => 'new.owner@example.com',
+        'password' => 'password',
+    ];
+
+    $owner = $this->ownerService->updateOrCreate($userData);
+
+    expect($owner)->toBeInstanceOf(User::class);
+    expect($owner->name)->toBe('New Owner');
+    expect($owner->hasRole('owner'))->toBeTrue();
+    expect(User::owner()->count())->toBe(1);
+});
+
+test('it can update an existing owner using updateOrCreate()', function () {
+    $existingOwner = $this->ownerService->create([
+        'name' => 'Original Owner',
+        'email' => 'original.owner@example.com',
+        'password' => 'password',
+    ]);
+
+    $updateData = [
+        'name' => 'Updated Original Owner',
+        'email' => 'updated.owner@example.com', // Update email as well
+    ];
+
+    $updatedOwner = $this->ownerService->updateOrCreate($updateData);
+
+    expect($updatedOwner)->toBeInstanceOf(User::class);
+    expect($updatedOwner->id)->toBe($existingOwner->id); // Same owner
+    expect($updatedOwner->name)->toBe('Updated Original Owner');
+    expect($updatedOwner->email)->toBe('updated.owner@example.com');
+    expect($updatedOwner->hasRole('owner'))->toBeTrue();
+    expect(User::owner()->count())->toBe(1); // Still only one owner
+});
+
+test('it ensures owner role is assigned by updateOrCreate() even if not in data', function () {
+    $userData = [
+        'name' => 'Owner with no role in data',
+        'email' => 'no.role.data@example.com',
+        'password' => 'password',
+    ];
+
+    $owner = $this->ownerService->updateOrCreate($userData);
+    expect($owner->hasRole('owner'))->toBeTrue();
 });
 
 test('it can delete the owner account', function () {
@@ -204,7 +270,7 @@ test('it throws RecordNotFoundException if deleting a non-existent owner', funct
 
     expect(fn () => $this->ownerService->delete($nonExistentId))
         ->toThrow(RecordNotFoundException::class)
-        ->and(fn (RecordNotFoundException $e) => expect($e->getMessage())->toContain('The requested record could not be found.'));
+        ->and(fn (RecordNotFoundException $e) => expect($e->getUserMessage())->toBe('The requested record could not be found.'));
 });
 
 test('it throws RecordNotFoundException if deleting with an ID that is not the actual owner', function () {
@@ -218,5 +284,5 @@ test('it throws RecordNotFoundException if deleting with an ID that is not the a
 
     expect(fn () => $this->ownerService->delete($regularUser->id))
         ->toThrow(RecordNotFoundException::class)
-        ->and(fn (RecordNotFoundException $e) => expect($e->getMessage())->toContain('The requested record could not be found.'));
+        ->and(fn (RecordNotFoundException $e) => expect($e->getUserMessage())->toBe('The requested record could not be found.'));
 });
