@@ -31,26 +31,63 @@ test('it has fillable attributes', function () {
     expect($setting->getFillable())->toEqual(['key', 'value', 'type', 'description', 'group']);
 });
 
-test('it casts \'value\' attribute', function () {
+test('it casts \'value\' attribute correctly based on its type', function () {
     // Test with string value
-    $settingString = Setting::factory()->string(value: 'test_string')->create();
-    expect($settingString->value)->toBe('test_string');
+    $settingString = Setting::factory()->string(['value' => 'test_string'])->create();
+    $settingString->refresh(); // Ensure cast is applied on retrieval
+    expect($settingString->value)->toBe('test_string')
+        ->and($settingString->type)->toBe('string');
 
     // Test with integer value
-    $settingInt = Setting::factory()->integer(value: 123)->create();
-    expect($settingInt->value)->toBe(123);
+    $settingInt = Setting::factory()->integer(['value' => 123])->create();
+    $settingInt->refresh(); // Ensure cast is applied on retrieval
+    expect($settingInt->value)->toBe(123)
+        ->and($settingInt->type)->toBe('integer');
 
-    // Test with boolean value
-    $settingBool = Setting::factory()->boolean(value: true)->create();
-    expect($settingBool->value)->toBeTrue();
+    // Test with float value
+    $settingFloat = Setting::factory()->float(['value' => 123.45])->create();
+    $settingFloat->refresh(); // Ensure cast is applied on retrieval
+    expect($settingFloat->value)->toBe(123.45)
+        ->and($settingFloat->type)->toBe('float');
+
+    // Test with boolean value (true)
+    $settingBoolTrue = Setting::factory()->boolean(['value' => true])->create();
+    $settingBoolTrue->refresh(); // Ensure cast is applied on retrieval
+    expect($settingBoolTrue->value)->toBeTrue()
+        ->and($settingBoolTrue->type)->toBe('boolean');
+
+    // Test with boolean value (false)
+    $settingBoolFalse = Setting::factory()->boolean(['value' => false])->create();
+    $settingBoolFalse->refresh(); // Ensure cast is applied on retrieval
+    expect($settingBoolFalse->value)->toBeFalse()
+        ->and($settingBoolFalse->type)->toBe('boolean');
 
     // Test with array value
-    $settingArray = Setting::factory()->array(value: ['a' => 1, 'b' => 'test'])->create();
-    expect($settingArray->value)->toEqual(['a' => 1, 'b' => 'test']);
+    $arrayValue = ['a' => 1, 'b' => 'test', 'c' => ['nested' => true]];
+    $settingArray = Setting::factory()->array(['value' => $arrayValue])->create();
+    $settingArray->refresh(); // Ensure cast is applied on retrieval
+    expect($settingArray->value)->toEqual($arrayValue)
+        ->and($settingArray->type)->toBe('json'); // Array is cast to JSON string internally
 
     // Test with json value (which is also array behind the scenes for Eloquent)
-    $settingJson = Setting::factory()->json(value: ['x' => 'y'])->create();
-    expect($settingJson->value)->toEqual(['x' => 'y']);
+    $jsonValue = ['x' => 'y', 'z' => 100];
+    $settingJson = Setting::factory()->json(['value' => $jsonValue])->create();
+    $settingJson->refresh(); // Ensure cast is applied on retrieval
+    expect($settingJson->value)->toEqual($jsonValue)
+        ->and($settingJson->type)->toBe('json'); // JSON is cast to JSON string internally
+
+    // Test with null value
+    $settingNull = Setting::factory()->nullType(['value' => null])->create();
+    $settingNull->refresh(); // Ensure cast is applied on retrieval
+    expect($settingNull->value)->toBeNull()
+        ->and($settingNull->type)->toBe('null');
+
+    // Test with an object value (should be cast to JSON and retrieved as array)
+    $objectValue = new class { public $prop = 'value'; public $num = 1; };
+    $settingObject = Setting::factory()->json(['value' => $objectValue])->create(); // Use json factory type
+    $settingObject->refresh(); // Ensure cast is applied on retrieval
+    expect($settingObject->value)->toEqual(json_decode(json_encode($objectValue), true)) // Compare with JSON decoded array
+        ->and($settingObject->type)->toBe('json');
 });
 
 test('it can scope settings by group', function () {
@@ -76,6 +113,12 @@ test('it can create an integer setting via factory', function () {
     expect($setting->value)->toBeInt();
 });
 
+test('it can create a float setting via factory', function () {
+    $setting = Setting::factory()->float()->create();
+    expect($setting->type)->toBe('float');
+    expect($setting->value)->toBeFloat();
+});
+
 test('it can create a boolean setting via factory', function () {
     $setting = Setting::factory()->boolean()->create();
     expect($setting->type)->toBe('boolean');
@@ -84,7 +127,7 @@ test('it can create a boolean setting via factory', function () {
 
 test('it can create an array setting via factory', function () {
     $setting = Setting::factory()->array()->create();
-    expect($setting->type)->toBe('array');
+    expect($setting->type)->toBe('json'); // Harmonized to 'json' by factory
     expect($setting->value)->toBeArray();
 });
 
@@ -92,4 +135,10 @@ test('it can create a json setting via factory', function () {
     $setting = Setting::factory()->json()->create();
     expect($setting->type)->toBe('json');
     expect($setting->value)->toBeArray(); // JSON is typically cast to array in PHP
+});
+
+test('it can create a null setting via factory', function () {
+    $setting = Setting::factory()->nullType()->create();
+    expect($setting->type)->toBe('null');
+    expect($setting->value)->toBeNull();
 });

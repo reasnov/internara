@@ -8,104 +8,130 @@ class SettingFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
+     *
+     * @var string
      */
     protected $model = \Modules\Setting\Models\Setting::class;
 
     /**
      * Define the model's default state.
-     * This default state is a string setting.
+     *
+     * @return array<string, mixed>
      */
     public function definition(): array
     {
-        return $this->buildStateByType(default: $this->faker->sentence());
+        // Defaults to a 'string' type setting.
+        return $this->buildState('string');
     }
 
     /**
-     * Indicate that the setting is of type string.
+     * Indicate that the setting should be of type 'string'.
+     *
+     * @param  array<string, mixed>  $attributes
      */
-    public function string(?string $key = null, ?string $value = null, ?string $description = null, ?string $group = null): self
+    public function string(array $attributes = []): static
     {
-        return $this->state(fn (array $attributes) => $this->buildStateByType(
-            'string',
-            $key,
-            $value,
-            $this->faker->sentence(),
-            $description,
-            $group
-        ));
+        return $this->state(fn (array $_) => $this->buildState('string', $attributes));
     }
 
     /**
-     * Indicate that the setting is of type integer.
+     * Indicate that the setting should be of type 'integer'.
+     *
+     * @param  array<string, mixed>  $attributes
      */
-    public function integer(?string $key = null, ?int $value = null, ?string $description = null, ?string $group = null): self
+    public function integer(array $attributes = []): static
     {
-        return $this->state(fn (array $attributes) => $this->buildStateByType(
-            'integer',
-            $key,
-            $value,
-            $this->faker->numberBetween(1, 100),
-            $description,
-            $group
-        ));
+        return $this->state(fn (array $_) => $this->buildState('integer', $attributes));
     }
 
     /**
-     * Indicate that the setting is of type boolean.
+     * Indicate that the setting should be of type 'float'.
+     *
+     * @param  array<string, mixed>  $attributes
      */
-    public function boolean(?string $key = null, ?bool $value = null, ?string $description = null, ?string $group = null): self
+    public function float(array $attributes = []): static
     {
-        return $this->state(fn (array $attributes) => $this->buildStateByType(
-            'boolean',
-            $key,
-            $value,
-            $this->faker->boolean(),
-            $description,
-            $group
-        ));
+        return $this->state(fn (array $_) => $this->buildState('float', $attributes));
     }
 
     /**
-     * Indicate that the setting is of type array.
+     * Indicate that the setting should be of type 'boolean'.
+     *
+     * @param  array<string, mixed>  $attributes
      */
-    public function array(?string $key = null, ?array $value = null, ?string $description = null, ?string $group = null): self
+    public function boolean(array $attributes = []): static
     {
-        return $this->state(fn (array $attributes) => $this->buildStateByType(
-            'array',
-            $key,
-            $value,
-            ['item1' => $this->faker->word(), 'item2' => $this->faker->word()],
-            $description,
-            $group
-        ));
+        return $this->state(fn (array $_) => $this->buildState('boolean', $attributes));
     }
 
     /**
-     * Indicate that the setting is of type json.
+     * Indicate that the setting should be of type 'array'.
+     *
+     * @param  array<string, mixed>  $attributes
      */
-    public function json(?string $key = null, ?array $value = null, ?string $description = null, ?string $group = null): self
+    public function array(array $attributes = []): static
     {
-        return $this->state(fn (array $attributes) => $this->buildStateByType(
-            'json',
-            $key,
-            $value,
-            ['data_key' => $this->faker->word(), 'data_value' => $this->faker->sentence()],
-            $description,
-            $group
-        ));
+        return $this->state(fn (array $_) => $this->buildState('array', $attributes));
     }
 
     /**
-     * Build a state array for a setting of a specific type.
+     * Indicate that the setting should be of type 'json'.
+     *
+     * @param  array<string, mixed>  $attributes
      */
-    protected function buildStateByType(string $type = 'string', ?string $key = null, mixed $value = null, mixed $default = null, ?string $description = null, ?string $group = null): array
+    public function json(array $attributes = []): static
     {
-        return [
-            'key' => $key ?? $this->faker->unique()->slug(2),
-            'value' => $value ?? $default,
-            'type' => $type,
-            'description' => $description ?? $this->faker->paragraph(),
-            'group' => $group === null ? null : ($group ?? $this->faker->word()),
+        return $this->state(fn (array $_) => $this->buildState('json', $attributes));
+    }
+
+    /**
+     * Indicate that the setting should be of type 'null'.
+     *
+     * @param  array<string, mixed>  $attributes
+     */
+    public function nullType(array $attributes = []): static
+    {
+        return $this->state(fn (array $_) => $this->buildState('null', $attributes));
+    }
+
+    /**
+     * Build a state array with default values for a given setting type,
+     * merged with any provided attribute overrides.
+     *
+     * @param  string  $type  The type of the setting ('string', 'integer', etc.).
+     * @param  array<string, mixed>  $attributes  Attributes to override the defaults.
+     * @return array<string, mixed>
+     */
+    protected function buildState(string $type, array $attributes = []): array
+    {
+        $defaultValue = match ($type) {
+            'integer' => $this->faker->numberBetween(1, 100),
+            'float' => $this->faker->randomFloat(2, 0, 1000),
+            'boolean' => $this->faker->boolean(),
+            'array' => ['item1' => $this->faker->word(), 'item2' => $this->faker->word()],
+            'json' => ['data_key' => $this->faker->word(), 'data_value' => $this->faker->sentence()],
+            'null' => null,
+            default => $this->faker->sentence(), // 'string'
+        };
+
+        // Harmonize the 'type' attribute with what the SettingValueCast expects for storage
+        $dbType = match ($type) {
+            'array', 'object', 'json' => 'json', // Add 'json' here
+            'boolean' => 'boolean',
+            'integer' => 'integer',
+            'float' => 'float',
+            'null' => 'null', // Null is stored as 'null' type
+            default => 'string', // All other types (including 'string' itself)
+        };
+
+        $defaults = [
+            'key' => $this->faker->unique()->slug(2),
+            'value' => $defaultValue,
+            'type' => $dbType, // Use the harmonized dbType
+            'description' => $this->faker->paragraph(),
+            'group' => $this->faker->word(),
         ];
+
+        return array_merge($defaults, $attributes);
     }
 }

@@ -2,11 +2,21 @@
 
 namespace Modules\Setting\Database\Seeders;
 
-class AppSettingSeeder extends \Illuminate\Database\Seeder
+use Illuminate\Database\Seeder;
+use Modules\Setting\Casts\SettingValueCast;
+use Modules\Setting\Models\Setting;
+
+class AppSettingSeeder extends Seeder
 {
-    public function run()
+    /**
+     * Run the database seeds.
+     *
+     * This method seeds the application with default settings, converting values
+     * via the SettingValueCast before using a single 'upsert' operation for efficiency.
+     */
+    public function run(): void
     {
-        $settings = [
+        $rawSettings = [
             [
                 'key' => 'brand_name',
                 'value' => config('setting.brand_name', 'Internara'),
@@ -44,11 +54,24 @@ class AppSettingSeeder extends \Illuminate\Database\Seeder
             ],
         ];
 
-        foreach ($settings as $setting) {
-            \Modules\Setting\Models\Setting::updateOrCreate(
-                ['key' => $setting['key']],
-                $setting
-            );
+        $settingsToUpsert = [];
+        $caster = new SettingValueCast;
+        $dummyModel = new Setting; // A dummy model instance for the caster's set method
+
+        foreach ($rawSettings as $setting) {
+            // Apply the SettingValueCast::set logic manually to each setting
+            $processed = $caster->set($dummyModel, 'value', $setting['value'], ['type' => $setting['type'] ?? 'string']);
+
+            $settingsToUpsert[] = array_merge($setting, [
+                'value' => $processed['value'],
+                'type' => $processed['type'],
+            ]);
         }
+
+        Setting::upsert(
+            $settingsToUpsert,
+            ['key'],
+            ['value', 'type', 'description', 'group']
+        );
     }
 }

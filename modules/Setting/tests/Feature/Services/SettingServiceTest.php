@@ -14,7 +14,7 @@ beforeEach(function () {
 });
 
 test('it can get a setting by key', function () {
-    Setting::factory()->string(key: 'app_name', value: 'Internara App')->create();
+    Setting::factory()->string(['key' => 'app_name', 'value' => 'Internara App'])->create();
 
     $value = $this->service->get('app_name');
     expect($value)->toBe('Internara App');
@@ -27,7 +27,7 @@ test('it returns default if setting not found', function () {
 
 test('it retrieves settings from cache', function () {
     $expectedValue = 'Cached App Name';
-    Setting::factory()->string(key: 'app_name', value: $expectedValue)->create();
+    Setting::factory()->string(['key' => 'app_name', 'value' => $expectedValue])->create();
 
     Cache::shouldReceive('remember')
         ->once() // Expect cache::remember to be called once
@@ -38,21 +38,27 @@ test('it retrieves settings from cache', function () {
 });
 
 test('it bypasses cache when skipCached is true', function () {
-    Setting::factory()->string(key: 'app_name', value: 'DB Value')->create();
+    // Explicitly set group to null to test the scenario where the setting has no group.
+    $setting = Setting::factory()->string(['key' => 'app_name', 'value' => 'DB Value', 'group' => null])->create();
+    $groupKey = 'settings.group.'; // Expected cache key for null group
 
     Cache::shouldReceive('forget')
-        ->once() // Expect cache::forget to be called
+        ->once() // Expect forget for individual key
         ->with('settings.app_name');
+    Cache::shouldReceive('forget')
+        ->once() // Expect forget for group
+        ->with($groupKey);
+
     // We expect remember to be called, and it will fetch from DB, so it should not be mocked to return something specific.
     Cache::shouldReceive('remember')->once()->andReturnUsing(fn ($key, $ttl, $callback) => $callback());
 
-    $value = $this->service->get('app_name', null, true);
+    $value = $this->service->get('app_name', null, true); // This calls forget('app_name')
     expect($value)->toBe('DB Value');
 });
 
 test('it can get multiple settings by an array of keys', function () {
-    Setting::factory()->string(key: 'app_name', value: 'Internara App')->create();
-    Setting::factory()->integer(key: 'app_version', value: 1)->create();
+    Setting::factory()->string(['key' => 'app_name', 'value' => 'Internara App'])->create();
+    Setting::factory()->integer(['key' => 'app_version', 'value' => 1])->create();
 
     $values = $this->service->get(['app_name', 'app_version']);
     expect($values)->toEqual([
@@ -62,7 +68,7 @@ test('it can get multiple settings by an array of keys', function () {
 });
 
 test('it returns default for missing keys in array request', function () {
-    Setting::factory()->string(key: 'app_name', value: 'Internara App')->create();
+    Setting::factory()->string(['key' => 'app_name', 'value' => 'Internara App'])->create();
 
     $values = $this->service->get(['app_name', 'non_existent_key'], 'Default');
     expect($values)->toEqual([
@@ -81,7 +87,7 @@ test('it can create a new setting', function () {
 });
 
 test('it can update an existing setting', function () {
-    Setting::factory()->string(key: 'existing_setting', value: 'Old Value')->create();
+    Setting::factory()->string(['key' => 'existing_setting', 'value' => 'Old Value'])->create();
 
     $success = $this->service->set('existing_setting', 'Updated Value');
 
@@ -90,7 +96,7 @@ test('it can update an existing setting', function () {
 });
 
 test('it clears cache for individual setting on set', function () {
-    Setting::factory()->string(key: 'app_name', value: 'Internara App', group: null)->create(); // Explicitly set group to null
+    Setting::factory()->string(['key' => 'app_name', 'value' => 'Internara App', 'group' => null])->create(); // Explicitly set group to null
 
     Cache::shouldReceive('forget')
         ->once() // Expect forget for individual key
@@ -103,7 +109,7 @@ test('it clears cache for individual setting on set', function () {
 });
 
 test('it clears cache for group on set', function () {
-    Setting::factory()->string(key: 'app_name', value: 'Internara App', group: 'general')->create();
+    Setting::factory()->string(['key' => 'app_name', 'value' => 'Internara App', 'group' => 'general'])->create();
 
     Cache::shouldReceive('forget')
         ->once() // Expect forget for individual key
@@ -159,9 +165,9 @@ test('it handles extra attributes for multiple settings', function () {
 });
 
 test('it can get settings by group', function () {
-    Setting::factory()->string(key: 'app_name', value: 'Internara App', group: 'general')->create();
-    Setting::factory()->integer(key: 'app_version', value: 1, group: 'general')->create();
-    Setting::factory()->string(key: 'other_setting', value: 'Other Value', group: 'other')->create();
+    Setting::factory()->string(['key' => 'app_name', 'value' => 'Internara App', 'group' => 'general'])->create();
+    Setting::factory()->integer(['key' => 'app_version', 'value' => 1, 'group' => 'general'])->create();
+    Setting::factory()->string(['key' => 'other_setting', 'value' => 'Other Value', 'group' => 'other'])->create();
 
     $generalSettings = $this->service->getByGroup('general');
     expect($generalSettings)->toHaveCount(2)
@@ -172,7 +178,7 @@ test('it retrieves group settings from cache', function () {
     $expectedValue = collect([
         (new Setting(['key' => 'app_name', 'value' => 'My Cached App Name', 'type' => 'string', 'group' => 'general'])),
     ]);
-    Setting::factory()->string(key: 'app_name', value: 'My Cached App Name', group: 'general')->create();
+    Setting::factory()->string(['key' => 'app_name', 'value' => 'My Cached App Name', 'group' => 'general'])->create();
 
     Cache::shouldReceive('remember')
         ->once() // Expect cache::remember to be called once
