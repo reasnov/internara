@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Mockery;
 use Modules\Permission\Models\Role;
 use Modules\Shared\Exceptions\AppException;
+use Modules\Shared\Exceptions\RecordNotFoundException;
 use Modules\User\Contracts\Services\OwnerService as OwnerServiceContract;
 use Modules\User\Models\User;
 use Modules\User\Services\UserService;
@@ -50,6 +51,20 @@ test('it can create a user', function () {
     expect($user->username)->not->toBeNull();
 });
 
+test('it throws AppException for duplicate email on create', function () {
+    User::factory()->create(['email' => 'duplicate@example.com']);
+
+    $data = [
+        'name' => 'New User',
+        'email' => 'duplicate@example.com',
+        'password' => 'password123',
+    ];
+
+    expect(fn () => $this->service->create($data))
+        ->toThrow(AppException::class)
+        ->and(fn (AppException $e) => expect($e->getUserMessage())->toBe('shared::exceptions.name_exists'));
+});
+
 test('it can create an owner user', function () {
     $data = [
         'name' => 'Owner User',
@@ -77,6 +92,27 @@ test('it can create an owner user', function () {
     expect($user)->toBe($mockOwnerUser);
 });
 
+test('it can list users without filters', function () {
+    User::factory()->count(5)->create();
+
+    $results = $this->service->list();
+
+    expect($results)->toHaveCount(5);
+    expect($results->currentPage())->toBe(1);
+    expect($results->perPage())->toBe(10);
+});
+
+test('it can list users with pagination', function () {
+    User::factory()->count(15)->create();
+
+    $results = $this->service->list([], 5); // 5 items per page
+
+    expect($results)->toHaveCount(5);
+    expect($results->total())->toBe(15);
+    expect($results->perPage())->toBe(5);
+    expect($results->lastPage())->toBe(3);
+});
+
 test('it can list users with search', function () {
     User::factory()->create(['name' => 'John Doe']);
     User::factory()->create(['name' => 'Jane Doe']);
@@ -86,6 +122,21 @@ test('it can list users with search', function () {
 
     expect($results)->toHaveCount(2);
     expect($results->items()[0]->name)->toContain('Doe');
+    expect($results->items()[1]->name)->toContain('Doe');
+});
+
+test('it can list users with sorting', function () {
+    User::factory()->create(['name' => 'Alice']);
+    User::factory()->create(['name' => 'Bob']);
+    User::factory()->create(['name' => 'Charlie']);
+
+    $resultsAsc = $this->service->list(['sort' => 'name', 'direction' => 'asc']);
+    expect($resultsAsc->first()->name)->toBe('Alice');
+    expect($resultsAsc->last()->name)->toBe('Charlie');
+
+    $resultsDesc = $this->service->list(['sort' => 'name', 'direction' => 'desc']);
+    expect($resultsDesc->first()->name)->toBe('Charlie');
+    expect($resultsDesc->last()->name)->toBe('Alice');
 });
 
 test('it can update a user', function () {
@@ -100,6 +151,14 @@ test('it can update a user', function () {
 
     expect($updatedUser->name)->toBe('New Name');
     expect(User::find($user->id)->name)->toBe('New Name');
+});
+
+test('it throws RecordNotFoundException when updating a non-existent user', function () {
+    $nonExistentId = (string) Str::uuid();
+
+    expect(fn () => $this->service->update($nonExistentId, ['name' => 'Any Name']))
+        ->toThrow(RecordNotFoundException::class)
+        ->and(fn (RecordNotFoundException $e) => expect($e->replace['id'])->toBe($nonExistentId));
 });
 
 test('it can update an owner user', function () {
@@ -155,6 +214,14 @@ test('it can delete a user', function () {
     expect(User::find($user->id))->toBeNull();
 });
 
+test('it throws RecordNotFoundException when deleting a non-existent user', function () {
+    $nonExistentId = (string) Str::uuid();
+
+    expect(fn () => $this->service->delete($nonExistentId))
+        ->toThrow(RecordNotFoundException::class)
+        ->and(fn (RecordNotFoundException $e) => expect($e->replace['id'])->toBe($nonExistentId));
+});
+
 test('it cannot delete an owner user', function () {
     // Create an actual owner user in the database
     $ownerUser = User::factory()->create();
@@ -174,7 +241,55 @@ test('it can find by unique fields', function () {
         'username' => 'uniqueuser',
     ]);
 
-    expect($this->service->find($user->id)->id)->toBe($user->id);
-    expect($this->service->findByEmail('unique@example.com')->id)->toBe($user->id);
-    expect($this->service->findByUsername('uniqueuser')->id)->toBe($user->id);
+    expect($this->service->find($user->id))->toBeInstanceOf(User::class)
+        ->and($this->service->find($user->id)->id)->toBe($user->id);
+    expect($this->service->findByEmail('unique@example.com'))->toBeInstanceOf(User::class)
+        ->and($this->service->findByEmail('unique@example.com')->id)->toBe($user->id);
+    expect($this->service->findByUsername('uniqueuser'))->toBeInstanceOf(User::class)
+        ->and($this->service->findByUsername('uniqueuser')->id)->toBe($user->id);
+});
+
+test('it returns null when finding a non-existent user by ID', function () {
+    $nonExistentId = (string) Str::uuid();
+    expect($this->service->find($nonExistentId))->toBeNull();
+});
+
+test('it returns null when finding a non-existent user by email', function () {
+    expect($this->service->findByEmail('nonexistent@example.com'))->toBeNull();
+});
+
+test('it returns null when finding a non-existent user by username', function () {
+    expect($this->service->findByUsername('nonexistentuser'))->toBeNull();
+});
+
+test('it returns an eloquent builder instance for query()', function () {
+    $builder = $this->service->query();
+    expect($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+});
+
+test('it returns an eloquent builder instance with selected columns for query()', function () {
+    User::factory()->create(['name' => 'Test User', 'email' => 'test@example.com']);
+    $builder = $this->service->query(['name']);
+    $user = $builder->first();
+    expect($user)->not->toBeNull();
+    expect($user->name)->toBe('Test User');
+    expect($user)->not->toHaveProperty('email'); // Should not have email if not selected
+});
+
+test('it returns true if a record exists with exists()', function () {
+    User::factory()->create(['email' => 'existing@example.com']);
+    expect($this->service->exists(['email' => 'existing@example.com']))->toBeTrue();
+});
+
+test('it returns false if no record exists with exists()', function () {
+    expect($this->service->exists(['email' => 'nonexistent@example.com']))->toBeFalse();
+});
+
+test('it returns true if any record exists when calling exists() without conditions', function () {
+    User::factory()->create();
+    expect($this->service->exists())->toBeTrue();
+});
+
+test('it returns false if no record exists when calling exists() without conditions', function () {
+    expect($this->service->exists())->toBeFalse();
 });

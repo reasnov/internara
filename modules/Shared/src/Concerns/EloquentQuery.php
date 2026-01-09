@@ -14,8 +14,18 @@ trait EloquentQuery
 {
     protected Model $model;
 
+    /**
+     * The Eloquent query builder instance.
+     *
+     * @var \Illuminate\Database\Eloquent\Builder|null
+     */
     protected ?Builder $query = null;
 
+    /**
+     * The singular name of the record this service manages.
+     *
+     * @var string
+     */
     protected string $recordName = 'record';
 
     /**

@@ -29,7 +29,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
- * @property-read \Illuminate\Database\Eloquent\Collection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read \Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property string|null $avatar_url
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static> owner()
  */

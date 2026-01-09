@@ -21,16 +21,18 @@ class UserService implements UserServiceContract
     }
 
     /**
-     * UserService constructor.
+     * The OwnerService instance.
+     *
+     * @var \Modules\User\Contracts\Services\OwnerService
      */
+    protected OwnerService $ownerService;
+
     /**
      * UserService constructor.
      *
      * @param  \Modules\User\Models\User  $userModel
      * @param  \Modules\User\Contracts\Services\OwnerService  $ownerService
      */
-    protected OwnerService $ownerService;
-
     public function __construct(User $userModel, OwnerService $ownerService)
     {
         $this->setModel($userModel);
