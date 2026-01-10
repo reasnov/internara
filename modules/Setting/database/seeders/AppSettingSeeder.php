@@ -47,7 +47,7 @@ class AppSettingSeeder extends Seeder
             ],
             [
                 'key' => 'app_installed',
-                'value' => true,
+                'value' => false,
                 'type' => 'boolean',
                 'description' => 'Indicates whether the application is installed',
                 'group' => 'system',

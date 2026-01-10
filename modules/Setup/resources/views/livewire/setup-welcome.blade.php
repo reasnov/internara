@@ -38,6 +38,6 @@
 
     <!-- Call to Action Button -->
     <div>
-        <x-ui::button class="btn-primary" label="Mari Mulai" wire:click="nextStep" />
+        <x-ui::button class="btn-primary" label="Mulai Instalasi" wire:click="nextStep" />
     </div>
 </div>

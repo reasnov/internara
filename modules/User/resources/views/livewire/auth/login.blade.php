@@ -22,7 +22,7 @@
 
                 @if (\Illuminate\Support\Facades\Route::has('register'))
                     <p class="text-center text-sm">
-                        Belum punya akun Internara? <a class="font-medium underline" href="{{ route('register') }}"
+                        Belum punya akun? <a class="font-medium underline" href="{{ route('register') }}"
                             wire:navigate>Daftar Sekarang</a>
                     </p>
                 @endif

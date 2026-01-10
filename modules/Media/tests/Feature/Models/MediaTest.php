@@ -2,74 +2,12 @@
 
 namespace Modules\Media\Tests\Feature\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Modules\Media\Models\Media;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
-
-/*
-|--------------------------------------------------------------------------
-| Test Models for Polymorphic Relations
-|--------------------------------------------------------------------------
-|
-| These dummy models are created specifically for testing polymorphic
-| relationships with integer and UUID primary keys. They implement
-| the HasMedia interface required by Spatie Media Library.
-|
-*/
-
-// Dummy model with auto-incrementing (bigint) ID
-class TestModelBigInt extends Model implements HasMedia
-{
-    use InteractsWithMedia;
-
-    protected $table = 'test_models_big_int';
-
-    protected $guarded = [];
-
-    public $timestamps = false; // Not needed for these tests
-
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('default');
-    }
-}
-
-// Dummy model with UUID ID
-class TestUserUUID extends Model implements HasMedia
-{
-    use HasUuids;
-    use InteractsWithMedia;
-
-    protected $table = 'test_users_uuid';
-
-    protected $guarded = [];
-
-    public $timestamps = false; // Not needed for these tests
-
-    /**
-     * The "type" of the primary key ID.
-     *
-     * @var string
-     */
-    protected $keyType = 'string';
-
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = false;
-
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('default');
-    }
-}
+use Modules\Media\Tests\Dummies\TestModelBigInt;
+use Modules\Media\Tests\Dummies\TestUserUUID;
 
 /*
 |--------------------------------------------------------------------------

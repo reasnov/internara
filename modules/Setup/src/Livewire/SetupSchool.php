@@ -42,10 +42,10 @@ class SetupSchool extends Component
     }
 
     /**
-     * Handles the 'school-updated' event to proceed to the next setup step.
+     * Handles the 'school-saved' event to proceed to the next setup step.
      */
-    #[On('school-updated')]
-    public function handleSchoolUpdated(): void
+    #[On('school-saved')]
+    public function handleSchoolSaved(): void
     {
         $this->nextStep();
     }

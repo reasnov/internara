@@ -1,3 +1,3 @@
 <div {{ $attributes->class(['w-full']) }}>
-    <x-mary-input {{ $attributes }} />
+    <x-mary-textarea {{ $attributes }} />
 </div>

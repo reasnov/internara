@@ -26,6 +26,7 @@ class SchoolServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+        $this->registerViewSlots();
     }
 
     /**
@@ -45,6 +46,15 @@ class SchoolServiceProvider extends ServiceProvider
      */
     protected function bindings(): array
     {
-        return [];
+        return [
+            \Modules\School\Contracts\Services\SchoolService::class => \Modules\School\Services\SchoolService::class,
+        ];
+    }
+
+    protected function viewSlots(): array
+    {
+        return [
+            'school-manager' => 'livewire:school::school-manager',
+        ];
     }
 }

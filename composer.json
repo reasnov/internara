@@ -17,7 +17,9 @@
         "livewire/volt": "^1.10",
         "mhmiton/laravel-modules-livewire": "^5.2",
         "nwidart/laravel-modules": "^12.0",
+        "postare/blade-mdi": "^1.1",
         "robsontenorio/mary": "^2.4",
+        "secondnetwork/blade-tabler-icons": "^3.36",
         "spatie/laravel-medialibrary": "^11.17",
         "spatie/laravel-permission": "^6.24"
     },

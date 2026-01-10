@@ -12,7 +12,12 @@ use Modules\Shared\Exceptions\AppException;
 
 class SchoolService implements SchoolServiceContract
 {
-    use EloquentQuery;
+    use EloquentQuery {
+        create as eloquentCreate;
+        update as eloquentUpdate;
+        updateOrCreate as eloquentUpdateOrCreate;
+        first as eloquentFirst;
+    }
 
     /**
      * SchoolService constructor.
@@ -20,6 +25,7 @@ class SchoolService implements SchoolServiceContract
     public function __construct(School $model)
     {
         $this->setModel($model);
+        $this->setSearchable(['name', 'email']);
     }
 
     /**
@@ -89,7 +95,11 @@ class SchoolService implements SchoolServiceContract
             }
 
             /** @var School $school */
-            $school = $this->model->create($data);
+            $school = $this->eloquentCreate($data);
+
+            if (isset($data['school_logo_file']) && $data['school_logo_file']) {
+                $school->addMedia($data['school_logo_file'])->toMediaCollection('school_logo');
+            }
 
             return $school;
         } catch (QueryException $e) {
@@ -110,5 +120,35 @@ class SchoolService implements SchoolServiceContract
                 previous: $e
             );
         }
+    }
+
+    public function update(mixed $id, array $data, array $columns = ['*']): School
+    {
+        /** @var School $school */
+        $school = $this->model->where('id', $id)->firstOrFail();
+
+        $school->update($data);
+
+        if (isset($data['school_logo_file']) && $data['school_logo_file']) {
+            $school->clearMediaCollection('school_logo');
+            $school->addMedia($data['school_logo_file'])->toMediaCollection('school_logo');
+        }
+
+        return $school;
+    }
+
+    public function updateOrCreate(array $data): School
+    {
+        return $this->eloquentUpdateOrCreate($data);
+    }
+
+    /**
+     * Retrieve the first school record.
+     *
+     * @param  array<int, string>  $columns
+     */
+    public function first(array $columns = ['*']): ?School
+    {
+        return $this->eloquentFirst($columns);
     }
 }

@@ -17,6 +17,13 @@ interface SchoolService
     public function get(array $where = [], array $columns = ['*']): School|\Illuminate\Support\Collection;
 
     /**
+     * Retrieve the first school record.
+     *
+     * @param  array<int, string>  $columns
+     */
+    public function first(array $columns = ['*']): ?School;
+
+    /**
      * List schools with optional filtering and pagination.
      *
      * @param  array<string, mixed>  $filters  Filter criteria (e.g., 'search', 'sort').
@@ -41,4 +48,8 @@ interface SchoolService
      * @return bool True if a record exists, false otherwise.
      */
     public function exists(array|callable $where = []): bool;
+
+    public function update(mixed $id, array $data, array $columns = ['*']): School;
+
+    public function updateOrCreate(array $data): School;
 }

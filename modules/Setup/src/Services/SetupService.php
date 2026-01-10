@@ -24,8 +24,7 @@ class SetupService implements SetupServiceContract
         protected SchoolService $schoolService,
         protected DepartmentService $departmentService,
         protected InternshipService $internshipService,
-    ) {
-    }
+    ) {}
 
     /**
      * {@inheritDoc}
@@ -61,8 +60,8 @@ class SetupService implements SetupServiceContract
         $schoolRecord = $this->schoolService->get();
         $settings = [
             'brand_name' => $schoolRecord->name,
-            'brand_logo' => $schoolRecord->logo ?? null,
-            'brand_logo_dark' => $schoolRecord->logo_dark ?? null,
+            'brand_logo' => $schoolRecord->logo_url ?? null,
+            'brand_logo_dark' => $schoolRecord->logo_dark_url ?? null,
             'site_title' => $schoolRecord->name,
             'app_installed' => true,
         ];

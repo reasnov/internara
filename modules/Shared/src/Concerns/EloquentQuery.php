@@ -16,15 +16,11 @@ trait EloquentQuery
 
     /**
      * The Eloquent query builder instance.
-     *
-     * @var \Illuminate\Database\Eloquent\Builder|null
      */
     protected ?Builder $query = null;
 
     /**
      * The singular name of the record this service manages.
-     *
-     * @var string
      */
     protected string $recordName = 'record';
 
@@ -156,6 +152,16 @@ trait EloquentQuery
     }
 
     /**
+     * Retrieve the first record matching the query.
+     *
+     * @param  array<int, string>  $columns
+     */
+    public function first(array $columns = ['*']): ?Model
+    {
+        return $this->query()->first($columns);
+    }
+
+    /**
      * Check if a record exists based on the given conditions.
      *
      * @param  array<string, mixed>|callable  $where  Conditions for existence check.
@@ -208,6 +214,11 @@ trait EloquentQuery
                 previous: $e
             );
         }
+    }
+
+    public function updateOrCreate(array $data): Model
+    {
+        return $this->model->updateOrCreate(['id' => $data['id'] ?? null], $data);
     }
 
     /**
