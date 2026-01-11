@@ -2,8 +2,7 @@
 
 namespace Modules\Core\Console\Commands;
 
-use Illuminate\Support\Str;
-use Modules\Core\Concerns\Console\Commands\GeneratesModulePaths;
+use Modules\Core\Console\Concerns\HandlesModuleMakeGenerator;
 use Nwidart\Modules\Commands\Make\GeneratorCommand;
 use Nwidart\Modules\Support\Stub;
 use Symfony\Component\Console\Input\InputArgument;
@@ -14,7 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class ModuleMakeTraitCommand extends GeneratorCommand
 {
-    use GeneratesModulePaths;
+    use HandlesModuleMakeGenerator;
 
     /**
      * The name and signature of the console command.
@@ -38,6 +37,13 @@ class ModuleMakeTraitCommand extends GeneratorCommand
     protected $argumentName = 'name';
 
     /**
+     * The configuration key for the command.
+     *
+     * @var string
+     */
+    protected $configKey = 'traits';
+
+    /**
      * Get the stub file for the generator.
      */
     protected function getStub(): string
@@ -47,34 +53,31 @@ class ModuleMakeTraitCommand extends GeneratorCommand
 
     /**
      * Get the template contents for the generator.
+     *
+     * @return string
      */
     protected function getTemplateContents(): string
     {
-        $module = $this->getModule();
-
-        // Extract the base class name from the full name argument
-        $traitName = Str::afterLast($this->argument('name'), '/');
-
         return (new Stub($this->getStub(), [
-            'CLASS_NAMESPACE' => $this->getClassNamespace($module),
-            'CLASS' => Str::studly($traitName),
+            'NAMESPACE' => $this->getTargetNamespace(),
+            'CLASS' => $this->getTargetName(),
         ]))->render();
     }
 
-    public function getClassNamespace($module): string
-    {
-        return $this->getComponentNamespace($module, 'traits', $this->argument('name'));
-    }
-
+    /**
+     * Get the destination file path for the generated trait.
+     *
+     * @return string The destination file path.
+     */
     protected function getDestinationFilePath(): string
     {
-        $module = $this->getModule();
-
-        return $this->getComponentDestinationFilePath($module, 'traits', $this->argument('name'));
+        return $this->getTargetFilePath();
     }
 
     /**
      * Get the console command arguments.
+     *
+     * @return array The array of arguments.
      */
     protected function getArguments(): array
     {
@@ -86,25 +89,13 @@ class ModuleMakeTraitCommand extends GeneratorCommand
 
     /**
      * Get the console command options.
+     *
+     * @return array The array of options.
      */
     protected function getOptions(): array
     {
         return [
             ['force', null, InputOption::VALUE_NONE, 'Create the trait even if the trait already exists.'],
         ];
-    }
-
-    /**
-     * Get the default namespace for the trait.
-     */
-    public function getDefaultNamespace(): string
-    {
-        // The namespace is constructed manually in getClassNamespace()
-        return '';
-    }
-
-    protected function getFileName(): string
-    {
-        return $this->getBaseFileName($this->argument('name'));
     }
 }

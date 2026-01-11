@@ -4,19 +4,25 @@ namespace Modules\School\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\UploadedFile;
 use Modules\School\Contracts\Services\SchoolService as SchoolServiceContract;
 use Modules\School\Models\School;
 use Modules\Shared\Concerns\EloquentQuery;
 use Modules\Shared\Exceptions\AppException;
 
+/**
+ * @property School $model
+ */
 class SchoolService implements SchoolServiceContract
 {
     use EloquentQuery {
-        create as eloquentCreate;
-        update as eloquentUpdate;
-        updateOrCreate as eloquentUpdateOrCreate;
-        first as eloquentFirst;
+        first as firstQuery;
+        create as createQuery;
+        update as updateQuery;
+        updateOrCreate as updateOrCreateQuery;
     }
 
     /**
@@ -38,17 +44,14 @@ class SchoolService implements SchoolServiceContract
      */
     public function get(array $where = [], array $columns = ['*']): School|\Illuminate\Support\Collection
     {
-        $query = $this->model->query();
-
-        foreach ($where as $column => $value) {
-            $query->where($column, $value);
-        }
+        $query = $this->query($columns);
+        $query->when(!empty($where), fn ($q) => $q->where($where));
 
         if (config('school.single_record')) {
-            return $query->first($columns);
+            return $query->first();
         }
 
-        return $query->get($columns);
+        return $query->get();
     }
 
     /**
@@ -87,19 +90,15 @@ class SchoolService implements SchoolServiceContract
     public function create(array $data): School
     {
         try {
-            if (config('school.single_record') && $this->model->count() > 0) {
+            if (config('school.single_record') && $this->model->exists()) {
                 throw new AppException(
                     userMessage: 'school::exceptions.single_record_exists',
                     code: 409 // Conflict
                 );
             }
 
-            /** @var School $school */
-            $school = $this->eloquentCreate($data);
-
-            if (isset($data['school_logo_file']) && $data['school_logo_file']) {
-                $school->addMedia($data['school_logo_file'])->toMediaCollection('school_logo');
-            }
+            $school = $this->createQuery($data);
+            $this->handleSchoolLogo($school, $data['logo_file'] ?? null);
 
             return $school;
         } catch (QueryException $e) {
@@ -125,21 +124,18 @@ class SchoolService implements SchoolServiceContract
     public function update(mixed $id, array $data, array $columns = ['*']): School
     {
         /** @var School $school */
-        $school = $this->model->where('id', $id)->firstOrFail();
-
-        $school->update($data);
-
-        if (isset($data['school_logo_file']) && $data['school_logo_file']) {
-            $school->clearMediaCollection('school_logo');
-            $school->addMedia($data['school_logo_file'])->toMediaCollection('school_logo');
-        }
+        $school = $this->updateQuery($id, $data, $columns);
+        $this->handleSchoolLogo($school, $data['logo_file'] ?? null);
 
         return $school;
     }
 
     public function updateOrCreate(array $data): School
     {
-        return $this->eloquentUpdateOrCreate($data);
+        $school = $this->updateOrCreateQuery($data);
+        $this->handleSchoolLogo($school, $data['file_logo'] ?? null);
+
+        return $school;
     }
 
     /**
@@ -149,6 +145,16 @@ class SchoolService implements SchoolServiceContract
      */
     public function first(array $columns = ['*']): ?School
     {
-        return $this->eloquentFirst($columns);
+        return $this->firstQuery($columns);
+    }
+
+    public function registerFromRelatedModel(Model $model, string|null $foreignKey = null, string|null $ownerKey = null, string|null $relation = null): BelongsTo
+    {
+        return $model->belongsTo($this->model::class, $foreignKey, $ownerKey, $relation);
+    }
+
+    protected function handleSchoolLogo(School &$school, string|UploadedFile|null $file): bool
+    {
+        return isset($logo) ? $school->changeLogo($file) : false;
     }
 }

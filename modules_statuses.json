@@ -15,5 +15,7 @@
     "Support": true,
     "UI": true,
     "User": true,
-    "Media": true
+    "Media": true,
+    "FormBuilder": true,
+    "Records": true
 }

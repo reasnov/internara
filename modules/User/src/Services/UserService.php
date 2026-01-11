@@ -3,6 +3,7 @@
 namespace Modules\User\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Modules\Shared\Concerns\EloquentQuery;
 use Modules\Shared\Exceptions\AppException;
@@ -11,13 +12,16 @@ use Modules\User\Contracts\Services\OwnerService;
 use Modules\User\Contracts\Services\UserService as UserServiceContract;
 use Modules\User\Models\User;
 
+/**
+ * @property User $model
+ */
 class UserService implements UserServiceContract
 {
     use EloquentQuery {
-        list as eloquentList;
-        create as eloquentCreate;
-        update as eloquentUpdate;
-        delete as eloquentDelete;
+        list as listQuery;
+        create as createQuery;
+        update as updateQuery;
+        delete as deleteQuery;
     }
 
     /**
@@ -30,12 +34,12 @@ class UserService implements UserServiceContract
     /**
      * UserService constructor.
      *
-     * @param  \Modules\User\Models\User  $userModel
+     * @param  \Modules\User\Models\User  $model
      * @param  \Modules\User\Contracts\Services\OwnerService  $ownerService
      */
-    public function __construct(User $userModel, OwnerService $ownerService)
+    public function __construct(User $model, OwnerService $ownerService)
     {
-        $this->setModel($userModel);
+        $this->setModel($model);
         $this->setSearchable('name', 'email', 'username');
         $this->ownerService = $ownerService;
     }
@@ -50,7 +54,7 @@ class UserService implements UserServiceContract
      */
     public function list(array $filters = [], int $perPage = 10, array $columns = ['*']): LengthAwarePaginator
     {
-        return $this->eloquentList($filters, $perPage, $columns);
+        return $this->listQuery($filters, $perPage, $columns);
     }
 
     /**
@@ -87,10 +91,10 @@ class UserService implements UserServiceContract
             }
         }
 
-        /** @var User $user */
-        $user = $this->eloquentCreate($data);
+        $user = $this->createQuery($data);
+        $this->handleUserAvatar($user, $data['avatar_file'] ?? null);
 
-        if ($originalRoles !== null) { // Use originalRoles here to prevent double assignment in OwnerService case
+        if ($originalRoles !== null) {
             $user->assignRole($originalRoles);
         }
 
@@ -163,7 +167,8 @@ class UserService implements UserServiceContract
             unset($data['password']);
         }
 
-        $updatedUser = $this->eloquentUpdate($id, $data, $columns);
+        $updatedUser = $this->updateQuery($id, $data, $columns);
+        $this->handleUserAvatar($updatedUser, $data['avatar_file'] ?? null);
 
         if ($originalRoles !== null) {
             $updatedUser->syncRoles($originalRoles);
@@ -182,7 +187,6 @@ class UserService implements UserServiceContract
      */
     public function delete(mixed $id): bool
     {
-        /** @var User $user */
         $user = $this->find($id);
 
         if (! $user) {
@@ -190,9 +194,14 @@ class UserService implements UserServiceContract
         }
 
         if ($user->hasRole('owner')) {
-            return $this->ownerService->delete($id); // OwnerService::delete handles the exception
+            return $this->ownerService->delete($id);
         }
 
-        return $this->eloquentDelete($id);
+        return $this->deleteQuery($id);
+    }
+
+    protected function handleUserAvatar(User &$user, UploadedFile|string|null $avatar = null): bool
+    {
+        return isset($avatar) ? $user->changeAvatar($avatar) : false;
     }
 }

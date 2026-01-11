@@ -3,6 +3,7 @@
 namespace Modules\User\Services;
 
 // Added for exception handling
+use Illuminate\Http\UploadedFile;
 use Modules\Shared\Concerns\EloquentQuery;
 use Modules\Shared\Exceptions\AppException;
 use Modules\Shared\Exceptions\RecordNotFoundException;
@@ -12,6 +13,7 @@ use Modules\User\Models\User;
 /**
  * Service to manage owner-related operations.
  *
+ * @property User $model
  * @method \Illuminate\Database\Eloquent\Builder<User> query(array $columns = ['*'])
  * @method \Illuminate\Contracts\Pagination\LengthAwarePaginator list(array $filters = [], int $perPage = 10, array $columns = ['*'])
  * @method \Modules\User\Models\User create(array $data)
@@ -24,9 +26,10 @@ use Modules\User\Models\User;
 class OwnerService implements OwnerServiceContract
 {
     use EloquentQuery {
-        create as eloquentCreate;
-        update as eloquentUpdate;
-        delete as eloquentDelete;
+        create as createQuery;
+        update as updateQuery;
+        updateOrCreate as updateOrCreateQuery;
+        delete as deleteQuery;
     }
 
     public function __construct(User $user)
@@ -54,8 +57,9 @@ class OwnerService implements OwnerServiceContract
             );
         }
 
-        /** @var \Modules\User\Models\User $owner */
-        $owner = $this->eloquentCreate($data);
+        $owner = $this->createQuery($data);
+
+        $this->handleOwnerAvatar($owner, $data['avatar_file'] ?? null);
 
         $owner->assignRole('owner');
         $owner->loadMissing(['roles', 'permissions']);
@@ -87,7 +91,7 @@ class OwnerService implements OwnerServiceContract
             );
         }
 
-        if ($existingOwner->id !== $id) { // The provided ID is not the actual owner's ID
+        if ($existingOwner->id !== $id) {
             throw new RecordNotFoundException(
                 userMessage: 'shared::exceptions.owner_not_found',
                 replace: ['id' => $id],
@@ -100,8 +104,10 @@ class OwnerService implements OwnerServiceContract
         unset($data['roles']);
         unset($data['role']);
 
-        /** @var \Modules\User\Models\User $updatedOwner */
-        $updatedOwner = $this->eloquentUpdate($existingOwner->id, $data, $columns);
+        $updatedOwner = $this->updateQuery($existingOwner->id, $data, $columns);
+
+        $this->handleOwnerAvatar($updatedOwner, $data['avatar_file'] ?? null);
+
         $updatedOwner->loadMissing(['roles', 'permissions']);
 
         return $updatedOwner;
@@ -115,10 +121,10 @@ class OwnerService implements OwnerServiceContract
      */
     public function updateOrCreate(array $data): User
     {
-        $keyName = $this->model->getKeyName();
-        $id = $this->query()->first()?->$keyName;
+        $owner = $this->updateOrCreateQuery($data);
 
-        $owner = $this->model->updateOrCreate([$keyName => $id], $data);
+        $this->handleOwnerAvatar($owner, $data['avatar_file'] ?? null);
+
         $owner->assignRole('owner');
         $owner->loadMissing(['roles', 'permissions']);
 
@@ -155,5 +161,10 @@ class OwnerService implements OwnerServiceContract
         }
 
         return $owner;
+    }
+
+    protected function handleOwnerAvatar(User &$owner, UploadedFile|string|null $avatar = null): bool
+    {
+        return isset($avatar) ? $owner->changeAvatar($avatar) : false;
     }
 }

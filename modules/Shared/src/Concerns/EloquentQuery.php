@@ -10,6 +10,9 @@ use Illuminate\Support\Arr;
 use Modules\Shared\Exceptions\AppException;
 use Modules\Shared\Exceptions\RecordNotFoundException;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ */
 trait EloquentQuery
 {
     protected Model $model;
@@ -112,11 +115,13 @@ trait EloquentQuery
      * Create a new record.
      *
      * @param  array<string, mixed>  $data  The data for creating the record.
+     * @return TModel
      */
     public function create(array $data): Model
     {
         try {
-            return $this->query()->create($data);
+            $filteredData = $this->filterFillable($data);
+            return $this->query()->create($filteredData);
         } catch (QueryException $e) {
             if ($e->getCode() === '23000') { // Duplicate entry
                 throw new AppException(
@@ -142,6 +147,7 @@ trait EloquentQuery
      *
      * @param  mixed  $id  The primary key of the record.
      * @param  array<int, string>  $columns  Columns to retrieve.
+     * @return TModel|null
      */
     public function find(mixed $id, array $columns = ['*']): ?Model
     {
@@ -155,6 +161,7 @@ trait EloquentQuery
      * Retrieve the first record matching the query.
      *
      * @param  array<int, string>  $columns
+     * * @return TModel|null
      */
     public function first(array $columns = ['*']): ?Model
     {
@@ -180,6 +187,8 @@ trait EloquentQuery
      * @param  array<string, mixed>  $data  The data for updating the record.
      * @param  array<int, string>  $columns  Columns to retrieve after update.
      *
+     * @return TModel
+     *
      * @throws RecordNotFoundException If the record is not found.
      * @throws AppException If the update fails due to a database error.
      */
@@ -193,7 +202,8 @@ trait EloquentQuery
         }
 
         try {
-            $record->update($data);
+            $filteredData = $this->filterFillable($data);
+            $record->update($filteredData);
 
             return $record;
         } catch (QueryException $e) {
@@ -216,9 +226,17 @@ trait EloquentQuery
         }
     }
 
+    /**
+     * @param array $data
+     *
+     * @return TModel
+     */
     public function updateOrCreate(array $data): Model
     {
-        return $this->model->updateOrCreate(['id' => $data['id'] ?? null], $data);
+        $keyName = $this->model->getKeyName();
+        $filteredData = $this->filterFillable($data);
+
+        return $this->model->updateOrCreate([$keyName => $data[$keyName] ?? null], $filteredData);
     }
 
     /**
@@ -266,5 +284,10 @@ trait EloquentQuery
     {
         $flattenedColumns = Arr::flatten($columns);
         $this->searchableColumns = array_unique($flattenedColumns);
+    }
+
+    protected function filterFillable(array $data): array
+    {
+        return collect($data)->only($this->model->getFillable())->toArray();
     }
 }

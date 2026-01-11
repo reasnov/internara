@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder; // Added this import
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Modules\User\Database\Factories\UserFactory;
@@ -141,6 +142,12 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     public function getAvatarUrlAttribute(): ?string
     {
         return $this->getFirstMediaUrl('user_avatar') ?: null;
+    }
+
+    public function changeAvatar(string|UploadedFile $file, string $collectionName = 'user_avatar'): bool
+    {
+        $this->clearMediaCollection('user_avatar');
+        return (bool) $this->addMedia($file)->toMediaCollection($collectionName) ?? false;
     }
 
     /**

@@ -5,11 +5,11 @@ namespace Modules\User\Livewire\Auth;
 use Livewire\Component;
 use Modules\User\Contracts\Services\AuthService;
 use Modules\User\Contracts\Services\OwnerService;
-use Modules\User\Livewire\AccountForm;
+use Modules\User\Livewire\UserForm;
 
 class RegisterOwner extends Component
 {
-    public AccountForm $form;
+    public UserForm $form;
 
     protected AuthService $authService;
 

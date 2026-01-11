@@ -5,7 +5,7 @@ namespace Modules\User\Livewire;
 use Livewire\Form;
 use Illuminate\Validation\Rule as ValidationRule;
 
-class AccountForm extends Form
+class UserForm extends Form
 {
     public string|int|null $id = null;
 

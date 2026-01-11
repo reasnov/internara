@@ -1,0 +1,30 @@
+{
+    "name": "reasnov/records",
+    "description": "",
+    "authors": [
+        {
+            "name": "Reas Vyn",
+            "email": "reasnov.official@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Records\\": "src/",
+            "Modules\\Records\\Database\\Factories\\": "database/factories/",
+            "Modules\\Records\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Records\\Tests\\": "tests/"
+        }
+    }
+}

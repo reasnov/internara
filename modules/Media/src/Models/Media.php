@@ -52,4 +52,10 @@ class Media extends SpatieMedia
         'generated_conversions' => 'array',
         'responsive_images' => 'array',
     ];
+
+    public function withModule(?string $name = null): self
+    {
+        $this->module = $name;
+        return $this;
+    }
 }

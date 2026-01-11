@@ -4,17 +4,27 @@ namespace Modules\Department\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Cache;
 use Modules\Department\Contracts\Services\DepartmentService as DepartmentServiceContract;
 use Modules\Department\Models\Department;
+use Modules\School\Contracts\Services\SchoolService;
 use Modules\Shared\Concerns\EloquentQuery;
 
+/**
+ * @property Department $model
+ */
 class DepartmentService implements DepartmentServiceContract
 {
-    use EloquentQuery;
+    use EloquentQuery {
+        create as createQuery;
+        update as updateQuery;
+        updateOrCreate as updateOrCreateQuery;
+    }
 
-    public function __construct(Department $model)
+    public function __construct(Department $model, protected SchoolService $schoolService)
     {
         $this->setModel($model);
+        $this->setSearchable(['name', 'school_id']);
     }
 
     /**
@@ -38,5 +48,47 @@ class DepartmentService implements DepartmentServiceContract
                 $query->latest();
             })
             ->paginate($perPage);
+    }
+
+    public function create(array $data): Department
+    {
+        $schoolId = $data['school_id'] ?? null;
+        unset($data['school_id']);
+
+        $department = $this->createQuery($data);
+        $department->changeSchoolId($schoolId);
+
+        $department->refresh();
+        $department->loadMissing(['school']);
+
+        return $department;
+    }
+
+    public function update(mixed $id, array $data, array $columns = ['*']): Department
+    {
+        $schoolId = $data['school_id'] ?? null;
+        unset($data['school_id']);
+
+        $department = $this->updateQuery($id, $data, $columns);
+        $department->changeSchoolId($schoolId);
+
+        $department->refresh();
+        $department->loadMissing(['school']);
+
+        return $department;
+    }
+
+    public function updateOrCreate(array $data): Department
+    {
+        $schoolId = $data['school_id'] ?? null;
+        unset($data['school_id']);
+
+        $department = $this->updateOrCreateQuery($data);
+        $department->changeSchoolId($schoolId);
+
+        $department->refresh();
+        $department->loadMissing(['school']);
+
+        return $department;
     }
 }

@@ -128,33 +128,36 @@ return [
         | Setting the generate key to false will not generate that folder
         */
         'generator' => [
+            //basics
+            'base' => ['path' => 'src', 'generate' => false],
+            'class' => ['path' => 'src', 'generate' => false],
+            'enums' => ['path' => 'src/Enums', 'generate' => false],
+            'interfaces' => ['path' => 'src/Contracts', 'generate' => false],
+            'traits' => ['path' => 'src/Concerns', 'generate' => false],
+            'provider' => ['path' => 'src/Providers', 'generate' => true],
+            'exceptions' => ['path' => 'src/Exceptions', 'generate' => false],
+
             // src/
             'actions' => ['path' => 'src/Actions', 'generate' => false],
             'casts' => ['path' => 'src/Casts', 'generate' => false],
             'channels' => ['path' => 'src/Broadcasting', 'generate' => false],
-            'class' => ['path' => 'src', 'generate' => false],
             'command' => ['path' => 'src/Console', 'generate' => false],
             'component-class' => ['path' => 'src/View/Components', 'generate' => false],
             'emails' => ['path' => 'src/Emails', 'generate' => false],
             'event' => ['path' => 'src/Events', 'generate' => false],
-            'enums' => ['path' => 'src/Enums', 'generate' => false],
-            'exceptions' => ['path' => 'src/Exceptions', 'generate' => false],
             'jobs' => ['path' => 'src/Jobs', 'generate' => false],
             'helpers' => ['path' => 'src/Helpers', 'generate' => false],
-            'interfaces' => ['path' => 'src/Contracts', 'generate' => false],
             'listener' => ['path' => 'src/Listeners', 'generate' => false],
             'model' => ['path' => 'src/Models', 'generate' => false],
             'notifications' => ['path' => 'src/Notifications', 'generate' => false],
             'observer' => ['path' => 'src/Observers', 'generate' => false],
             'policies' => ['path' => 'src/Policies', 'generate' => false],
-            'provider' => ['path' => 'src/Providers', 'generate' => true],
             'repository' => ['path' => 'src/Repositories', 'generate' => false],
             'resource' => ['path' => 'src/Transformers', 'generate' => false],
             'route-provider' => ['path' => 'src/Providers', 'generate' => true],
             'rules' => ['path' => 'src/Rules', 'generate' => false],
             'services' => ['path' => 'src/Services', 'generate' => false],
             'scopes' => ['path' => 'src/Models/Scopes', 'generate' => false],
-            'traits' => ['path' => 'src/Concerns', 'generate' => false],
 
             // src/Http/
             'controller' => ['path' => 'src/Http/Controllers', 'generate' => false],

@@ -3,6 +3,9 @@
 namespace Modules\School\Contracts\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\School\Models\School;
 
 interface SchoolService
@@ -52,4 +55,8 @@ interface SchoolService
     public function update(mixed $id, array $data, array $columns = ['*']): School;
 
     public function updateOrCreate(array $data): School;
+
+    public function query(array $columns = ['*']): Builder;
+
+    public function registerFromRelatedModel(Model $model, ?string $foreignKey = null, ?string $ownerKey = null, ?string $relation = null): BelongsTo;
 }

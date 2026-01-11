@@ -22,8 +22,12 @@ class SchoolManager extends Component
 
     public function mount(): void
     {
-        // Populate the form with the first school's data, as this is a manager component.
-        $school = $this->schoolService->first();
+        $this->initFormData();
+    }
+
+    protected function initFormData(): void
+    {
+        $school = $this->schoolService->first()?->append('logo_url');
 
         if ($school) {
             $this->form->fill($school);
