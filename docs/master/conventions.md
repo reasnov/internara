@@ -155,9 +155,16 @@ This approach makes module service providers highly readable and focused on thei
     *   **Configuration:** `config('user.default_role')`
 
 *   **Localization Best Practices for Exceptions:**
-    *   **Prioritize Shared Translations:** For generic error messages (e.g., creation/update/deletion failures, record not found, name/email conflicts), always use translation keys defined in the `Shared` module (e.g., `shared::exceptions.creation_failed`).
-    *   **Use Replacements**: Leverage replacement placeholders (e.g., `:record`, `:attribute`) with module-specific terms (e.g., `['record' => 'Department']`, `['record' => 'User']`) to provide context-aware messages.
-    *   **Module-Specific Only**: Only create new translation keys within a module's `lang/` directory when the message is truly unique and cannot be generalized or parameterized from the `Shared` module (e.g., `user::exceptions.invalid_credentials`).
+
+    To maximize reusability and maintain a clear structure, follow this two-tiered approach for exception translations:
+
+    1.  **Prioritize Shared Translations:** Before creating a new translation, always check if a generic message already exists that can be reused. "Shared" translations are intended for common errors that can occur across different modules.
+        -   **Truly Global Errors:** For system-wide issues not tied to any domain (e.g., server error, connection failed), place translations in the `Shared` module (`shared::exceptions.*`).
+        -   **Common Domain Errors:** For errors related to common concepts like data records or users (e.g., "not found," "already exists"), use the translation from the most relevant generic module (e.g., `records::exceptions.not_found`, `user::exceptions.owner_exists`).
+        -   The goal is to reuse before creating. Use replacement placeholders (e.g., `:record`, `:column`) to adapt generic messages to a specific context.
+
+    2.  **Use Module-Specific Translations as a Last Resort:** Only create a new translation key within your specific module's `lang/` directory if the error message is truly unique to its business logic and cannot be covered by an existing shared translation.
+        -   **Example:** `internship::exceptions.invalid_end_date`
 
 ### 4.3 Repository & Entity Conventions (Optional)
 

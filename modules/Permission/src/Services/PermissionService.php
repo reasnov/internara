@@ -61,7 +61,7 @@ class PermissionService implements PermissionServiceContract
         } catch (QueryException $e) {
             if ($e->getCode() === '23000') {
                 throw new AppException(
-                    userMessage: 'shared::exceptions.name_exists',
+                    userMessage: 'records::exceptions.unique_violation',
                     replace: ['record' => $this->recordName],
                     logMessage: 'Attempted to create '.$this->recordName.' with duplicate unique field.',
                     code: 409,
@@ -69,7 +69,7 @@ class PermissionService implements PermissionServiceContract
                 );
             }
             throw new AppException(
-                userMessage: 'shared::exceptions.creation_failed',
+                userMessage: 'records::exceptions.creation_failed',
                 replace: ['record' => $this->recordName],
                 logMessage: 'Creation of '.$this->recordName.' failed: '.$e->getMessage(),
                 code: 500,
@@ -101,7 +101,7 @@ class PermissionService implements PermissionServiceContract
         } catch (QueryException $e) {
             if ($e->getCode() === '23000') { // Duplicate entry
                 throw new AppException(
-                    userMessage: 'shared::exceptions.name_exists',
+                    userMessage: 'records::exceptions.unique_violation',
                     replace: ['record' => $this->recordName],
                     logMessage: 'Attempted to update '.$this->recordName.' with duplicate unique field.',
                     code: 409,
@@ -109,7 +109,7 @@ class PermissionService implements PermissionServiceContract
                 );
             }
             throw new AppException(
-                userMessage: 'shared::exceptions.update_failed',
+                userMessage: 'records::exceptions.update_failed',
                 replace: ['record' => $this->recordName],
                 logMessage: 'Update of '.$this->recordName.' failed: '.$e->getMessage(),
                 code: 500,

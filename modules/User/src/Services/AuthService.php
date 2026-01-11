@@ -92,7 +92,7 @@ class AuthService implements AuthServiceContract
         } catch (QueryException $e) {
             if ($e->getCode() === '23000') { // Duplicate entry SQLSTATE code
                 throw new AppException(
-                    userMessage: 'shared::exceptions.email_exists',
+                    userMessage: 'records::exceptions.unique_violation',
                     replace: ['record' => 'user'],
                     logMessage: 'Attempted to register with duplicate email: '.$data['email'],
                     code: 409, // Conflict
@@ -100,7 +100,7 @@ class AuthService implements AuthServiceContract
                 );
             }
             throw new AppException(
-                userMessage: 'shared::exceptions.creation_failed',
+                userMessage: 'records::exceptions.creation_failed',
                 replace: ['record' => 'user'],
                 logMessage: 'Registration failed due to database error: '.$e->getMessage(),
                 code: 500,

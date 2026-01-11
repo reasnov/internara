@@ -49,12 +49,12 @@ A specialized exception for when a requested data record cannot be located. It e
 *   **Purpose:** To standardize error reporting for missing records.
 *   **Key Features:**
     *   Defaults to an HTTP status code of **`404 Not Found`**.
-    *   By default, uses the translation key `shared::exceptions.record_not_found` but can be overridden.
+    *   By default, uses the translation key `records::exceptions.not_found` but can be overridden.
     *   Accepts `replace` parameters for dynamic messages and `record` for logging context.
 *   **Constructor:**
     ```php
     public function __construct(
-        string $userMessage = 'shared::exceptions.record_not_found',
+        string $userMessage = 'records::exceptions.not_found',
         array $replace = [],
         ?string $locale = null,
         array $record = [],
@@ -73,21 +73,25 @@ Continue to utilize Laravel's native exceptions for framework-level concerns lik
 
 All user-facing error messages thrown via `AppException` **must** be localized using translation keys. This ensures our application can support multiple languages and that messages are managed centrally.
 
-### 3.1. Three-Tiered Language File Structure
+### 3.1. Language File Structure for Exceptions
 
-We organize our exception messages into a three-tiered structure to maintain separation of concerns:
+To maximize reusability and maintain a clear structure, exception translations are organized into two main categories:
 
-1.  **Shared Errors**: For generic, system-wide errors not tied to a specific module.
-    - **Location**: `modules/Shared/lang/{locale}/exceptions.php`
-    - **Example**: General "record not found" or "server error" messages.
+1.  **Shared Exception Translations**: For messages intended to be reused across multiple modules. These are further categorized by their scope:
+    *   **Truly Global Errors**: For system-wide issues not tied to any specific domain (e.g., service unavailable, internal server error). If defined, these would reside in the `Shared` module's exceptions file.
+        -   **Location**: `modules/Shared/lang/{locale}/exceptions.php` (currently empty, but reserved for this purpose)
+        -   **Example**: `shared::exceptions.service_unavailable`
+    *   **Domain-Specific Shared Errors**: For common errors related to broad domains like data records or user management.
+        -   **`Records` Module**: For generic data record operations (e.g., record not found, creation failed, unique violation).
+            -   **Location**: `modules/Records/lang/{locale}/exceptions.php`
+            -   **Example**: `records::exceptions.not_found`
+        -   **`User` Module**: For errors specific to users, authentication, or owners.
+            -   **Location**: `modules/User/lang/{locale}/exceptions.php`
+            -   **Example**: `user::exceptions.owner_exists`
 
-2.  **Core Errors**: For errors related to core business logic that may span multiple modules.
-    - **Location**: `modules/Core/lang/{locale}/exceptions.php`
-    - **Example**: A business rule violation related to the overall internship program.
-
-3.  **Module-Specific Errors**: For errors that are specific to a single module's domain logic. This is the most common use case.
-    - **Location**: `modules/{ModuleName}/lang/{locale}/exceptions.php`
-    - **Example**: An error specific to user creation in the `User` module.
+2.  **Module-Specific Exception Translations**: For messages that are unique to a single module's business logic and cannot be generalized or reused elsewhere.
+    *   **Location**: `modules/{ModuleName}/lang/{locale}/exceptions.php`
+    *   **Example**: An error specific to internship date validation in the `Internship` module (e.g., `internship::exceptions.invalid_end_date`).
 
 ### 3.2. Namespaced Translation Keys
 
@@ -95,7 +99,7 @@ To call a translation from a specific module, we use **namespaced keys**.
 
 - **Format**: `{module_name}::exceptions.{key_name}`
 - **Examples**:
-  - `shared::exceptions.record_not_found`
+  - `records::exceptions.not_found`
   - `user::exceptions.owner_cannot_be_deleted`
 
 ### 3.3. How to Throw a Localized `AppException`
@@ -158,18 +162,18 @@ To pass dynamic data to your translated message, use the `$replace` parameter.
 **Throwing the exception:**
 ```php
 throw new AppException(
-    userMessage: 'shared::exceptions.record_not_found_by_id',
-    replace: ['id' => $userId],
+    userMessage: 'records::exceptions.not_found',
+    replace: ['id' => $userId, 'record' => 'User'],
     code: 404
 );
 ```
 
-**Language file (`modules/Shared/lang/en/exceptions.php`):**
+**Language file (`modules/Records/lang/en/exceptions.php`):**
 ```php
 <?php
 
 return [
-    'record_not_found_by_id' => 'The record with ID :id could not be found.',
+    'not_found' => 'The record with ID :id could not be found.',
 ];
 ```
 
@@ -177,7 +181,7 @@ return [
 
 **4. Example Throwing `RecordNotFoundException`**
 
-You can throw `RecordNotFoundException` directly. By default, it uses `shared::exceptions.record_not_found`. You can also pass replacement parameters or a specific translation key.
+You can throw `RecordNotFoundException` directly. By default, it uses `records::exceptions.not_found`. You can also pass replacement parameters or a specific translation key.
 
 ```php
 throw new \Modules\Shared\Exceptions\RecordNotFoundException(
@@ -195,7 +199,7 @@ throw new \Modules\Shared\Exceptions\RecordNotFoundException(
 );
 ```
 
-You would need to define the `record_not_found` key in `modules/Shared/lang/{locale}/exceptions.php` and `user_not_found` in `modules/User/lang/{locale}/exceptions.php` respectively.
+You would need to define the `not_found` key in `modules/Records/lang/{locale}/exceptions.php` and `user_not_found` in `modules/User/lang/{locale}/exceptions.php` respectively.
 
 ---
 

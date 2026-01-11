@@ -125,7 +125,7 @@ trait EloquentQuery
         } catch (QueryException $e) {
             if ($e->getCode() === '23000') { // Duplicate entry
                 throw new AppException(
-                    userMessage: 'shared::exceptions.name_exists',
+                    userMessage: 'records::exceptions.unique_violation',
                     replace: ['record' => $this->recordName],
                     logMessage: sprintf('Attempted to create %s with duplicate unique field: %s', $this->recordName, $e->getMessage()),
                     code: 409,
@@ -133,7 +133,7 @@ trait EloquentQuery
                 );
             }
             throw new AppException(
-                userMessage: 'shared::exceptions.creation_failed',
+                userMessage: 'records::exceptions.creation_failed',
                 replace: ['record' => $this->recordName],
                 logMessage: sprintf('Creation of %s failed: %s', $this->recordName, $e->getMessage()),
                 code: 500,
@@ -209,7 +209,7 @@ trait EloquentQuery
         } catch (QueryException $e) {
             if ($e->getCode() === '23000') { // Duplicate entry
                 throw new AppException(
-                    userMessage: 'shared::exceptions.name_exists',
+                    userMessage: 'records::exceptions.unique_violation',
                     replace: ['record' => $this->recordName],
                     logMessage: sprintf('Attempted to update %s with duplicate unique field: %s', $this->recordName, $e->getMessage()),
                     code: 409,
@@ -217,7 +217,7 @@ trait EloquentQuery
                 );
             }
             throw new AppException(
-                userMessage: 'shared::exceptions.update_failed',
+                userMessage: 'records::exceptions.update_failed',
                 replace: ['record' => $this->recordName],
                 logMessage: sprintf('Update of %s failed: %s', $this->recordName, $e->getMessage()),
                 code: 500,
@@ -260,15 +260,15 @@ trait EloquentQuery
         } catch (QueryException $e) {
             if ($e->getCode() === '23000') { // Foreign key constraint violation
                 throw new AppException(
-                    userMessage: 'shared::exceptions.cannot_delete_associated',
-                    replace: ['record' => $this->recordName],
+                    userMessage: 'records::exceptions.cannot_delete_associated',
+                    replace: ['record' => $this->recordName, 'relation' => $this->recordName],
                     logMessage: sprintf('Attempted to delete %s with associated records: %s', $this->recordName, $e->getMessage()),
                     code: 409,
                     previous: $e
                 );
             }
             throw new AppException(
-                userMessage: 'shared::exceptions.deletion_failed',
+                userMessage: 'records::exceptions.deletion_failed',
                 replace: ['record' => $this->recordName],
                 logMessage: sprintf('Deletion of %s failed: %s', $this->recordName, $e->getMessage()),
                 code: 500,

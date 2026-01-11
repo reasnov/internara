@@ -8,4 +8,6 @@ return [
     'invalid_credentials' => 'The provided credentials do not match our records.',
     'password_mismatch' => 'The provided current password does not match our records.',
     'email_already_verified' => 'This email address is already verified.',
+    'owner_not_found' => 'The owner account with ID :id could not be found.',
+    'owner_exists' => 'An owner account already exists. Only one owner account is allowed.',
 ];

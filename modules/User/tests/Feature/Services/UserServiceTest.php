@@ -62,7 +62,7 @@ test('it throws AppException for duplicate email on create', function () {
 
     expect(fn () => $this->service->create($data))
         ->toThrow(AppException::class)
-        ->and(fn (AppException $e) => expect($e->getUserMessage())->toBe('shared::exceptions.name_exists'));
+        ->and(fn (AppException $e) => expect($e->getUserMessage())->toBe('records::exceptions.unique_violation'));
 });
 
 test('it can create an owner user', function () {

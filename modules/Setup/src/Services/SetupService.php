@@ -114,7 +114,7 @@ class SetupService implements SetupServiceContract
         $isExists = $this->isRecordExists($record);
 
         if (! $isExists) {
-            throw new RecordNotFoundException('shared::exceptions.record_not_found');
+            throw new RecordNotFoundException('records::exceptions.not_found');
         }
 
         return $isExists;

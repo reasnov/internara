@@ -17,7 +17,7 @@ class RecordNotFoundException extends AppException
     /**
      * Create a new RecordNotFoundException instance.
      *
-     * @param  string  $userMessage  The translation key for the user-friendly message (e.g., "shared::exceptions.record_not_found").
+     * @param  string  $userMessage  The translation key for the user-friendly message (e.g., "records::exceptions.not_found").
      * @param  array  $replace  Parameters to pass to the translator for replacement.
      * @param  string|null  $locale  Specific locale to use for the user message.
      * @param  array  $record  The record identifier(s) that were not found, for logging context.
@@ -26,7 +26,7 @@ class RecordNotFoundException extends AppException
      * @param  Throwable|null  $previous  The previous exception used for chaining.
      */
     public function __construct(
-        string $userMessage = 'shared::exceptions.record_not_found', // Default key
+        string $userMessage = 'records::exceptions.not_found', // Default key
         array $replace = [],
         ?string $locale = null,
         array $record = [],

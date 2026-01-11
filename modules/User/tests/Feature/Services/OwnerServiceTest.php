@@ -73,7 +73,7 @@ test('it cannot create a second owner account', function () {
 
     expect(fn () => $this->ownerService->create($userData))
         ->toThrow(AppException::class)
-        ->and(fn (AppException $e) => expect($e->getUserMessage())->toBe('shared::exceptions.owner_exists'));
+        ->and(fn (AppException $e) => expect($e->getUserMessage())->toBe('user::exceptions.owner_exists'));
 
     // Assert only one owner still exists in the database
     expect(User::owner()->count())->toBe(1);
@@ -156,7 +156,7 @@ test('it throws RecordNotFoundException if updating a non-existent owner', funct
 
     expect(fn () => $this->ownerService->update($nonExistentId, ['name' => 'Invalid']))
         ->toThrow(RecordNotFoundException::class)
-        ->and(fn (RecordNotFoundException $e) => expect($e->getUserMessage())->toBe('shared::exceptions.owner_not_found'));
+        ->and(fn (RecordNotFoundException $e) => expect($e->getUserMessage())->toBe('user::exceptions.owner_not_found'));
 });
 
 test('it throws RecordNotFoundException if updating with an ID that is not the actual owner', function () {
@@ -170,7 +170,7 @@ test('it throws RecordNotFoundException if updating with an ID that is not the a
 
     expect(fn () => $this->ownerService->update($regularUser->id, ['name' => 'Attempted Hack']))
         ->toThrow(RecordNotFoundException::class)
-        ->and(fn (RecordNotFoundException $e) => expect($e->getUserMessage())->toBe('shared::exceptions.owner_not_found'));
+        ->and(fn (RecordNotFoundException $e) => expect($e->getUserMessage())->toBe('user::exceptions.owner_not_found'));
 });
 
 test('it does not change owner role during update even if data tries to modify it', function () {

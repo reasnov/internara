@@ -8,4 +8,6 @@ return [
     'invalid_credentials' => 'Kredensial yang diberikan tidak cocok dengan catatan kami.',
     'password_mismatch' => 'Kata sandi saat ini yang diberikan tidak cocok dengan catatan kami.',
     'email_already_verified' => 'Alamat email ini sudah diverifikasi.',
+    'owner_not_found' => 'Akun pemilik dengan ID :id tidak dapat ditemukan.',
+    'owner_exists' => 'Akun pemilik sudah ada. Hanya satu akun pemilik yang diizinkan.',
 ];

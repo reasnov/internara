@@ -51,7 +51,7 @@ class OwnerService implements OwnerServiceContract
     {
         if ($this->exists()) {
             throw new AppException(
-                userMessage: 'shared::exceptions.owner_exists',
+                userMessage: 'user::exceptions.owner_exists',
                 logMessage: 'Attempted to create a second owner account.',
                 code: 409
             );
@@ -85,7 +85,7 @@ class OwnerService implements OwnerServiceContract
 
         if (! $existingOwner) { // No owner exists at all
             throw new RecordNotFoundException(
-                userMessage: 'shared::exceptions.owner_not_found',
+                userMessage: 'user::exceptions.owner_not_found',
                 logMessage: 'Attempted to update owner, but no owner account exists.',
                 code: 404
             );
@@ -93,7 +93,7 @@ class OwnerService implements OwnerServiceContract
 
         if ($existingOwner->id !== $id) {
             throw new RecordNotFoundException(
-                userMessage: 'shared::exceptions.owner_not_found',
+                userMessage: 'user::exceptions.owner_not_found',
                 replace: ['id' => $id],
                 logMessage: sprintf('Attempted to update user with ID %s, but it is not the owner account (actual owner ID: %s).', $id, $existingOwner->id),
                 code: 404

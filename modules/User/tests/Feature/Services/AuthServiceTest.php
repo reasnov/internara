@@ -49,7 +49,7 @@ test('registration fails with duplicate email', function () {
 
     expect(fn () => $this->authService->register($userData))
         ->toThrow(AppException::class)
-        ->and(fn (AppException $e) => expect($e->getUserMessage())->toBe('shared::exceptions.email_exists'));
+        ->and(fn (AppException $e) => expect($e->getUserMessage())->toBe('records::exceptions.unique_violation'));
 });
 
 test('a user can log in with correct credentials', function () {
