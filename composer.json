@@ -42,7 +42,8 @@
             "Modules\\": "modules/"
         },
         "exclude-from-classmap": [
-            "modules/*/vendor"
+            "modules/*/vendor",
+            ".temp"
         ]
     },
     "autoload-dev": {

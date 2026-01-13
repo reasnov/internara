@@ -8,15 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\UploadedFile;
-use Modules\School\Contracts\Services\SchoolService as SchoolServiceContract;
 use Modules\School\Models\School;
-use Modules\Shared\Concerns\EloquentQuery;
-use Modules\Shared\Exceptions\AppException;
+use Modules\Exceptions\AppException;
 
 /**
  * @property School $model
  */
-class SchoolService implements SchoolServiceContract
+class SchoolService implements Contracts\SchoolService
 {
     use EloquentQuery {
         first as firstQuery;

@@ -2,11 +2,10 @@
 
 namespace Modules\Internship\Services;
 
-use Modules\Internship\Contracts\Services\InternshipService as InternshipServiceContract;
 use Modules\Internship\Models\Internship;
-use Modules\Shared\Concerns\EloquentQuery;
+use Modules\Shared\Services\Concerns\EloquentQuery;
 
-class InternshipService implements InternshipServiceContract
+class InternshipService implements Contracts\InternshipService
 {
     use EloquentQuery;
 

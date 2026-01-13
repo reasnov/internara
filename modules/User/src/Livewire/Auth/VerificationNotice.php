@@ -3,7 +3,7 @@
 namespace Modules\User\Livewire\Auth;
 
 use Livewire\Component;
-use Modules\Shared\Exceptions\AppException;
+use Modules\Exceptions\AppException;
 use Modules\User\Contracts\Services\AuthService;
 use Modules\User\Traits\Auth\RedirectsUsers;
 

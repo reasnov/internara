@@ -18,6 +18,27 @@ class AppSettingSeeder extends Seeder
     {
         $rawSettings = [
             [
+                'key' => 'app_name',
+                'value' => config('app.name', 'Internara'),
+                'type' => 'string',
+                'description' => 'Application name',
+                'group' => 'system',
+            ],
+            [
+                'key' => 'app_logo',
+                'value' => config('app.logo', ''),
+                'type' => 'string',
+                'description' => 'Application logo',
+                'group' => 'system',
+            ],
+            [
+                'key' => 'app_installed',
+                'value' => false,
+                'type' => 'boolean',
+                'description' => 'Indicates whether the application is installed',
+                'group' => 'system',
+            ],
+            [
                 'key' => 'brand_name',
                 'value' => config('setting.brand_name', 'Internara'),
                 'type' => 'string',
@@ -45,18 +66,11 @@ class AppSettingSeeder extends Seeder
                 'description' => 'The title of the site',
                 'group' => 'general',
             ],
-            [
-                'key' => 'app_installed',
-                'value' => false,
-                'type' => 'boolean',
-                'description' => 'Indicates whether the application is installed',
-                'group' => 'system',
-            ],
         ];
 
         $settingsToUpsert = [];
-        $caster = new SettingValueCast;
-        $dummyModel = new Setting; // A dummy model instance for the caster's set method
+        $caster = new SettingValueCast();
+        $dummyModel = new Setting(); // A dummy model instance for the caster's set method
 
         foreach ($rawSettings as $setting) {
             // Apply the SettingValueCast::set logic manually to each setting

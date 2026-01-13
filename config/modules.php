@@ -131,9 +131,9 @@ return [
             //basics
             'base' => ['path' => 'src', 'generate' => false],
             'class' => ['path' => 'src', 'generate' => false],
-            'enums' => ['path' => 'src/Enums', 'generate' => false],
             'interfaces' => ['path' => 'src/Contracts', 'generate' => false],
             'traits' => ['path' => 'src/Concerns', 'generate' => false],
+            'enums' => ['path' => 'src/Enums', 'generate' => false],
             'provider' => ['path' => 'src/Providers', 'generate' => true],
             'exceptions' => ['path' => 'src/Exceptions', 'generate' => false],
 

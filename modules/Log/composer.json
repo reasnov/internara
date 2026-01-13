@@ -1,0 +1,28 @@
+{
+    "name": "reasnov/log",
+    "description": "",
+    "authors": [
+        {
+            "name": "Reas Vyn",
+            "email": "reasnov.official@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Log\\": "src/",
+            "Modules\\Log\\Database\\Factories\\": "database/factories/",
+            "Modules\\Log\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Log\\Tests\\": "tests/"
+        }
+    }
+}

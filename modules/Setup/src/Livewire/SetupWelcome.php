@@ -4,8 +4,7 @@ namespace Modules\Setup\Livewire;
 
 use Illuminate\View\View;
 use Livewire\Component;
-use Modules\Setup\Concerns\Livewire\HandlesAppSetup;
-use Modules\Setup\Contracts\Services\SetupService;
+use Modules\Setup\Services\Contracts\SetupService;
 
 /**
  * Represents the initial 'Welcome' screen of the application setup process.
@@ -13,12 +12,12 @@ use Modules\Setup\Contracts\Services\SetupService;
  */
 class SetupWelcome extends Component
 {
-    use HandlesAppSetup;
+    use Concerns\HandlesSetupSteps;
 
     /**
      * Boots the component and injects the SetupService.
      *
-     * @param  \Modules\Setup\Contracts\Services\SetupService  $setupService  The service for handling setup logic.
+     * @param  SetupService  $setupService  The service for handling setup logic.
      */
     public function boot(SetupService $setupService): void
     {

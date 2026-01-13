@@ -1,0 +1,28 @@
+{
+    "name": "reasnov/exception",
+    "description": "",
+    "authors": [
+        {
+            "name": "Reas Vyn",
+            "email": "reasnov.official@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Exception\\": "src/",
+            "Modules\\Exception\\Database\\Factories\\": "database/factories/",
+            "Modules\\Exception\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Exception\\Tests\\": "tests/"
+        }
+    }
+}

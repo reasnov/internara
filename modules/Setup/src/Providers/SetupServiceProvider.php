@@ -4,12 +4,10 @@ namespace Modules\Setup\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
-use Nwidart\Modules\Traits\PathNamespace;
 
 class SetupServiceProvider extends ServiceProvider
 {
     use ManagesModuleProvider;
-    use PathNamespace;
 
     protected string $name = 'Setup';
 
@@ -46,7 +44,7 @@ class SetupServiceProvider extends ServiceProvider
     protected function bindings(): array
     {
         return [
-            \Modules\Setup\Contracts\Services\SetupService::class => \Modules\Setup\Services\SetupService::class,
+            \Modules\Setup\Services\Contracts\SetupService::class => \Modules\Setup\Services\SetupService::class,
         ];
     }
 }

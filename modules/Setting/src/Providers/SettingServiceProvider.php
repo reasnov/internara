@@ -3,8 +3,6 @@
 namespace Modules\Setting\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Modules\Setting\Contracts\Services\SettingService as SettingServiceContract;
-use Modules\Setting\Services\SettingService;
 use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
 
 class SettingServiceProvider extends ServiceProvider
@@ -49,7 +47,7 @@ class SettingServiceProvider extends ServiceProvider
     protected function bindings(): array
     {
         return [
-            SettingServiceContract::class => SettingService::class,
+            \Modules\Setting\Services\Contracts\SettingService::class => \Modules\Setting\Services\SettingService::class
         ];
     }
 }

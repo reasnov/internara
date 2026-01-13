@@ -7,5 +7,7 @@
     "providers": [
         "Modules\\Core\\Providers\\CoreServiceProvider"
     ],
-    "files": []
+    "files": [
+        "src/Functions/setting.php"
+    ]
 }

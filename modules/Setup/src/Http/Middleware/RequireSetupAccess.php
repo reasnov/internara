@@ -4,16 +4,12 @@ namespace Modules\Setup\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
-use Modules\Setup\Contracts\Services\SetupService;
+use Modules\Setup\Services\Contracts\SetupService;
 use Symfony\Component\HttpFoundation\Response;
 
 class RequireSetupAccess
 {
-    /**
-     * @param  \Modules\Setup\Contracts\Services\SetupService  $setupService
-     */
     public function __construct(protected SetupService $setupService)
     {
     }
@@ -30,6 +26,7 @@ class RequireSetupAccess
             return $next($request);
         }
 
+        // If the app is installed and is setup route, redirect to login
         if ($this->setupService->isAppInstalled() && $this->isSetupRoute($request)) {
             return redirect()->route('login');
         }

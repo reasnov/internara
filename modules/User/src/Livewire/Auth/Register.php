@@ -5,7 +5,7 @@ namespace Modules\User\Livewire\Auth;
 use Illuminate\View\View;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
-use Modules\Shared\Exceptions\AppException;
+use Modules\Exceptions\AppException;
 use Modules\User\Contracts\Services\AuthService;
 
 class Register extends Component

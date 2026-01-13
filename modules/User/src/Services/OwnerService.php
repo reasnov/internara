@@ -2,12 +2,10 @@
 
 namespace Modules\User\Services;
 
-// Added for exception handling
 use Illuminate\Http\UploadedFile;
-use Modules\Shared\Concerns\EloquentQuery;
-use Modules\Shared\Exceptions\AppException;
-use Modules\Shared\Exceptions\RecordNotFoundException;
-use Modules\User\Contracts\Services\OwnerService as OwnerServiceContract;
+use Modules\Exceptions\AppException;
+use Modules\Exceptions\RecordNotFoundException;
+use Modules\Shared\Concerns\Services\Eloquent\EloquentQuery;
 use Modules\User\Models\User;
 
 /**
@@ -23,7 +21,7 @@ use Modules\User\Models\User;
  * @method bool delete(mixed $id)
  * @method \Modules\User\Models\User|null get()
  */
-class OwnerService implements OwnerServiceContract
+class OwnerService implements Contracts\OwnerService
 {
     use EloquentQuery {
         create as createQuery;
@@ -35,7 +33,7 @@ class OwnerService implements OwnerServiceContract
     public function __construct(User $user)
     {
         $this->setModel($user);
-        $this->setQuery($user->owner());
+        $this->setBaseQuery($user->owner());
         $this->setSearchable(['name', 'email', 'username']);
     }
 
@@ -45,7 +43,7 @@ class OwnerService implements OwnerServiceContract
      * @param  array<string, mixed>  $data  The data for creating the owner user.
      * @return \Modules\User\Models\User The newly created owner user.
      *
-     * @throws \Modules\Shared\Exceptions\AppException If an owner already exists or creation fails.
+     * @throws \Modules\Exceptions\AppException If an owner already exists or creation fails.
      */
     public function create(array $data): User
     {
@@ -75,8 +73,8 @@ class OwnerService implements OwnerServiceContract
      * @param  array<int, string>  $columns  Columns to retrieve after update.
      * @return \Modules\User\Models\User The updated owner user.
      *
-     * @throws \Modules\Shared\Exceptions\RecordNotFoundException If no owner exists or the provided ID does not match the owner.
-     * @throws \Modules\Shared\Exceptions\AppException If the update fails.
+     * @throws \Modules\Exceptions\RecordNotFoundException If no owner exists or the provided ID does not match the owner.
+     * @throws \Modules\Exceptions\AppException If the update fails.
      */
     public function update(mixed $id, array $data, array $columns = ['*']): User
     {

@@ -8,7 +8,7 @@ use Illuminate\Database\QueryException;
 use Modules\Permission\Contracts\Services\PermissionService as PermissionServiceContract;
 use Modules\Permission\Models\Permission;
 use Modules\Shared\Concerns\EloquentQuery;
-use Modules\Shared\Exceptions\AppException;
+use Modules\Exceptions\AppException;
 
 class PermissionService implements PermissionServiceContract
 {
@@ -49,7 +49,7 @@ class PermissionService implements PermissionServiceContract
      * @param  array<string, mixed>  $data  The data for creating the permission.
      * @return Permission The newly created permission.
      *
-     * @throws \Modules\Shared\Exceptions\AppException If creation fails due to a database error.
+     * @throws \Modules\Exceptions\AppException If creation fails due to a database error.
      */
     public function create(array $data): Permission
     {
@@ -88,7 +88,7 @@ class PermissionService implements PermissionServiceContract
      * @return Permission The updated permission.
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If the record is not found.
-     * @throws \Modules\Shared\Exceptions\AppException If the update fails due to a database error.
+     * @throws \Modules\Exceptions\AppException If the update fails due to a database error.
      */
     public function update(mixed $id, array $data, array $columns = ['*']): Permission
     {

@@ -3,8 +3,8 @@
 namespace $NAMESPACE$;
 
 use Illuminate\Support\ServiceProvider;
-use Nwidart\Modules\Traits\PathNamespace;
 use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
+use Nwidart\Modules\Traits\PathNamespace;
 
 class $CLASS$ extends ServiceProvider
 {

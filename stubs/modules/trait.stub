@@ -1,5 +1,5 @@
 <?php
 
-namespace $CLASS_NAMESPACE$;
+namespace $NAMESPACE$;
 
 trait $CLASS$ {}

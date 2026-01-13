@@ -5,17 +5,12 @@ namespace Modules\Setting\Services;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Modules\Setting\Contracts\Services\SettingService as SettingServiceContract;
 use Modules\Setting\Models\Setting;
+use Modules\Shared\Services\Concerns\EloquentQuery;
 
-class SettingService implements SettingServiceContract
+class SettingService implements Contracts\SettingService
 {
-    /**
-     * The Setting model instance.
-     *
-     * @var \Modules\Setting\Models\Setting
-     */
-    protected Setting $model;
+    use EloquentQuery;
 
     /**
      * Create a new SettingService instance.
@@ -24,7 +19,9 @@ class SettingService implements SettingServiceContract
      */
     public function __construct(Setting $model)
     {
-        $this->model = $model;
+        $this->setModel($model);
+        $this->setSearchable(['key', 'group']);
+        $this->setSortable(['key', 'group']);
     }
 
     /**
@@ -32,28 +29,28 @@ class SettingService implements SettingServiceContract
      *
      * @param  array  $columns  The columns to select.
      * @param  bool  $skipCache  Whether to bypass the cache and fetch directly from the database.
-     * @return \Illuminate\Support\Collection A collection of all Setting models.
+     * @return array
      */
-    public function all(array $columns = ['*'], bool $skipCache = false): Collection
+    public function allValue(array $filters = [], bool $skipCache = false): array
     {
-        return $this->remember('settings.all', fn () => $this->model->all($columns), $skipCache);
+        return $this->remember('settings.all', now()->addDay(), fn () => $this->get($filters, ['value'])->toArray(), $skipCache);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function get(string|array $key, mixed $default = null, bool $skipCached = false): mixed
+    public function getValue(string|array $key, mixed $default = null, bool $skipCached = false): mixed
     {
         if (is_array($key)) {
             $results = [];
             foreach ($key as $k) {
-                $results[$k] = $this->get($k, $default, $skipCached);
+                $results[$k] = $this->getValue($k, $default, $skipCached);
             }
 
             return $results;
         }
 
-        return $this->remember('settings.'.$key, function () use ($key, $default) {
+        return $this->remember('settings.'.$key, now()->addDay(), function () use ($key, $default) {
             $setting = $this->model->find($key);
 
             if (! $setting) {
@@ -67,14 +64,14 @@ class SettingService implements SettingServiceContract
     /**
      * {@inheritDoc}
      */
-    public function set(string|array $key, mixed $value = null, array $extraAttributes = []): bool
+    public function setValue(string|array $key, mixed $value = null, array $extraAttributes = []): bool
     {
         if (is_array($key)) {
             $success = true;
             foreach ($key as $k => $v) {
                 $value = $v['value'] ?? $v;
                 $extraAttributes = is_array($v) ? array_diff_key($v, ['value' => null]) : [];
-                if (! $this->set($k, $value, $extraAttributes)) {
+                if (! $this->setValue($k, $value, $extraAttributes)) {
                     $success = false;
                 }
             }
@@ -98,7 +95,7 @@ class SettingService implements SettingServiceContract
     /**
      * {@inheritDoc}
      */
-    public function getByGroup(string $name, bool $skipCache = false): Collection
+    public function group(string $name, bool $skipCache = false): Collection
     {
         return $this->remember('settings.group.'.$name, fn () => $this->model->group($name)->get(), $skipCache);
     }
@@ -106,7 +103,7 @@ class SettingService implements SettingServiceContract
     /**
      * {@inheritDoc}
      */
-    public function delete(string $key): bool
+    public function discard(string $key): bool
     {
         $setting = $this->model->find($key);
 
@@ -114,7 +111,7 @@ class SettingService implements SettingServiceContract
             return false;
         }
 
-        if ($deleted = $setting->delete()) {
+        if ($deleted = $setting->discard()) {
             $this->clearCache($key, $setting->group);
         }
 
@@ -127,25 +124,6 @@ class SettingService implements SettingServiceContract
     public function query(array $columns = ['*']): Builder
     {
         return $this->model->query()->select($columns);
-    }
-
-    /**
-     * Retrieve an item from the cache or store the result of a callback forever.
-     *
-     * @param string $cacheKey The key for the cache item.
-     * @param callable $callback The callback to execute if the item is not in the cache.
-     * @param bool $skipCache Whether to skip the cache and execute the callback directly.
-     * @return mixed
-     */
-    protected function remember(string $cacheKey, callable $callback, bool $skipCache = false): mixed
-    {
-        if ($skipCache) {
-            Cache::forget($cacheKey);
-
-            return $callback();
-        }
-
-        return Cache::remember($cacheKey, now()->addDay(), $callback);
     }
 
     /**

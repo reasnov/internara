@@ -3,6 +3,7 @@
 namespace Modules\Core\Console\Concerns;
 
 use Illuminate\Support\Str;
+use Modules\Shared\Support\Formatter;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Nwidart\Modules\Support\Config\GeneratorPath;
 
@@ -21,6 +22,11 @@ trait HandlesModuleMakeGenerator
         return \Nwidart\Modules\Facades\Module::findOrFail($this->argument('module'));
     }
 
+    protected function getModuleName(): string
+    {
+        return $this->getModule()->getStudlyName();
+    }
+
     /**
      * Get the base namespace for the given module.
      *
@@ -28,10 +34,10 @@ trait HandlesModuleMakeGenerator
      */
     protected function getModuleNamespace(): string
     {
-        $module = $this->getModule();
+        $moduleName = $this->getModuleName();
         $baseNamespace = config('modules.namespace', 'Modules');
 
-        return $baseNamespace.'\\'.$module->getStudlyName();
+        return Formatter::namespace($baseNamespace, $moduleName);
     }
 
     /**
@@ -46,56 +52,19 @@ trait HandlesModuleMakeGenerator
     }
 
     /**
-     * Get the subdirectory path for the generated file.
-     *
-     * @return string The target subdirectory path.
-     */
-    protected function getTargetSubPath(): string
-    {
-        $name = $this->argument('name');
-
-        if (Str::contains($name, '/')) {
-            return $this->normalizePath(Str::beforeLast($name, '/'));
-        }
-
-        return '';
-    }
-
-    /**
-     * Get the full target path for the generated file.
-     *
-     * @return string The full target path.
-     */
-    protected function getTargetPath(): string
-    {
-        $name = $this->argument('name');
-
-        $appPath = $this->getAppPath();
-        $basePath = $this->getBasePath();
-
-        if (Str::contains($name, Str::finish($basePath, '/')) && Str::contains($name, '/')) {
-            // 'src/Services/Contracts'
-            return $appPath . '/' . $this->getTargetSubPath();
-        };
-
-        // 'src/Contracts'
-        return $this->normalizePath(($appPath . '/' . $basePath));
-    }
-
-    /**
      * Get the target namespace for the generated class.
      *
      * @return string The target namespace.
      */
     protected function getTargetNamespace(): string
     {
-        $classPath = str_replace(($this->getAppPath() . '/'), '', $this->getTargetPath());
+        $appPath = Str::finish($this->getAppPath(), '/');
+        $targetPath = str_replace($appPath, '', $this->getTargetPath());
 
         $moduleNamespace = $this->getModuleNamespace();
-        $baseNamespace = str_replace('/', '\\', $classPath);
+        $baseNamespace = str_replace('/', '\\', $targetPath);
 
-        // Modules\ModuleName\Example\
-        return $moduleNamespace . '\\' . $baseNamespace;
+        return Formatter::namespace($moduleNamespace, $baseNamespace);
     }
 
     /**
@@ -105,8 +74,42 @@ trait HandlesModuleMakeGenerator
      */
     protected function getTargetFilePath(): string
     {
-        $filePath = $this->getTargetPath() . '/' . $this->getTargetName() . '.php';
+        $filePath = Formatter::path($this->getTargetPath(), $this->getTargetName()) . '.php';
         return module_path($this->getModule()->getName(), $filePath);
+    }
+
+    /**
+     * Get the full target path for the generated file.
+     *
+     * @return string The full target path.
+     */
+    protected function getTargetPath(): string
+    {
+        $appPath = $this->getAppPath();
+        $basePath = $this->getBasePath();
+        $subPath = $this->getTargetSubPath();
+
+        if ($subPath && Str::contains($subPath, $basePath)) {
+            return Formatter::path($appPath, $subPath);
+        }
+
+        return Formatter::path($appPath, $basePath, $subPath);
+    }
+
+    /**
+     * Get the subdirectory path for the generated file.
+     *
+     * @return string The target subdirectory path.
+     */
+    protected function getTargetSubPath(): string
+    {
+        $name = $this->argument('name');
+
+        if (Str::contains($name, '/')) {
+            return Formatter::path(Str::beforeLast($name, '/'));
+        }
+
+        return '';
     }
 
     /**
@@ -116,8 +119,10 @@ trait HandlesModuleMakeGenerator
      */
     protected function getBasePath(): string
     {
-        $path = Str::after($this->getAppPath() . '/', $this->getConfigReader($this->getConfigKey())->getPath()) ?? '';
-        return $this->normalizePath($path);
+        $appPath = Str::finish($this->getAppPath(), '/');
+        $basePath = Str::after($this->getConfigReader($this->getConfigKey())->getPath(), $appPath);
+
+        return Formatter::path($basePath);
     }
 
     /**
@@ -128,8 +133,7 @@ trait HandlesModuleMakeGenerator
     protected function getAppPath(): string
     {
         $appPath = config('modules.paths.app_folder', 'src/');
-
-        return $this->normalizePath($appPath);
+        return Formatter::path($appPath);
     }
 
     /**
@@ -151,22 +155,5 @@ trait HandlesModuleMakeGenerator
     protected function getConfigReader(string $key): GeneratorPath
     {
         return GenerateConfigReader::read($key);
-    }
-
-    /**
-     * Normalize a given path by removing leading and trailing slashes.
-     *
-     * @param  string  $path The path to normalize.
-     * @return string The normalized path.
-     */
-    private function normalizePath(string $path): string
-    {
-        // remove leading '/' if exists
-        $path = Str::startsWith($path, '/') ? Str::replaceFirst('/', '', $path) : $path;
-
-        // remove trailing '/' if exists
-        $path = Str::endsWith($path, '/') ? Str::replaceLast('/', '', $path) : $path;
-
-        return $path;
     }
 }

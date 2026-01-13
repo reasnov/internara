@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Modules\Shared\Exceptions\AppException;
+use Modules\Exceptions\AppException;
 use Modules\User\Contracts\Services\AuthService as AuthServiceContract;
 use Modules\User\Contracts\Services\UserService;
 use Modules\User\Models\User;
@@ -127,7 +127,7 @@ class AuthService implements AuthServiceContract
      * @param  string  $newPassword  The new password for the user.
      * @return bool True if the password was successfully changed, false otherwise.
      *
-     * @throws \Modules\Shared\Exceptions\AppException If the current password does not match.
+     * @throws \Modules\Exceptions\AppException If the current password does not match.
      */
     public function changePassword(User $user, string $currentPassword, string $newPassword): bool
     {
@@ -202,7 +202,7 @@ class AuthService implements AuthServiceContract
      *
      * @param  \Modules\User\Models\User  $user  The user to resend the verification email to.
      *
-     * @throws \Modules\Shared\Exceptions\AppException If the email is already verified.
+     * @throws \Modules\Exceptions\AppException If the email is already verified.
      */
     public function resendVerificationEmail(User $user): void
     {

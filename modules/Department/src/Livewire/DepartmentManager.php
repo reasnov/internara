@@ -4,15 +4,15 @@ namespace Modules\Department\Livewire;
 
 use Illuminate\View\View;
 use Livewire\Component;
-use Modules\Support\Concerns\Livewire\HandlesRecords;
+use Modules\Shared\Concerns\Livewire\ManagesRecords;
 
 class DepartmentManager extends Component
 {
-    use HandlesRecords;
+    use ManagesRecords;
 
     public function mount(): void
     {
-        $this->prepRecordHandler(['recordName' => 'department']);
+        //
     }
 
     public function render(): View

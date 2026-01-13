@@ -4,7 +4,6 @@ namespace Modules\Setup\Livewire;
 
 use Illuminate\View\View;
 use Livewire\Component;
-use Modules\Setup\Concerns\Livewire\HandlesAppSetup;
 use Modules\Setup\Contracts\Services\SetupService;
 
 /**
@@ -13,7 +12,7 @@ use Modules\Setup\Contracts\Services\SetupService;
  */
 class SetupComplete extends Component
 {
-    use HandlesAppSetup;
+    use Concerns\HandlesSetupSteps;
 
     /**
      * Boots the component and injects the SetupService.
@@ -30,12 +29,12 @@ class SetupComplete extends Component
      */
     public function mount(): void
     {
-        $this->initSetupProps(
+        $this->initSetupStepProps(
             currentStep: 'complete',
             prevStep: 'internship',
         );
 
-        $this->ensurePrevStepCompleted();
+        $this->requireSetupAccess();
     }
 
     /**

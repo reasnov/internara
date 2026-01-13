@@ -1,7 +1,7 @@
 {
     "name": "Setup",
     "alias": "setup",
-    "description": "",
+    "description": "Application Setup",
     "keywords": [],
     "priority": 0,
     "providers": [
