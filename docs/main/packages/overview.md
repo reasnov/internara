@@ -30,6 +30,10 @@ Used for Role-Based Access Control (RBAC). We have refactored this into a portab
 
 Integrated for robust system monitoring and user activity logging, aligning with the `Log` module's functionality and supporting Internara's modular architecture.
 
+### 7. [spatie/laravel-model-status](spatie-laravel-model-status.md)
+
+Used for flexible and standardized management of model statuses, enhancing workflow capabilities across various entities within Internara.
+
 ---
 
 ## Implementation Philosophy
