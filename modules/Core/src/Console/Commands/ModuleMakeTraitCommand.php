@@ -53,8 +53,6 @@ class ModuleMakeTraitCommand extends GeneratorCommand
 
     /**
      * Get the template contents for the generator.
-     *
-     * @return string
      */
     protected function getTemplateContents(): string
     {

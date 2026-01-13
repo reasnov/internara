@@ -4,8 +4,8 @@ namespace Modules\FormBuilder\Livewire;
 
 use Illuminate\View\View;
 use Livewire\Component;
-use Modules\FormBuilder\Livewire\Concerns\HandlesInitialize;
 use Modules\FormBuilder\Concerns\ManagesFormSchemas;
+use Modules\FormBuilder\Livewire\Concerns\HandlesInitialize;
 
 class FormBuilder extends Component
 {

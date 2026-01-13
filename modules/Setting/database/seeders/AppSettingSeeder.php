@@ -69,8 +69,8 @@ class AppSettingSeeder extends Seeder
         ];
 
         $settingsToUpsert = [];
-        $caster = new SettingValueCast();
-        $dummyModel = new Setting(); // A dummy model instance for the caster's set method
+        $caster = new SettingValueCast;
+        $dummyModel = new Setting; // A dummy model instance for the caster's set method
 
         foreach ($rawSettings as $setting) {
             // Apply the SettingValueCast::set logic manually to each setting

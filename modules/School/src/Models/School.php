@@ -45,6 +45,7 @@ class School extends Model implements HasMedia
     public function changeLogo(string|UploadedFile $file, string $collectionName = 'school_logo'): bool
     {
         $this->clearMediaCollection('school_logo');
+
         return (bool) $this->addMedia($file)->toMediaCollection($collectionName) ?? false;
     }
 }

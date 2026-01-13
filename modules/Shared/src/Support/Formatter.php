@@ -6,10 +6,11 @@ use Illuminate\Support\Str;
 
 final class Formatter
 {
-    public static function path(string|null ...$paths): string
+    public static function path(?string ...$paths): string
     {
-        $path = implode('/', array_filter($paths, fn ($path) => !empty($path)));
-        return static::normalizePath($path);
+        $path = implode('/', array_filter($paths, fn ($path) => ! empty($path)));
+
+        return self::normalizePath($path);
     }
 
     protected static function normalizePath(string $path = ''): string
@@ -21,10 +22,11 @@ final class Formatter
         return $path;
     }
 
-    public static function namespace(string|null ...$parts): string
+    public static function namespace(?string ...$parts): string
     {
-        $namespace = implode('\\', array_filter($parts, fn ($namespace) => !empty($namespace)));
-        return static::normalizeNamespace($namespace);
+        $namespace = implode('\\', array_filter($parts, fn ($namespace) => ! empty($namespace)));
+
+        return self::normalizeNamespace($namespace);
     }
 
     protected static function normalizeNamespace(string $namespace): string

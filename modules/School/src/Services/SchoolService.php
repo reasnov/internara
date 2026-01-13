@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\UploadedFile;
-use Modules\School\Models\School;
 use Modules\Exception\AppException;
-use Modules\Shared\Services\EloquentQuery;
+use Modules\School\Models\School;
 use Modules\School\Services\Contracts\SchoolService as SchoolServiceContract;
+use Modules\Shared\Services\EloquentQuery;
 
 class SchoolService extends EloquentQuery implements SchoolServiceContract
 {
@@ -137,7 +137,7 @@ class SchoolService extends EloquentQuery implements SchoolServiceContract
         return parent::first($filters, $columns);
     }
 
-    public function registerFromRelatedModel(Model $model, string|null $foreignKey = null, string|null $ownerKey = null, string|null $relation = null): BelongsTo
+    public function registerFromRelatedModel(Model $model, ?string $foreignKey = null, ?string $ownerKey = null, ?string $relation = null): BelongsTo
     {
         return $model->belongsTo($this->model::class, $foreignKey, $ownerKey, $relation);
     }

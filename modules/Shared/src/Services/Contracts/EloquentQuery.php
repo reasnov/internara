@@ -22,7 +22,6 @@ interface EloquentQuery
      * Retrieves paginated records, applying optional filters.
      *
      * @param  array<string, mixed>  $filters
-     * @param  int  $perPage
      * @param  list<string>  $columns
      * @return LengthAwarePaginator<TModel>
      */
@@ -68,7 +67,6 @@ interface EloquentQuery
     /**
      * Finds a record by its primary key.
      *
-     * @param  mixed  $id
      * @param  list<string>  $columns
      * @return TModel|null
      */
@@ -78,7 +76,6 @@ interface EloquentQuery
      * Checks if any records exist that match the given filters.
      *
      * @param  array<string, mixed>  $filters
-     * @return bool
      */
     public function exists(array $filters = []): bool;
 
@@ -93,7 +90,6 @@ interface EloquentQuery
     /**
      * Updates a record by its primary key with the given data.
      *
-     * @param  mixed  $id
      * @param  array<string, mixed>  $data
      * @return TModel
      */
@@ -111,9 +107,7 @@ interface EloquentQuery
     /**
      * Deletes a record by its primary key.
      *
-     * @param  mixed  $id
      * @param  bool  $force  Permanently delete if true.
-     * @return bool
      */
     public function delete(mixed $id, bool $force = false): bool;
 
@@ -121,7 +115,6 @@ interface EloquentQuery
      * Performs a bulk insert operation.
      *
      * @param  list<array<string, mixed>>  $data
-     * @return bool
      */
     public function insert(array $data): bool;
 
@@ -131,7 +124,6 @@ interface EloquentQuery
      * @param  list<array<string, mixed>>  $values
      * @param  list<string>|string  $uniqueBy
      * @param  list<string>|null  $update
-     * @return int
      */
     public function upsert(array $values, array|string $uniqueBy, ?array $update = null): int;
 
@@ -140,7 +132,6 @@ interface EloquentQuery
      *
      * @param  Collection<int, mixed>|list<mixed>|mixed  $ids
      * @param  bool  $force  Permanently delete if true.
-     * @return int
      */
     public function destroy(mixed $ids, bool $force = false): int;
 
@@ -165,11 +156,9 @@ interface EloquentQuery
     /**
      * Retrieves an item from cache, or executes the callback and caches the result.
      *
-     * @param  string  $cacheKey
      * @param  \DateTimeInterface|\DateInterval|int  $ttl
      * @param  Closure(static): mixed  $callback
      * @param  bool  $skipCache  If true, bypasses the cache and executes the callback directly.
-     * @return mixed
      */
     public function remember(string $cacheKey, mixed $ttl, Closure $callback, bool $skipCache = false): mixed;
 

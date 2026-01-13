@@ -5,8 +5,8 @@ namespace Modules\Auth\Livewire;
 use Illuminate\View\View;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
-use Modules\Exception\AppException;
 use Modules\Auth\Services\Contracts\AuthService;
+use Modules\Exception\AppException;
 
 /**
  * Livewire component for handling user login.
@@ -24,7 +24,6 @@ class Login extends Component
     /**
      * The user's password for login.
      */
-
     #[Rule('required|string')]
     public string $password = '';
 
@@ -48,9 +47,6 @@ class Login extends Component
 
     /**
      * Check if the given identifier string is likely an email address.
-     *
-     * @param  string  $value
-     * @return bool
      */
     protected function isEmail(string $value): bool
     {

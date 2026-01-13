@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Modules\Exception;
 
-use Modules\Exception\AppException;
 use Throwable;
 
 /**

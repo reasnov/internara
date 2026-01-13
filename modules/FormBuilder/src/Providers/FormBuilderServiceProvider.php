@@ -3,15 +3,16 @@
 namespace Modules\FormBuilder\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Nwidart\Modules\Traits\PathNamespace;
 use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
+use Nwidart\Modules\Traits\PathNamespace;
 
 class FormBuilderServiceProvider extends ServiceProvider
 {
-    use PathNamespace;
     use ManagesModuleProvider;
+    use PathNamespace;
 
     protected string $name = 'FormBuilder';
+
     protected string $nameLower = 'formbuilder';
 
     /**

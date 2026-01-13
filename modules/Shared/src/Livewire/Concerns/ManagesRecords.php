@@ -5,7 +5,6 @@ namespace Modules\Shared\Livewire\Concerns;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
-use Modules\Shared\Services\Contracts\EloquentQuery;
 
 /**
  * @mixin \Livewire\Component
@@ -85,8 +84,6 @@ trait ManagesRecords
 
     /**
      * Dispatch event to open the form modal for editing a record.
-     *
-     * @param  mixed  $id
      */
     public function edit(mixed $id): void
     {
@@ -95,8 +92,6 @@ trait ManagesRecords
 
     /**
      * Dispatch event to show a confirmation modal for removing a record.
-     *
-     * @param  mixed  $id
      */
     public function discard(mixed $id): void
     {
@@ -119,8 +114,6 @@ trait ManagesRecords
 
     /**
      * Listener for the delete confirmation event.
-     *
-     * @param  mixed $id
      */
     public function remove(mixed $id): void
     {

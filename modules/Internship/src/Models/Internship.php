@@ -3,16 +3,16 @@
 namespace Modules\Internship\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Modules\Internship\Database\Factories\InternshipFactory;
 use Modules\School\Models\Concerns\HasSchoolRelation;
 
 class Internship extends Model
 {
-    use HasUuids;
     use HasFactory;
     use HasSchoolRelation;
+    use HasUuids;
 
     /**
      * The "type" of the primary key ID.
@@ -38,7 +38,7 @@ class Internship extends Model
         'semester',
         'date_start',
         'date_finish',
-        'school_id'
+        'school_id',
     ];
 
     /**
@@ -50,13 +50,11 @@ class Internship extends Model
         'year' => 'year',
         'semester' => 'string',
         'date_start' => 'date',
-        'date_finish' => 'date'
+        'date_finish' => 'date',
     ];
 
     /**
      * Create a new factory instance for the model.
-     *
-     * @return InternshipFactory
      */
     protected static function newFactory(): InternshipFactory
     {

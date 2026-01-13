@@ -2,7 +2,6 @@
 
 namespace Modules\Auth\Services;
 
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\QueryException;
@@ -10,8 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Modules\Exception\AppException;
 use Modules\Auth\Services\Contracts\AuthService as AuthServiceContract;
+use Modules\Exception\AppException;
 use Modules\User\Contracts\Services\UserService;
 use Modules\User\Models\User;
 
@@ -22,13 +21,8 @@ class AuthService implements AuthServiceContract
 {
     /**
      * Create a new AuthService instance.
-     *
-     * @param  \Modules\User\Contracts\Services\UserService  $userService
      */
-    public function __construct(protected UserService $userService)
-    {
-
-    }
+    public function __construct(protected UserService $userService) {}
 
     /**
      * Attempt to log in a user with the given credentials.
@@ -72,7 +66,7 @@ class AuthService implements AuthServiceContract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function register(array $data, string|array|null $roles = null, bool $sendEmailVerification = false): User
     {
@@ -81,7 +75,7 @@ class AuthService implements AuthServiceContract
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
-                'roles' => $roles
+                'roles' => $roles,
             ]);
 
             if ($sendEmailVerification) {

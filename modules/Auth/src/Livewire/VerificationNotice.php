@@ -3,9 +3,9 @@
 namespace Modules\Auth\Livewire;
 
 use Livewire\Component;
-use Modules\Exception\AppException;
 use Modules\Auth\Services\Contracts\AuthService;
 use Modules\Auth\Traits\RedirectsUsers;
+use Modules\Exception\AppException;
 
 class VerificationNotice extends Component
 {
@@ -29,6 +29,7 @@ class VerificationNotice extends Component
     {
         if (! auth()->check()) {
             session()->flash('error', 'You must be logged in to resend the verification email.');
+
             return;
         }
 

@@ -12,6 +12,7 @@ use Modules\User\Models\User;
  * Service to manage owner-related operations.
  *
  * @property User $model
+ *
  * @method \Illuminate\Database\Eloquent\Builder<User> query(array $columns = ['*'])
  * @method \Illuminate\Contracts\Pagination\LengthAwarePaginator list(array $filters = [], int $perPage = 10, array $columns = ['*'])
  * @method \Modules\User\Models\User create(array $data)
@@ -19,7 +20,6 @@ use Modules\User\Models\User;
  * @method bool exists(array|callable $where = [])
  * @method \Modules\User\Models\User update(mixed $id, array $data, array $columns = ['*'])
  * @method bool delete(mixed $id, bool $force = false)
-
  */
 class OwnerService extends EloquentQuery implements Contracts\OwnerService
 {

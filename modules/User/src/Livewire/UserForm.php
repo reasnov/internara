@@ -2,8 +2,8 @@
 
 namespace Modules\User\Livewire;
 
-use Livewire\Form;
 use Illuminate\Validation\Rule as ValidationRule;
+use Livewire\Form;
 
 class UserForm extends Form
 {
@@ -22,7 +22,7 @@ class UserForm extends Form
         return [
             'name' => ['required', 'string', ValidationRule::unique('users', 'email')->ignore($this->id)],
             'email' => 'required|email',
-            'password' => 'required|string|min:8|confirmed'
+            'password' => 'required|string|min:8|confirmed',
         ];
     }
 }

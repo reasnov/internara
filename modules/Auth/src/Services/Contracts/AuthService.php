@@ -28,7 +28,7 @@ interface AuthService
      *
      * @param  array  $data  Contains user data including 'name', 'email', 'password'.
      * @param  string|array|null  $roles  Roles to assign to the user upon registration.
-     * @param bool $sendEmailVerification Whether to send an email verification notification.
+     * @param  bool  $sendEmailVerification  Whether to send an email verification notification.
      * @return User The newly registered user.
      *
      * @throws \Modules\Exceptions\AppException If registration fails (e.g., duplicate email).

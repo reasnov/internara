@@ -2,9 +2,9 @@
 
 namespace Modules\Department\Services;
 
-use Modules\Shared\Services\EloquentQuery;
 use Modules\Department\Models\Department;
 use Modules\School\Services\Contracts\SchoolService;
+use Modules\Shared\Services\EloquentQuery;
 
 class DepartmentService extends EloquentQuery implements Contracts\DepartmentService
 {

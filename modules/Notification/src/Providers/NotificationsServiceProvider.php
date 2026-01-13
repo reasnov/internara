@@ -3,15 +3,16 @@
 namespace Modules\Notifications\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Nwidart\Modules\Traits\PathNamespace;
 use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
+use Nwidart\Modules\Traits\PathNamespace;
 
 class NotificationsServiceProvider extends ServiceProvider
 {
-    use PathNamespace;
     use ManagesModuleProvider;
+    use PathNamespace;
 
     protected string $name = 'Notification';
+
     protected string $nameLower = 'notification';
 
     /**

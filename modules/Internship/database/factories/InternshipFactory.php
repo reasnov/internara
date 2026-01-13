@@ -19,4 +19,3 @@ class InternshipFactory extends Factory
         return [];
     }
 }
-

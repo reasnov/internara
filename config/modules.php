@@ -128,7 +128,7 @@ return [
         | Setting the generate key to false will not generate that folder
         */
         'generator' => [
-            //basics
+            // basics
             'base' => ['path' => 'src', 'generate' => false],
             'class' => ['path' => 'src', 'generate' => false],
             'interfaces' => ['path' => 'src/Contracts', 'generate' => false],

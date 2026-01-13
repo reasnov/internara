@@ -6,11 +6,9 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Modules\Shared\Services\EloquentQuery;
-use Tests\TestCase;
 
 // Define a concrete Model for testing purposes.
 class EloquentQueryTestModel extends Model
@@ -18,6 +16,7 @@ class EloquentQueryTestModel extends Model
     protected $table = 'eloquent_query_test_models';
 
     protected $guarded = [];
+
     protected $fillable = ['name', 'description', 'value'];
 
     public $timestamps = false;
@@ -28,13 +27,11 @@ class TestEloquentQuery extends EloquentQuery
 {
     public function __construct()
     {
-        $this->setModel(new EloquentQueryTestModel());
+        $this->setModel(new EloquentQueryTestModel);
         $this->setSearchable(['name', 'description']);
         $this->setSortable(['name', 'value']);
     }
 }
-
-
 
 beforeEach(function () {
     // Set up the database schema for the test model.
@@ -53,7 +50,7 @@ beforeEach(function () {
         ['name' => 'Delta', 'description' => 'Fourth item', 'value' => 10],
     ]);
 
-    $this->query = new TestEloquentQuery();
+    $this->query = new TestEloquentQuery;
 });
 
 test('it can be instantiated', function () {

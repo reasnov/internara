@@ -48,6 +48,7 @@ trait HandlesModuleMakeGenerator
     protected function getTargetName(): string
     {
         $name = $this->argument('name');
+
         return Str::contains($name, '/') ? Str::afterLast($name, '/') : $name;
     }
 
@@ -74,7 +75,8 @@ trait HandlesModuleMakeGenerator
      */
     protected function getTargetFilePath(): string
     {
-        $filePath = Formatter::path($this->getTargetPath(), $this->getTargetName()) . '.php';
+        $filePath = Formatter::path($this->getTargetPath(), $this->getTargetName()).'.php';
+
         return module_path($this->getModule()->getName(), $filePath);
     }
 
@@ -133,6 +135,7 @@ trait HandlesModuleMakeGenerator
     protected function getAppPath(): string
     {
         $appPath = config('modules.paths.app_folder', 'src/');
+
         return Formatter::path($appPath);
     }
 
@@ -149,7 +152,7 @@ trait HandlesModuleMakeGenerator
     /**
      * Get the configuration reader for a given key.
      *
-     * @param  string  $key The configuration key.
+     * @param  string  $key  The configuration key.
      * @return \Nwidart\Modules\Support\Config\GeneratorPath The generator path configuration.
      */
     protected function getConfigReader(string $key): GeneratorPath

@@ -18,7 +18,7 @@ class Department extends Model
     protected $fillable = [
         'name',
         'description',
-        'school_id'
+        'school_id',
     ];
 
     protected static function newFactory(): DepartmentFactory

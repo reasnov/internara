@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
  * available. This prevents fatal errors across the application if the
  * Settings module is disabled.
  */
-if (class_exists('\\Modules\\Settings\\Providers\\SettingsServiceProvider') && !function_exists('setting')) {
+if (class_exists('\\Modules\\Settings\\Providers\\SettingsServiceProvider') && ! function_exists('setting')) {
     /**
      * Fallback for the setting() helper function.
      *

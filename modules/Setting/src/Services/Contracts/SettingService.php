@@ -48,12 +48,6 @@ interface SettingService
 
     /**
      * Alias for setValue method
-     *
-     * @param string|array $key
-     * @param mixed|null $value
-     * @param array $extraAttributes
-     *
-     * @return bool
      */
     public function set(string|array $key, mixed $value = null, array $extraAttributes = []): bool;
 }

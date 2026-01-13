@@ -56,6 +56,7 @@ class Media extends SpatieMedia
     public function withModule(?string $name = null): self
     {
         $this->module = $name;
+
         return $this;
     }
 }

@@ -4,14 +4,15 @@ namespace Modules\Auth\Livewire;
 
 use Livewire\Component;
 use Modules\Auth\Services\Contracts\AuthService;
-use Modules\User\Models\User;
 use Modules\Auth\Traits\RedirectsUsers;
+use Modules\User\Models\User;
 
 class VerifyEmail extends Component
 {
     use RedirectsUsers;
 
     public $id;
+
     public $hash;
 
     protected $authService;
@@ -37,10 +38,12 @@ class VerifyEmail extends Component
 
         if ($this->authService->verifyEmail($this->id, $this->hash)) {
             session()->flash('status', 'Your email has been verified!');
+
             return redirect()->intended($this->redirectPath());
         }
 
         session()->flash('error', 'Invalid verification link or email already verified.');
+
         return redirect()->route('verification.notice');
     }
 

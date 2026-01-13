@@ -9,7 +9,6 @@ use Modules\UI\Core\Contracts\SlotManager as SlotManagerContract;
 use Modules\UI\Core\Contracts\SlotRegistry as SlotRegistryContract;
 use Modules\UI\Core\SlotManager;
 use Modules\UI\Core\SlotRegistry;
-use Modules\UI\Facades\SlotRegistry as SlotRegistryFacade;
 use Nwidart\Modules\Traits\PathNamespace;
 
 class UIServiceProvider extends ServiceProvider

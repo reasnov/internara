@@ -5,12 +5,12 @@ namespace Modules\User\Services;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
-use Modules\Shared\Services\EloquentQuery;
 use Modules\Exception\AppException;
 use Modules\Exception\RecordNotFoundException;
+use Modules\Shared\Services\EloquentQuery;
 use Modules\User\Contracts\Services\OwnerService;
-use Modules\User\Services\Contracts\UserService as UserServiceContract;
 use Modules\User\Models\User;
+use Modules\User\Services\Contracts\UserService as UserServiceContract;
 
 /**
  * @property User $model
@@ -19,16 +19,11 @@ class UserService extends EloquentQuery implements UserServiceContract
 {
     /**
      * The OwnerService instance.
-     *
-     * @var \Modules\User\Contracts\Services\OwnerService
      */
     protected OwnerService $ownerService;
 
     /**
      * UserService constructor.
-     *
-     * @param  \Modules\User\Models\User  $model
-     * @param  \Modules\User\Contracts\Services\OwnerService  $ownerService
      */
     public function __construct(User $model, OwnerService $ownerService)
     {
@@ -69,7 +64,7 @@ class UserService extends EloquentQuery implements UserServiceContract
             if (in_array('owner', $roles)) {
 
                 // Use for owner account setup
-                if (!setting('app_installed', true)) {
+                if (! setting('app_installed', true)) {
                     return $this->ownerService->save($data);
                 }
 

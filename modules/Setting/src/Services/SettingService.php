@@ -2,7 +2,6 @@
 
 namespace Modules\Setting\Services;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Modules\Setting\Models\Setting;
@@ -10,12 +9,10 @@ use Modules\Shared\Services\EloquentQuery;
 
 class SettingService extends EloquentQuery implements Contracts\SettingService
 {
-
-
     /**
      * Create a new SettingService instance.
      *
-     * @param  \Modules\Setting\Models\Setting  $model The Setting model instance.
+     * @param  \Modules\Setting\Models\Setting  $model  The Setting model instance.
      */
     public function __construct(Setting $model)
     {
@@ -118,14 +115,11 @@ class SettingService extends EloquentQuery implements Contracts\SettingService
         return $deleted;
     }
 
-
-
     /**
      * Clear the cache for a specific setting and its related groups.
      *
-     * @param string $key The key of the setting whose cache to clear.
-     * @param string|null $group The group name the setting belongs to, if any.
-     * @return void
+     * @param  string  $key  The key of the setting whose cache to clear.
+     * @param  string|null  $group  The group name the setting belongs to, if any.
      */
     protected function clearCache(string $key, ?string $group = null): void
     {
@@ -149,6 +143,6 @@ class SettingService extends EloquentQuery implements Contracts\SettingService
     public function setGroup(\Illuminate\Database\Eloquent\Collection|\Modules\Setting\Models\Setting $settings): \Illuminate\Database\Eloquent\Collection
     {
         // TODO: Implement setGroup() method.
-        return new \Illuminate\Database\Eloquent\Collection();
+        return new \Illuminate\Database\Eloquent\Collection;
     }
 }

@@ -3,8 +3,8 @@
 namespace Modules\Setting\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Nwidart\Modules\Traits\PathNamespace;
 use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
+use Nwidart\Modules\Traits\PathNamespace;
 
 class SettingServiceProvider extends ServiceProvider
 {
@@ -49,7 +49,7 @@ class SettingServiceProvider extends ServiceProvider
     protected function bindings(): array
     {
         return [
-            \Modules\Setting\Services\Contracts\SettingService::class => \Modules\Setting\Services\SettingService::class
+            \Modules\Setting\Services\Contracts\SettingService::class => \Modules\Setting\Services\SettingService::class,
         ];
     }
 }

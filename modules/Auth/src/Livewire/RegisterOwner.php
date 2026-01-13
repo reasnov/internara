@@ -4,7 +4,6 @@ namespace Modules\Auth\Livewire;
 
 use Livewire\Component;
 use Modules\Auth\Services\Contracts\AuthService;
-use Modules\User\Services\Contracts\OwnerService;
 use Modules\User\Livewire\UserForm;
 
 class RegisterOwner extends Component
@@ -40,8 +39,8 @@ class RegisterOwner extends Component
         return view('auth::livewire.register-owner')
             ->layout('auth::components.layouts.auth', [
                 'title' => __('Buat Akun Utama | :site_title', [
-                    'site_title' => setting('site_title', 'Internara')
-                ])
+                    'site_title' => setting('site_title', 'Internara'),
+                ]),
             ]);
     }
 }

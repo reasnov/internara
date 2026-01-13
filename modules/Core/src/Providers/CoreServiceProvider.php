@@ -3,8 +3,8 @@
 namespace Modules\Core\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Nwidart\Modules\Traits\PathNamespace;
 use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
+use Nwidart\Modules\Traits\PathNamespace;
 
 class CoreServiceProvider extends ServiceProvider
 {

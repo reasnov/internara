@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -87,6 +88,23 @@ class AppException extends Exception
     }
 
     /**
+     * Get the context that should be reported.
+     *
+     * This method is automatically called by Laravel's exception handler
+     * when reporting the exception, allowing custom data to be included
+     * in the log.
+     *
+     * @return array<string, mixed>
+     */
+    public function context(): array
+    {
+        return array_merge([
+            'user_message' => $this->getUserMessage(),
+            'log_message' => $this->getLogMessage(),
+        ], $this->getContext());
+    }
+
+    /**
      * Get a subset of the exception trace stack.
      *
      * @param  int  $limit  The maximum number of trace stacks to include.
@@ -95,6 +113,20 @@ class AppException extends Exception
     public function getSubTrace(int $limit = 6): array
     {
         return \array_slice($this->getTrace(), 0, $limit);
+    }
+
+    /**
+     * Report the exception.
+     */
+    public function report(): ?bool
+    {
+        Log::error($this->getLogMessage(), [
+            'user_message' => $this->getUserMessage(),
+            'context' => $this->getContext(),
+            'exception_trace' => $this->getSubTrace(),
+        ]);
+
+        return true; // Indicate that the exception has been handled and should not be re-reported by the parent handler.
     }
 
     /**

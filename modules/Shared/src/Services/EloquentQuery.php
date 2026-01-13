@@ -263,7 +263,6 @@ abstract class EloquentQuery implements EloquentQueryContract
      *
      * @param  Builder<TModel>  $query
      * @param  array<string, mixed>  $filters
-     * @return void
      */
     protected function applyFilters(Builder &$query, array &$filters): void
     {

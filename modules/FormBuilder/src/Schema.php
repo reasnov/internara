@@ -31,7 +31,7 @@ class Schema
     public static function configure(self|callable $schema): static
     {
         if (is_callable($schema)) {
-            return $schema(new static());
+            return $schema(new static);
         }
 
         return $schema;
@@ -66,7 +66,7 @@ class Schema
     }
 
     /**
-     * @param array<int, \Modules\FormBuilder\Contracts\Input> $schemas
+     * @param  array<int, \Modules\FormBuilder\Contracts\Input>  $schemas
      */
     public function form(array $schemas = []): self
     {
@@ -86,9 +86,7 @@ class Schema
     }
 
     /**
-     * @param array<string, class-string> $viewClasses
-     *
-     * @return void
+     * @param  array<string, class-string>  $viewClasses
      */
     public function registerInputViews(array $viewClasses = []): void
     {
@@ -103,7 +101,7 @@ class Schema
             InputType::RADIO->value => Radio::class,
             InputType::CHECKBOX->value => Checkbox::class,
             InputType::FILE->value => FileUploader::class,
-            InputType::EDITOR->value => RichEditor::class
+            InputType::EDITOR->value => RichEditor::class,
         ];
     }
 
@@ -115,7 +113,7 @@ class Schema
 
         return collect($schemas)
             ->map(function ($schema) {
-                if (!($schema instanceof InputContract)) {
+                if (! ($schema instanceof InputContract)) {
                     throw new InvalidArgumentException(sprintf('The schema must be instance of %s.', InputContract::class));
                 }
 
