@@ -2,37 +2,41 @@
 
 namespace Modules\Auth\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as BaseAuthServiceProvider;
+use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
 use Nwidart\Modules\Traits\PathNamespace;
-use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
 
-class AuthServiceProvider extends ServiceProvider
+class AuthServiceProvider extends BaseAuthServiceProvider
 {
-    use PathNamespace;
     use ManagesModuleProvider;
+    use PathNamespace;
 
     protected string $name = 'Auth';
+
     protected string $nameLower = 'auth';
 
     /**
-     * Boot the application events.
+     * Boot the authentication / authorization services.
      */
     public function boot(): void
     {
+        // Add module boot logic
         $this->registerCommands();
         $this->registerCommandSchedules();
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+        $this->registerViewSlots();
     }
 
     /**
-     * Register the service provider.
+     * Register any authentication / authorization services.
      */
     public function register(): void
     {
         $this->registerBindings();
+        // Register other service providers from this (Auth) module
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
     }
@@ -45,7 +49,15 @@ class AuthServiceProvider extends ServiceProvider
     protected function bindings(): array
     {
         return [
-            // 'SomeContract::class' => 'SomeConcrete::class'
+            \Modules\Auth\Services\Contracts\AuthService::class => \Modules\Auth\Services\AuthService::class,
+        ];
+    }
+
+    protected function viewSlots(): array
+    {
+        return [
+            // This needs to be updated. Livewire components are moving to Auth module
+            'register.owner' => 'livewire:auth::register-owner' // Changed 'user' to 'auth', removed 'auth' subdir
         ];
     }
 }

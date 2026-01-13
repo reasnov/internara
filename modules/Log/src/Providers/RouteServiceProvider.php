@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    protected string $name = 'Logs';
+    protected string $name = 'Log';
 
     /**
      * Called before routes are registered.

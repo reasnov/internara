@@ -5,7 +5,7 @@ namespace Modules\Department\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Department\Database\Factories\DepartmentFactory;
-use Modules\School\Concerns\Models\HasSchoolRelation;
+use Modules\School\Models\Concerns\HasSchoolRelation;
 
 class Department extends Model
 {

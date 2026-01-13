@@ -3,11 +3,13 @@
 namespace Modules\Core\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
+use Nwidart\Modules\Traits\PathNamespace;
+use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
 
 class CoreServiceProvider extends ServiceProvider
 {
     use ManagesModuleProvider;
+    use PathNamespace;
 
     protected string $name = 'Core';
 

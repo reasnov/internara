@@ -7,6 +7,14 @@ use Modules\Setting\Models\Setting;
 
 interface SettingService
 {
+    /**
+     * Get all settings.
+     *
+     * @param  array  $filters  Filter criteria.
+     * @param  bool  $skipCache  Whether to bypass the cache and fetch directly from the database.
+     * @return array<string, mixed>
+     */
+    public function getValues(array $filters = [], bool $skipCache = false): array;
 
     /**
      * Get a setting value by key or an array of keys.

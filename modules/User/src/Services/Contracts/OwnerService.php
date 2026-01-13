@@ -30,7 +30,7 @@ interface OwnerService
      * @param  array<string, mixed>  $data  The data for creating or updating the owner.
      * @return \Modules\User\Models\User The created or updated owner user.
      */
-    public function updateOrCreate(array $data): User;
+    public function save(array $attributes, array $values = []): User;
 
     /**
      * Delete an owner user.
@@ -38,7 +38,7 @@ interface OwnerService
      * @param  mixed  $id  The primary key of the owner user.
      * @return bool True if deletion was successful.
      */
-    public function delete(mixed $id): bool;
+    public function delete(mixed $id, bool $force = false): bool;
 
     /**
      * Get the single owner user.
@@ -46,7 +46,7 @@ interface OwnerService
      * @param  array<int, string>  $columns  Columns to retrieve.
      * @return \Modules\User\Models\User|null The owner user or null if not found.
      */
-    public function get(array $columns = ['*']): ?User;
+    public function getOwner(array $columns = ['*']): ?User;
 
     /**
      * Check if an owner account already exists.

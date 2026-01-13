@@ -5,12 +5,11 @@ namespace Modules\Permission\Services;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
-use Modules\Permission\Contracts\Services\PermissionService as PermissionServiceContract;
+use Modules\Permission\Services\Contracts\PermissionService as PermissionServiceContract;
 use Modules\Permission\Models\Permission;
-use Modules\Shared\Concerns\EloquentQuery;
-use Modules\Exceptions\AppException;
+use Modules\Shared\Services\EloquentQuery;
 
-class PermissionService implements PermissionServiceContract
+class PermissionService extends EloquentQuery implements PermissionServiceContract
 {
     use EloquentQuery;
 

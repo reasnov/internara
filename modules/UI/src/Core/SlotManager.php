@@ -7,8 +7,8 @@ use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 use Livewire\LivewireManager;
-use Modules\UI\Contracts\Core\SlotManager as SlotManagerContract;
-use Modules\UI\Contracts\Core\SlotRegistry as SlotRegistryContract;
+use Modules\UI\Core\Contracts\SlotManager as SlotManagerContract;
+use Modules\UI\Core\Contracts\SlotRegistry as SlotRegistryContract;
 
 /**
  * Handles the rendering of components registered in slots.

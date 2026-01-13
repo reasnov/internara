@@ -9,20 +9,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\UploadedFile;
 use Modules\School\Models\School;
-use Modules\Exceptions\AppException;
+use Modules\Exception\AppException;
+use Modules\Shared\Services\EloquentQuery;
+use Modules\School\Services\Contracts\SchoolService as SchoolServiceContract;
 
-/**
- * @property School $model
- */
-class SchoolService implements Contracts\SchoolService
+class SchoolService extends EloquentQuery implements SchoolServiceContract
 {
-    use EloquentQuery {
-        first as firstQuery;
-        create as createQuery;
-        update as updateQuery;
-        updateOrCreate as updateOrCreateQuery;
-    }
-
     /**
      * SchoolService constructor.
      */
@@ -40,16 +32,14 @@ class SchoolService implements Contracts\SchoolService
      * @param  array<int, string>  $columns  Columns to retrieve.
      * @return School|\Illuminate\Support\Collection The found school or a collection of schools.
      */
-    public function get(array $where = [], array $columns = ['*']): School|\Illuminate\Support\Collection
+    public function get(array $filters = [], array $columns = ['*']): \Illuminate\Support\Collection
     {
-        $query = $this->query($columns);
-        $query->when(!empty($where), fn ($q) => $q->where($where));
+        return parent::get($filters, $columns);
+    }
 
-        if (config('school.single_record')) {
-            return $query->first();
-        }
-
-        return $query->get();
+    public function getSchool(array $columns = ['*']): ?School
+    {
+        return $this->first([], $columns);
     }
 
     /**
@@ -95,7 +85,7 @@ class SchoolService implements Contracts\SchoolService
                 );
             }
 
-            $school = $this->createQuery($data);
+            $school = parent::create($data); // Updated call
             $this->handleSchoolLogo($school, $data['logo_file'] ?? null);
 
             return $school;
@@ -122,16 +112,17 @@ class SchoolService implements Contracts\SchoolService
     public function update(mixed $id, array $data, array $columns = ['*']): School
     {
         /** @var School $school */
-        $school = $this->updateQuery($id, $data, $columns);
+        $school = parent::update($id, $data, $columns); // Updated call
         $this->handleSchoolLogo($school, $data['logo_file'] ?? null);
 
         return $school;
     }
 
-    public function updateOrCreate(array $data): School
+    public function save(array $attributes, array $values = []): School
     {
-        $school = $this->updateOrCreateQuery($data);
-        $this->handleSchoolLogo($school, $data['file_logo'] ?? null);
+        $school = parent::save($attributes, $values);
+        $allData = array_merge($attributes, $values);
+        $this->handleSchoolLogo($school, $allData['file_logo'] ?? null);
 
         return $school;
     }
@@ -141,9 +132,9 @@ class SchoolService implements Contracts\SchoolService
      *
      * @param  array<int, string>  $columns
      */
-    public function first(array $columns = ['*']): ?School
+    public function first(array $filters = [], array $columns = ['*']): ?School
     {
-        return $this->firstQuery($columns);
+        return parent::first($filters, $columns);
     }
 
     public function registerFromRelatedModel(Model $model, string|null $foreignKey = null, string|null $ownerKey = null, string|null $relation = null): BelongsTo

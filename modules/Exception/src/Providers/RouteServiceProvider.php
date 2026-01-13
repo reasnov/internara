@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    protected string $name = 'Exceptions';
+    protected string $name = 'Exception';
 
     /**
      * Called before routes are registered.

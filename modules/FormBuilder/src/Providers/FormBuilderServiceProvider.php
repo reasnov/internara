@@ -4,7 +4,7 @@ namespace Modules\FormBuilder\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
-use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
+use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
 
 class FormBuilderServiceProvider extends ServiceProvider
 {

@@ -106,7 +106,7 @@ interface EloquentQuery
      * @param  array<string, mixed>  $values
      * @return TModel
      */
-    public function updateOrCreate(array $attributes, array $values = []): Model;
+    public function save(array $attributes, array $values = []): Model;
 
     /**
      * Deletes a record by its primary key.

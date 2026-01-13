@@ -4,15 +4,15 @@ namespace Modules\Exception\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
-use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
+use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
 
 class ExceptionServiceProvider extends ServiceProvider
 {
     use PathNamespace;
     use ManagesModuleProvider;
 
-    protected string $name = 'Exceptions';
-    protected string $nameLower = 'exceptions';
+    protected string $name = 'Exception';
+    protected string $nameLower = 'exception';
 
     /**
      * Boot the application events.

@@ -3,15 +3,16 @@
 namespace Modules\Internship\Livewire;
 
 use Livewire\Component;
-use Modules\Support\Concerns\Livewire\HandlesRecords;
+use Modules\Shared\Livewire\Concerns\ManagesRecords;
 
 class InternshipManager extends Component
 {
-    use HandlesRecords;
+    use ManagesRecords;
 
-    public function mount(): void
+    public function mount(\Modules\Internship\Services\Contracts\InternshipService $internshipService): void
     {
-        $this->prepRecordHandler(['recordName' => 'internship']);
+        $this->service = $internshipService;
+        $this->eventPrefix = 'internship';
     }
 
     public function render()

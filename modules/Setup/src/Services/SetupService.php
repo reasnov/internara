@@ -133,7 +133,7 @@ class SetupService implements Contracts\SetupService
      */
     public function finalizeSetupStep(): bool
     {
-        $schoolRecord = $this->schoolService->get();
+        $schoolRecord = $this->schoolService->getSchool();
         $settings = [
             'brand_name' => $schoolRecord->name,
             'brand_logo' => $schoolRecord->logo_url ?? null,

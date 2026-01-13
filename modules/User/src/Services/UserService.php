@@ -5,25 +5,18 @@ namespace Modules\User\Services;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
-use Modules\Shared\Concerns\EloquentQuery;
-use Modules\Exceptions\AppException;
-use Modules\Exceptions\RecordNotFoundException;
+use Modules\Shared\Services\EloquentQuery;
+use Modules\Exception\AppException;
+use Modules\Exception\RecordNotFoundException;
 use Modules\User\Contracts\Services\OwnerService;
-use Modules\User\Contracts\Services\UserService as UserServiceContract;
+use Modules\User\Services\Contracts\UserService as UserServiceContract;
 use Modules\User\Models\User;
 
 /**
  * @property User $model
  */
-class UserService implements UserServiceContract
+class UserService extends EloquentQuery implements UserServiceContract
 {
-    use EloquentQuery {
-        list as listQuery;
-        create as createQuery;
-        update as updateQuery;
-        delete as deleteQuery;
-    }
-
     /**
      * The OwnerService instance.
      *
@@ -54,7 +47,7 @@ class UserService implements UserServiceContract
      */
     public function list(array $filters = [], int $perPage = 10, array $columns = ['*']): LengthAwarePaginator
     {
-        return $this->listQuery($filters, $perPage, $columns);
+        return parent::paginate($filters, $perPage, $columns);
     }
 
     /**
@@ -77,7 +70,7 @@ class UserService implements UserServiceContract
 
                 // Use for owner account setup
                 if (!setting('app_installed', true)) {
-                    return $this->ownerService->updateOrCreate($data);
+                    return $this->ownerService->save($data);
                 }
 
                 if ($this->ownerService->exists()) {
@@ -91,7 +84,7 @@ class UserService implements UserServiceContract
             }
         }
 
-        $user = $this->createQuery($data);
+        $user = parent::create($data);
         $this->handleUserAvatar($user, $data['avatar_file'] ?? null);
 
         if ($originalRoles !== null) {
@@ -167,7 +160,7 @@ class UserService implements UserServiceContract
             unset($data['password']);
         }
 
-        $updatedUser = $this->updateQuery($id, $data, $columns);
+        $updatedUser = parent::update($id, $data, $columns);
         $this->handleUserAvatar($updatedUser, $data['avatar_file'] ?? null);
 
         if ($originalRoles !== null) {
@@ -185,7 +178,7 @@ class UserService implements UserServiceContract
      *
      * @throws AppException If attempting to delete the owner account.
      */
-    public function delete(mixed $id): bool
+    public function delete(mixed $id, bool $force = false): bool
     {
         $user = $this->find($id);
 
@@ -194,10 +187,10 @@ class UserService implements UserServiceContract
         }
 
         if ($user->hasRole('owner')) {
-            return $this->ownerService->delete($id);
+            return $this->ownerService->delete($id, $force);
         }
 
-        return $this->deleteQuery($id);
+        return parent::delete($id, $force);
     }
 
     protected function handleUserAvatar(User &$user, UploadedFile|string|null $avatar = null): bool

@@ -2,9 +2,14 @@
 
 namespace Modules\Internship\Services\Contracts;
 
-use Modules\Shared\Services\Contracts\EloquentService;
+use Modules\Shared\Services\Contracts\EloquentQuery;
 
-interface InternshipService extends EloquentService
+/**
+ * @template TModel of \Modules\Internship\Models\Internship
+ *
+ * @extends EloquentQuery<TModel>
+ */
+interface InternshipService extends EloquentQuery
 {
     //
 }

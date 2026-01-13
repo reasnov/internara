@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Internship\Database\Factories\InternshipFactory;
-use Modules\School\Concerns\Models\HasSchoolRelation;
+use Modules\School\Models\Concerns\HasSchoolRelation;
 
 class Internship extends Model
 {

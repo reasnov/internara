@@ -172,7 +172,7 @@ abstract class EloquentQuery implements EloquentQueryContract
     /**
      * {@inheritdoc}
      */
-    public function updateOrCreate(array $attributes, array $values = []): Model
+    public function save(array $attributes, array $values = []): Model
     {
         return $this->model->newQuery()->updateOrCreate($attributes, $values);
     }

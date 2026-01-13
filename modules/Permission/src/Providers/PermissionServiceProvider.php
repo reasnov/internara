@@ -5,7 +5,7 @@ namespace Modules\Permission\Providers;
 use Illuminate\Support\ServiceProvider;
 use Modules\Permission\Contracts\PermissionManager as PermissionManagerContract;
 use Modules\Permission\Services\PermissionManager;
-use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
+use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
 use Nwidart\Modules\Traits\PathNamespace;
 
 class PermissionServiceProvider extends ServiceProvider

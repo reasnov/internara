@@ -4,9 +4,9 @@ namespace Modules\UI\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
-use Modules\UI\Contracts\Core\SlotManager as SlotManagerContract;
-use Modules\UI\Contracts\Core\SlotRegistry as SlotRegistryContract;
+use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
+use Modules\UI\Core\Contracts\SlotManager as SlotManagerContract;
+use Modules\UI\Core\Contracts\SlotRegistry as SlotRegistryContract;
 use Modules\UI\Core\SlotManager;
 use Modules\UI\Core\SlotRegistry;
 use Modules\UI\Facades\SlotRegistry as SlotRegistryFacade;

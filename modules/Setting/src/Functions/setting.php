@@ -14,6 +14,6 @@ if (! function_exists('setting')) {
             return $settingFacade::getFacadeRoot();
         }
 
-        return $settingFacade::get($key, $default, $skipCache);
+        return $settingFacade::getValue($key, $default, $skipCache);
     }
 }

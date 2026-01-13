@@ -16,10 +16,10 @@
     "School": true,
     "Department": true,
     "Internship": true,
-    "Logbook": true,
-    "Assignment": true,
-    "Assessment": true,
+    "Logbook": false,
+    "Assignment": false,
+    "Assessment": false,
     "Media": true,
-    "Student": true,
-    "Teacher": true
+    "Student": false,
+    "Teacher": false
 }

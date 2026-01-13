@@ -3,12 +3,10 @@
 namespace Modules\Internship\Services;
 
 use Modules\Internship\Models\Internship;
-use Modules\Shared\Services\Concerns\EloquentQuery;
+use Modules\Shared\Services\EloquentQuery;
 
-class InternshipService implements Contracts\InternshipService
+class InternshipService extends EloquentQuery implements Contracts\InternshipService
 {
-    use EloquentQuery;
-
     public function __construct(Internship $internship)
     {
         $this->setModel($internship);

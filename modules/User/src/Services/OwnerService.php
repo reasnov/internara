@@ -3,9 +3,9 @@
 namespace Modules\User\Services;
 
 use Illuminate\Http\UploadedFile;
-use Modules\Exceptions\AppException;
-use Modules\Exceptions\RecordNotFoundException;
-use Modules\Shared\Concerns\Services\Eloquent\EloquentQuery;
+use Modules\Exception\AppException;
+use Modules\Exception\RecordNotFoundException;
+use Modules\Shared\Services\EloquentQuery;
 use Modules\User\Models\User;
 
 /**
@@ -18,18 +18,11 @@ use Modules\User\Models\User;
  * @method \Modules\User\Models\User|null find(mixed $id, array $columns = ['*'])
  * @method bool exists(array|callable $where = [])
  * @method \Modules\User\Models\User update(mixed $id, array $data, array $columns = ['*'])
- * @method bool delete(mixed $id)
- * @method \Modules\User\Models\User|null get()
- */
-class OwnerService implements Contracts\OwnerService
-{
-    use EloquentQuery {
-        create as createQuery;
-        update as updateQuery;
-        updateOrCreate as updateOrCreateQuery;
-        delete as deleteQuery;
-    }
+ * @method bool delete(mixed $id, bool $force = false)
 
+ */
+class OwnerService extends EloquentQuery implements Contracts\OwnerService
+{
     public function __construct(User $user)
     {
         $this->setModel($user);
@@ -43,7 +36,7 @@ class OwnerService implements Contracts\OwnerService
      * @param  array<string, mixed>  $data  The data for creating the owner user.
      * @return \Modules\User\Models\User The newly created owner user.
      *
-     * @throws \Modules\Exceptions\AppException If an owner already exists or creation fails.
+     * @throws \Modules\Exception\AppException If an owner already exists or creation fails.
      */
     public function create(array $data): User
     {
@@ -55,7 +48,7 @@ class OwnerService implements Contracts\OwnerService
             );
         }
 
-        $owner = $this->createQuery($data);
+        $owner = parent::create($data);
 
         $this->handleOwnerAvatar($owner, $data['avatar_file'] ?? null);
 
@@ -73,8 +66,8 @@ class OwnerService implements Contracts\OwnerService
      * @param  array<int, string>  $columns  Columns to retrieve after update.
      * @return \Modules\User\Models\User The updated owner user.
      *
-     * @throws \Modules\Exceptions\RecordNotFoundException If no owner exists or the provided ID does not match the owner.
-     * @throws \Modules\Exceptions\AppException If the update fails.
+     * @throws \Modules\Exception\RecordNotFoundException If no owner exists or the provided ID does not match the owner.
+     * @throws \Modules\Exception\AppException If the update fails.
      */
     public function update(mixed $id, array $data, array $columns = ['*']): User
     {
@@ -102,7 +95,7 @@ class OwnerService implements Contracts\OwnerService
         unset($data['roles']);
         unset($data['role']);
 
-        $updatedOwner = $this->updateQuery($existingOwner->id, $data, $columns);
+        $updatedOwner = parent::update($existingOwner->id, $data, $columns);
 
         $this->handleOwnerAvatar($updatedOwner, $data['avatar_file'] ?? null);
 
@@ -117,11 +110,12 @@ class OwnerService implements Contracts\OwnerService
      * @param  array<string, mixed>  $data  The data for creating or updating the owner.
      * @return \Modules\User\Models\User The created or updated owner user.
      */
-    public function updateOrCreate(array $data): User
+    public function save(array $attributes, array $values = []): User
     {
-        $owner = $this->updateOrCreateQuery($data);
+        $owner = parent::save($attributes, $values);
 
-        $this->handleOwnerAvatar($owner, $data['avatar_file'] ?? null);
+        $allData = array_merge($attributes, $values);
+        $this->handleOwnerAvatar($owner, $allData['avatar_file'] ?? null);
 
         $owner->assignRole('owner');
         $owner->loadMissing(['roles', 'permissions']);
@@ -129,7 +123,7 @@ class OwnerService implements Contracts\OwnerService
         return $owner;
     }
 
-    public function delete(mixed $id): bool
+    public function delete(mixed $id, bool $force = false): bool
     {
         /** @var User|null $owner */
         $owner = $this->find($id);
@@ -150,7 +144,7 @@ class OwnerService implements Contracts\OwnerService
      * @param  array<int, string>  $columns  Columns to retrieve.
      * @return \Modules\User\Models\User|null The owner user or null if not found.
      */
-    public function get(array $columns = ['*']): ?User
+    public function getOwner(array $columns = ['*']): ?User
     {
         /** @var User|null $owner */
         $owner = $this->query($columns)->first();
@@ -159,6 +153,20 @@ class OwnerService implements Contracts\OwnerService
         }
 
         return $owner;
+    }
+
+    /**
+     * Getting a collection of owners is not allowed.
+     *
+     * @throws \Modules\Exception\AppException
+     */
+    public function get(array $filters = [], array $columns = ['*']): \Illuminate\Support\Collection
+    {
+        throw new AppException(
+            userMessage: 'user::exceptions.cannot_get_multiple_owners',
+            logMessage: 'Attempted to get a collection of owners, which is not allowed.',
+            code: 405 // Method Not Allowed
+        );
     }
 
     protected function handleOwnerAvatar(User &$owner, UploadedFile|string|null $avatar = null): bool

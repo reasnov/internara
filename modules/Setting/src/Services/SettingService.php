@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Modules\Setting\Models\Setting;
-use Modules\Shared\Services\Concerns\EloquentQuery;
+use Modules\Shared\Services\EloquentQuery;
 
-class SettingService implements Contracts\SettingService
+class SettingService extends EloquentQuery implements Contracts\SettingService
 {
-    use EloquentQuery;
+
 
     /**
      * Create a new SettingService instance.
@@ -27,11 +27,11 @@ class SettingService implements Contracts\SettingService
     /**
      * Get all settings.
      *
-     * @param  array  $columns  The columns to select.
+     * @param  array  $filters  Filter criteria.
      * @param  bool  $skipCache  Whether to bypass the cache and fetch directly from the database.
-     * @return array
+     * @return array<string, mixed>
      */
-    public function allValue(array $filters = [], bool $skipCache = false): array
+    public function getValues(array $filters = [], bool $skipCache = false): array
     {
         return $this->remember('settings.all', now()->addDay(), fn () => $this->get($filters, ['value'])->toArray(), $skipCache);
     }
@@ -118,13 +118,7 @@ class SettingService implements Contracts\SettingService
         return $deleted;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function query(array $columns = ['*']): Builder
-    {
-        return $this->model->query()->select($columns);
-    }
+
 
     /**
      * Clear the cache for a specific setting and its related groups.
@@ -145,5 +139,16 @@ class SettingService implements Contracts\SettingService
 
         // Clear cache for all settings, as this setting might affect the 'all' collection
         Cache::forget('settings.all');
+    }
+
+    public function set(string|array $key, mixed $value = null, array $extraAttributes = []): bool
+    {
+        return $this->setValue($key, $value, $extraAttributes);
+    }
+
+    public function setGroup(\Illuminate\Database\Eloquent\Collection|\Modules\Setting\Models\Setting $settings): \Illuminate\Database\Eloquent\Collection
+    {
+        // TODO: Implement setGroup() method.
+        return new \Illuminate\Database\Eloquent\Collection();
     }
 }

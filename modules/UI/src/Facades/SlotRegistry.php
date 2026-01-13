@@ -3,7 +3,7 @@
 namespace Modules\UI\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Modules\UI\Contracts\Core\SlotRegistry as SlotRegistryContract;
+use Modules\UI\Core\Contracts\SlotRegistry as SlotRegistryContract;
 
 /**
  * @method static void configure(array $slots = [])

@@ -3,7 +3,7 @@
 namespace Modules\UI\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Modules\UI\Contracts\Core\SlotManager as SlotManagerContract;
+use Modules\UI\Core\Contracts\SlotManager as SlotManagerContract;
 
 /**
  * @method static string render(string $slot)

@@ -2,21 +2,12 @@
 
 namespace Modules\Department\Services;
 
+use Modules\Shared\Services\EloquentQuery;
 use Modules\Department\Models\Department;
 use Modules\School\Services\Contracts\SchoolService;
-use Modules\Shared\Services\Concerns\EloquentQuery;
 
-/**
- * @property Department $model
- */
-class DepartmentService implements Contracts\DepartmentService
+class DepartmentService extends EloquentQuery implements Contracts\DepartmentService
 {
-    use EloquentQuery {
-        create as createQuery;
-        update as updateQuery;
-        updateOrCreate as updateOrCreateQuery;
-    }
-
     public function __construct(Department $model, protected SchoolService $schoolService)
     {
         $this->setModel($model);
@@ -28,7 +19,7 @@ class DepartmentService implements Contracts\DepartmentService
         $schoolId = $data['school_id'] ?? null;
         unset($data['school_id']);
 
-        $department = $this->createQuery($data);
+        $department = parent::create($data);
         $department->changeSchoolId($schoolId);
 
         $department->refresh();
@@ -42,7 +33,7 @@ class DepartmentService implements Contracts\DepartmentService
         $schoolId = $data['school_id'] ?? null;
         unset($data['school_id']);
 
-        $department = $this->updateQuery($id, $data);
+        $department = parent::update($id, $data);
         $department->changeSchoolId($schoolId);
 
         $department->refresh();
@@ -51,12 +42,12 @@ class DepartmentService implements Contracts\DepartmentService
         return $department;
     }
 
-    public function updateOrCreate(array $attributes, array $values = []): Department
+    public function save(array $attributes, array $values = []): Department
     {
         $schoolId = $attributes['school_id'] ?? null;
         unset($attributes['school_id']);
 
-        $department = $this->updateOrCreateQuery($attributes, $values);
+        $department = parent::save($attributes, $values);
         $department->changeSchoolId($schoolId);
 
         $department->refresh();

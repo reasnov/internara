@@ -4,15 +4,15 @@ namespace Modules\Notifications\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
-use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
+use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
 
 class NotificationsServiceProvider extends ServiceProvider
 {
     use PathNamespace;
     use ManagesModuleProvider;
 
-    protected string $name = 'Notifications';
-    protected string $nameLower = 'notifications';
+    protected string $name = 'Notification';
+    protected string $nameLower = 'notification';
 
     /**
      * Boot the application events.

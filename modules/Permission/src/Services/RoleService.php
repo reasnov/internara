@@ -4,11 +4,11 @@ namespace Modules\Permission\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Modules\Permission\Contracts\Services\RoleService as RoleServiceContract;
+use Modules\Permission\Services\Contracts\RoleService as RoleServiceContract;
 use Modules\Permission\Models\Role;
-use Modules\Shared\Concerns\EloquentQuery;
+use Modules\Shared\Services\EloquentQuery;
 
-class RoleService implements RoleServiceContract
+class RoleService extends EloquentQuery implements RoleServiceContract
 {
     use EloquentQuery;
 

@@ -3,7 +3,7 @@
 namespace Modules\Support\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Modules\Shared\Concerns\Providers\ManagesModuleProvider;
+use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
 use Nwidart\Modules\Traits\PathNamespace;
 
 class SupportServiceProvider extends ServiceProvider

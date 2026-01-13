@@ -38,7 +38,7 @@ class SchoolManager extends Component
     {
         $this->form->validate();
 
-        $school = $this->schoolService->updateOrCreate($this->form->all());
+        $school = $this->schoolService->save($this->form->all());
 
         // Refresh form with persisted data, including new logo URLs
         $this->form->fill($school);
