@@ -1,13 +1,13 @@
 <?php
 
 return [
-    'owner_already_exists' => 'An owner already exists. Cannot create a new owner.',
-    'owner_role_cannot_be_removed' => 'The owner role cannot be removed from this account.',
-    'owner_cannot_be_transferred' => 'An owner already exists. The owner role cannot be transferred.',
-    'owner_cannot_be_deleted' => 'The owner account cannot be deleted.',
+    'super_admin_already_exists' => 'A SuperAdmin already exists. Cannot create a new SuperAdmin.',
+    'super_admin_role_cannot_be_removed' => 'The SuperAdmin role cannot be removed from this account.',
+    'super_admin_cannot_be_transferred' => 'A SuperAdmin already exists. The SuperAdmin role cannot be transferred.',
+    'super_admin_cannot_be_deleted' => 'The SuperAdmin account cannot be deleted.',
     'invalid_credentials' => 'The provided credentials do not match our records.',
     'password_mismatch' => 'The provided current password does not match our records.',
     'email_already_verified' => 'This email address is already verified.',
-    'owner_not_found' => 'The owner account with ID :id could not be found.',
-    'owner_exists' => 'An owner account already exists. Only one owner account is allowed.',
+    'super_admin_not_found' => 'The SuperAdmin account with ID :id could not be found.',
+    'super_admin_exists' => 'A SuperAdmin account already exists. Only one SuperAdmin account is allowed.',
 ];

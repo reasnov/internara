@@ -33,7 +33,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read \Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property string|null $avatar_url
  *
- * @method static \Illuminate\Database\Eloquent\Builder<static> owner()
+ * @method static \Illuminate\Database\Eloquent\Builder<static> superAdmin()
  */
 class User extends Authenticatable implements HasMedia, MustVerifyEmail
 {
@@ -152,13 +152,13 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     }
 
     /**
-     * Scope a query to only include users with the 'owner' role.
+     * Scope a query to only include users with the 'super-admin' role.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<static>  $query
      * @return \Illuminate\Database\Eloquent\Builder<static>
      */
-    public function scopeOwner(Builder $query): Builder
+    public function scopeSuperAdmin(Builder $query): Builder
     {
-        return $query->role('owner');
+        return $query->role('super-admin');
     }
 }

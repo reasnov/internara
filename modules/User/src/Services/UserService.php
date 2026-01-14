@@ -8,7 +8,7 @@ use Illuminate\Support\Arr;
 use Modules\Exception\AppException;
 use Modules\Exception\RecordNotFoundException;
 use Modules\Shared\Services\EloquentQuery;
-use Modules\User\Contracts\Services\OwnerService;
+use Modules\User\Contracts\Services\SuperAdminService;
 use Modules\User\Models\User;
 use Modules\User\Services\Contracts\UserService as UserServiceContract;
 
@@ -20,16 +20,16 @@ class UserService extends EloquentQuery implements UserServiceContract
     /**
      * The OwnerService instance.
      */
-    protected OwnerService $ownerService;
+    protected SuperAdminService $superAdminService;
 
     /**
      * UserService constructor.
      */
-    public function __construct(User $model, OwnerService $ownerService)
+    public function __construct(User $model, SuperAdminService $superAdminService)
     {
         $this->setModel($model);
         $this->setSearchable('name', 'email', 'username');
-        $this->ownerService = $ownerService;
+        $this->superAdminService = $superAdminService;
     }
 
     /**
@@ -51,7 +51,7 @@ class UserService extends EloquentQuery implements UserServiceContract
      * @param  array<string, mixed>  $data  The data for creating the user, optionally including 'roles'.
      * @return User The newly created user.
      *
-     * @throws AppException If the 'owner' role is assigned and an owner already exists.
+     * @throws AppException If the 'super-admin' role is assigned and a SuperAdmin already exists.
      */
     public function create(array $data): User
     {
@@ -61,21 +61,21 @@ class UserService extends EloquentQuery implements UserServiceContract
 
         if ($roles !== null) {
             $roles = Arr::wrap($roles);
-            if (in_array('owner', $roles)) {
+            if (in_array('super-admin', $roles)) {
 
-                // Use for owner account setup
+                // Use for SuperAdmin account setup
                 if (! setting('app_installed', true)) {
-                    return $this->ownerService->save($data);
+                    return $this->superAdminService->save($data);
                 }
 
-                if ($this->ownerService->exists()) {
+                if ($this->superAdminService->exists()) {
                     throw new AppException(
-                        userMessage: 'user::exceptions.owner_already_exists',
+                        userMessage: 'user::exceptions.super_admin_already_exists',
                         code: 403
                     );
                 }
 
-                return $this->ownerService->create($data);
+                return $this->superAdminService->create($data);
             }
         }
 
@@ -120,7 +120,7 @@ class UserService extends EloquentQuery implements UserServiceContract
      * @param  array<string, mixed>  $data  The data for updating the user.
      * @return User The updated user.
      *
-     * @throws AppException If attempting to modify owner roles incorrectly.
+     * @throws AppException If attempting to modify SuperAdmin roles incorrectly.
      */
     public function update(mixed $id, array $data, array $columns = ['*']): User
     {
@@ -132,19 +132,19 @@ class UserService extends EloquentQuery implements UserServiceContract
         }
 
         $roles = $data['roles'] ?? null;
-        $originalRoles = $roles; // Store original roles for later assignment if not owner
+        $originalRoles = $roles; // Store original roles for later assignment if not super-admin
         unset($data['roles']);
 
-        if ($user->hasRole('owner')) {
-            return $this->ownerService->update($id, $data, $columns);
+        if ($user->hasRole('super-admin')) {
+            return $this->superAdminService->update($id, $data, $columns);
         }
 
         if ($originalRoles !== null) {
             $roles = Arr::wrap($originalRoles);
-            if (in_array('owner', $roles) && ! $user->hasRole('owner')) {
-                if ($this->ownerService->exists()) {
+            if (in_array('super-admin', $roles) && ! $user->hasRole('super-admin')) {
+                if ($this->superAdminService->exists()) {
                     throw new AppException(
-                        userMessage: 'user::exceptions.owner_cannot_be_transferred',
+                        userMessage: 'user::exceptions.super_admin_cannot_be_transferred',
                         code: 403
                     );
                 }
@@ -171,7 +171,7 @@ class UserService extends EloquentQuery implements UserServiceContract
      * @param  string  $id  The UUID of the user to delete.
      * @return bool True if deletion was successful.
      *
-     * @throws AppException If attempting to delete the owner account.
+     * @throws AppException If attempting to delete the SuperAdmin account.
      */
     public function delete(mixed $id, bool $force = false): bool
     {
@@ -181,8 +181,8 @@ class UserService extends EloquentQuery implements UserServiceContract
             throw new RecordNotFoundException(replace: ['record' => $this->recordName, 'id' => $id]);
         }
 
-        if ($user->hasRole('owner')) {
-            return $this->ownerService->delete($id, $force);
+        if ($user->hasRole('super-admin')) {
+            return $this->superAdminService->delete($id, $force);
         }
 
         return parent::delete($id, $force);

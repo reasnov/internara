@@ -57,7 +57,7 @@ class AuthServiceProvider extends BaseAuthServiceProvider
     {
         return [
             // This needs to be updated. Livewire components are moving to Auth module
-            'register.owner' => 'livewire:auth::register-owner', // Changed 'user' to 'auth', removed 'auth' subdir
+            'register.super-admin' => 'livewire:auth::register-super-admin', // Changed 'user' to 'auth', removed 'auth' subdir
         ];
     }
 }

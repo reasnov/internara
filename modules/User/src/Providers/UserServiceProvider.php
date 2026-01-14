@@ -2,7 +2,6 @@
 
 namespace Modules\User\Providers;
 
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
 use Modules\User\Models\User;
@@ -36,7 +35,6 @@ class UserServiceProvider extends ServiceProvider
         $this->registerCommandSchedules();
         $this->registerTranslations();
         $this->registerConfig();
-        $this->registerPolicies();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
     }
@@ -52,16 +50,6 @@ class UserServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the module policies.
-     */
-    protected function registerPolicies(): void
-    {
-        Gate::before(function (User $user, string $ability) {
-            return $user->hasRole('owner') ? true : null;
-        });
-    }
-
-    /**
      * Get the service bindings for the module.
      *
      * @return array<string, string|\Closure>
@@ -70,8 +58,17 @@ class UserServiceProvider extends ServiceProvider
     {
         return [
             \Modules\User\Services\Contracts\UserService::class => \Modules\User\Services\UserService::class,
-            \Modules\User\Services\Contracts\OwnerService::class => \Modules\User\Services\OwnerService::class,
+            \Modules\User\Services\Contracts\SuperAdminService::class => \Modules\User\Services\SuperAdminService::class,
 
         ];
+    }
+
+    /**
+     * Register the module policies.
+     */
+    protected function registerPolicies(): void
+    {
+        // Policies are automatically registered via the $policies property.
+        // This method is intentionally empty but required for Laravel's policy discovery.
     }
 }

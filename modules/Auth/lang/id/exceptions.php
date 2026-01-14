@@ -1,13 +1,13 @@
 <?php
 
 return [
-    'owner_already_exists' => 'Akun owner sudah ada. Tidak dapat membuat owner baru.',
-    'owner_role_cannot_be_removed' => 'Role owner tidak dapat dihapus dari akun ini.',
-    'owner_cannot_be_transferred' => 'Akun owner sudah ada. Role owner tidak dapat dipindahtangankan.',
-    'owner_cannot_be_deleted' => 'Akun owner tidak dapat dihapus.',
+    'super_admin_already_exists' => 'Akun SuperAdmin sudah ada. Tidak dapat membuat SuperAdmin baru.',
+    'super_admin_role_cannot_be_removed' => 'Role SuperAdmin tidak dapat dihapus dari akun ini.',
+    'super_admin_cannot_be_transferred' => 'Akun SuperAdmin sudah ada. Role SuperAdmin tidak dapat dipindahtangankan.',
+    'super_admin_cannot_be_deleted' => 'Akun SuperAdmin tidak dapat dihapus.',
     'invalid_credentials' => 'Kredensial yang diberikan tidak cocok dengan catatan kami.',
     'password_mismatch' => 'Kata sandi saat ini yang diberikan tidak cocok dengan catatan kami.',
     'email_already_verified' => 'Alamat email ini sudah diverifikasi.',
-    'owner_not_found' => 'Akun pemilik dengan ID :id tidak dapat ditemukan.',
-    'owner_exists' => 'Akun pemilik sudah ada. Hanya satu akun pemilik yang diizinkan.',
+    'super_admin_not_found' => 'Akun SuperAdmin dengan ID :id tidak dapat ditemukan.',
+    'super_admin_exists' => 'Akun SuperAdmin sudah ada. Hanya satu akun SuperAdmin yang diizinkan.',
 ];

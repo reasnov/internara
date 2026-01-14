@@ -27,8 +27,8 @@ Route::middleware('auth')->group(function () {
         ->middleware('role:teacher')
         ->name('dashboard.teacher');
 
-    // Admin & Owner Dashboard
+    // Admin & SuperAdmin Dashboard
     Route::get('/dashboard/admin', AdminDashboard::class)
-        ->middleware('role:admin|owner')
+        ->middleware('role:admin|super-admin')
         ->name('dashboard.admin');
 });

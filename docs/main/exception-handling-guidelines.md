@@ -85,9 +85,9 @@ To maximize reusability and maintain a clear structure, exception translations a
         -   **`Records` Module**: For generic data record operations (e.g., record not found, creation failed, unique violation).
             -   **Location**: `modules/Records/lang/{locale}/exceptions.php`
             - **Example**: `records::exceptions.not_found`
-        -   **`User` Module**: For errors specific to users, authentication, or owners.
+        -   **`User` Module**: For errors specific to users, authentication, or SuperAdmins.
             - **Location**: `modules/User/lang/{locale}/exceptions.php`
-            - **Example**: `user::exceptions.owner_exists`
+            - **Example**: `user::exceptions.super_admin_exists`
 
 2.  **Module-Specific Exception Translations**: For messages that are unique to a single module's business logic and cannot be generalized or reused elsewhere.
     *   **Location**: `modules/{ModuleName}/lang/{locale}/exceptions.php`
@@ -100,11 +100,11 @@ To call a translation from a specific module, we use **namespaced keys**.
 - **Format**: `{module_name}::exceptions.{key_name}`
 - **Examples**:
   - `records::exceptions.not_found`
-  - `user::exceptions.owner_cannot_be_deleted`
+  - `user::exceptions.super_admin_cannot_be_deleted`
 
 ### 3.3. How to Throw a Localized `AppException`
 
-This example shows the complete flow for throwing an exception for the "owner cannot be deleted" rule in `UserService`.
+This example shows the complete flow for throwing an exception for the "SuperAdmin cannot be deleted" rule in `UserService`.
 
 **1. Throw the Exception with a Namespaced Key**
 
@@ -121,9 +121,9 @@ class UserService
     {
         $user = User::findOrFail($id);
 
-        if ($user->hasRole('owner')) {
+        if ($user->hasRole('super-admin')) {
             throw new AppException(
-                userMessage: 'user::exceptions.owner_cannot_be_deleted',
+                userMessage: 'user::exceptions.super_admin_cannot_be_deleted',
                 code: 403
             );
         }
@@ -142,7 +142,7 @@ Create the corresponding language files inside the `User` module.
 <?php
 
 return [
-    'owner_cannot_be_deleted' => 'The owner account cannot be deleted.',
+    'super_admin_cannot_be_deleted' => 'The SuperAdmin account cannot be deleted.',
 ];
 ```
 
@@ -151,7 +151,7 @@ return [
 <?php
 
 return [
-    'owner_cannot_be_deleted' => 'Akun owner tidak dapat dihapus.',
+    'super_admin_cannot_be_deleted' => 'Akun SuperAdmin tidak dapat dihapus.',
 ];
 ```
 

@@ -10,7 +10,7 @@ use Modules\Exception\RecordNotFoundException;
 use Modules\Internship\Services\Contracts\InternshipService;
 use Modules\School\Services\Contracts\SchoolService;
 use Modules\Setting\Services\Contracts\SettingService;
-use Modules\User\Services\Contracts\OwnerService;
+use Modules\User\Services\Contracts\SuperAdminService;
 
 /**
  * Service implementation for handling the application setup process.
@@ -21,14 +21,14 @@ class SetupService implements Contracts\SetupService
      * Create a new SetupService instance.
      *
      * @param  SettingService  $settingService  The setting service instance.
-     * @param  OwnerService  $ownerService  The owner service instance.
+     * @param  SuperAdminService  $superAdminService  The SuperAdmin service instance.
      * @param  SchoolService  $schoolService  The school service instance.
      * @param  DepartmentService  $departmentService  The department service instance.
      * @param  InternshipService  $internshipService  The internship service instance.
      */
     public function __construct(
         protected SettingService $settingService,
-        protected OwnerService $ownerService,
+        protected SuperAdminService $superAdminService,
         protected SchoolService $schoolService,
         protected DepartmentService $departmentService,
         protected InternshipService $internshipService,
@@ -63,7 +63,7 @@ class SetupService implements Contracts\SetupService
     /**
      * Checks if a specific record exists in the system.
      *
-     * @param  string  $recordName  The name of the record to check for existence (e.g., 'owner', 'school').
+     * @param  string  $recordName  The name of the record to check for existence (e.g., 'super-admin', 'school').
      * @return bool True if the record exists, false otherwise.
      *
      * @throws InvalidArgumentException If an unknown record type is requested.
@@ -72,7 +72,7 @@ class SetupService implements Contracts\SetupService
     {
         try {
             return match ($recordName) {
-                'owner' => $this->ownerService->exists(),
+                'super-admin' => $this->superAdminService->exists(),
                 'school' => $this->schoolService->exists(),
                 'department' => $this->departmentService->exists(),
                 'internship' => $this->internshipService->exists(),

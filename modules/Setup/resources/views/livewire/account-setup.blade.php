@@ -19,6 +19,6 @@
     </x-slot:header>
 
     <x-slot:content>
-        @slotRender('register.owner')
+        @slotRender('register.super-admin')
     </x-slot:content>
 </x-setup::layouts.setup-wizard>

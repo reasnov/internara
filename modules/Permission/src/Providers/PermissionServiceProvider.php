@@ -2,10 +2,12 @@
 
 namespace Modules\Permission\Providers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Modules\Permission\Contracts\PermissionManager as PermissionManagerContract;
 use Modules\Permission\Services\PermissionManager;
 use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
+use Modules\User\Models\User;
 use Nwidart\Modules\Traits\PathNamespace;
 
 class PermissionServiceProvider extends ServiceProvider
@@ -29,6 +31,7 @@ class PermissionServiceProvider extends ServiceProvider
         $this->overrideSpatieConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+        $this->registerPolicies();
     }
 
     /**
@@ -51,6 +54,16 @@ class PermissionServiceProvider extends ServiceProvider
         $this->registerBindings();
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+    }
+
+    /**
+     * Register the module policies.
+     */
+    protected function registerPolicies(): void
+    {
+        Gate::before(function (User $user, string $ability) {
+            return $user->hasRole('super-admin') ? true : null;
+        });
     }
 
     /**

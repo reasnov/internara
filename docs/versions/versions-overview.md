@@ -1,45 +1,79 @@
 # Application Versions Overview
 
-This document provides a central overview of all application versions and their respective documentation within the Internara project. Each major version (e.g., `v0.x`, `v1.x`) has its own dedicated documentation directory, containing specific details relevant to that version.
+This document outlines the versioning strategy and documentation standards for the Internara project. Adhering to these guidelines ensures clarity, consistency, and predictability across all development cycles.
+
+**Internara** is an open-source internship management system built with a modern Laravel tech stack, including **Livewire 3** and a **Modular Monolith** architecture. Its primary goal is to streamline the entire internship lifecycle, from student registration and daily journal logging to final assessments and reporting.
 
 ---
 
 ## Versioning Guidelines
 
-Internara adheres to a modified semantic versioning approach, incorporating major, minor, and patch releases, along with pre-release and build metadata flags. This system ensures clarity and predictability in application development and deployment.
+Internara uses a hybrid approach that combines Semantic Versioning (SemVer) for technical compatibility with a unique Series Code for identifying the goals and stage of each release.
 
-### 1. Version Components
+### 1.1. Semantic Versioning (SemVer)
 
-*   **Major Version (X.y.z)**: Incremented for incompatible API changes, significant architectural overhauls, or major new feature sets that break backward compatibility. A major version increment resets the minor and patch versions to zero.
-    *   **Example**: `1.0.0` to `2.0.0`
+We follow the standard `MAJOR.MINOR.PATCH` format:
 
-*   **Minor Version (x.Y.z)**: Incremented for new functionalities in a backward-compatible manner. This includes new features, significant improvements, or non-breaking API additions. A minor version increment resets the patch version to zero.
-    *   **Example**: `1.0.0` to `1.1.0`, or `1.2.5` to `1.3.0`
+-   **`MAJOR`**: Incremented for incompatible API changes or major architectural shifts.
+-   **`MINOR`**: Incremented for new, backward-compatible functionality.
+-   **`PATCH`**: Incremented for backward-compatible bug fixes.
 
-*   **Patch Version (x.y.Z)**: Incremented for backward-compatible bug fixes and minor internal changes. These releases are intended to be drop-in replacements.
-    *   **Example**: `1.0.0` to `1.0.1`, or `1.1.2` to `1.1.3`
+### 1.2. Series Code
 
-### 2. Pre-release Identifiers
+Each development cycle is identified by a `SERIES-CODE` that provides immediate context about its purpose.
 
-Pre-release versions can be denoted by appending a hyphen and a series of dot-separated identifiers immediately following the patch version. These indicate unstable or experimental releases.
+-   **Format:** `{codename}-{stage}-{scope}`
+-   **Example (for v0.1.x):** `ARC01-ALPHA-FND`
 
-*   **Alpha (`-alpha`)**: The initial phase of development, often unstable and feature-incomplete.
-    *   **Example**: `1.0.0-alpha.1`
+#### Components:
 
-*   **Beta (`-beta`)**: Feature-complete but potentially unstable. Used for internal testing and early feedback.
-    *   **Example**: `1.0.0-beta.2`
+-   **`{codename}`**: A unique, abstract identifier for a release cycle (e.g., `ARC01`, `CYGNUS2`).
+-   **`{stage}`**: The current development stage: `ALPHA`, `BETA`, `RC`, or `STABLE`.
+-   **`{scope}`**: A short code for the primary focus:
+    -   `FND`: Foundational (architecture, core setup).
+    -   `FEAT`: Feature-driven (new user-facing capabilities).
+    -   `RFT`: Refactor (codebase improvements).
+    -   `SEC`: Security (addressing vulnerabilities).
 
-*   **Release Candidate (`-rc`)**: Potentially final release. Used for final testing before a stable release.
-    *   **Example**: `1.0.0-rc.3`
+---
 
-### 3. Build Metadata
+## Version Documentation Guidelines
 
-Build metadata can be appended to the version number by adding a plus sign (`+`) and a series of dot-separated identifiers immediately following the patch or pre-release version. This is used for build-specific information and does not affect version precedence.
+Each version must have a corresponding document in this directory (e.g., `v0.1.x-alpha.md`) that follows a narrative-driven format. The goal is to explain the "why" behind decisions, not just list changes.
 
-*   **Example**: `1.0.0-alpha.1+001.build-123`
+The document must contain the following sections:
+
+### 2.1. Overview & Version Details
+
+-   **Title:** State the version and its thematic name (e.g., `Overview: Version v0.1.x-alpha (Foundational)`).
+-   **Version Details:** A list including `Name`, `Series Code`, `Status`, and a `Description`.
+
+### 2.2. Goals & Architectural Philosophy
+
+-   **Problem Keypoints:** A bulleted list of the core problems this version solves.
+-   **Architectural Pillars/Philosophy:** The strategies used to solve the problems.
+
+### 2.3. System & Feature Keystones
+
+The main body, grouping features into logical "Keystones". Each Keystone must include:
+
+-   **`Goal`:** The objective of the system.
+-   **`Implementation`:**
+    -   `Approach`: The technical strategy.
+    -   `Analysis Reports`: A summary of code verification.
+    -   `Security and Testing`: Security and testing strategies.
+-   **`Developer Impact`:** The tangible benefit for developers.
+
+### 2.4. Security Issues
+
+Detail any identified security vulnerabilities, their impact, severity, and remediation.
+
+### 2.5. Improvement Suggestions
+
+Capture potential improvements or refactoring opportunities.
 
 ---
 
 ## Available Versions
 
-*   **[v0.x-alpha Overview](v0.x-alpha.md)**: Details the initial alpha release features and scope.
+-   **[v0.1.x-alpha pre-release (ARC01-ALPHA-FND)](v0.1.x-alpha.md)** _(current version (unstable))_: Details the initial alpha release features and scope.

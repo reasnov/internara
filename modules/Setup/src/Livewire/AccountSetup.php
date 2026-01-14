@@ -9,7 +9,7 @@ use Modules\Setup\Services\Contracts\SetupService;
 
 /**
  * Represents the 'Account Creation' step in the application setup process.
- * This component is responsible for handling the creation of the initial owner account.
+ * This component is responsible for handling the creation of the initial SuperAdmin account.
  */
 class AccountSetup extends Component
 {
@@ -34,17 +34,17 @@ class AccountSetup extends Component
             currentStep: 'account',
             nextStep: 'school',
             prevStep: 'welcome',
-            extra: ['req_record' => 'owner']
+            extra: ['req_record' => 'super-admin']
         );
 
         $this->requireSetupAccess();
     }
 
     /**
-     * Handles the 'owner-registered' event to proceed to the next setup step.
+     * Handles the 'super-admin-registered' event to proceed to the next setup step.
      */
-    #[On('owner-registered')]
-    public function handleOwnerRegistered(): void
+    #[On('super-admin-registered')]
+    public function handleSuperAdminRegistered(): void
     {
         $this->nextStep();
     }

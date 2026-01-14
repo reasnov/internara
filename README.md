@@ -79,7 +79,15 @@ This project is built upon the Laravel ecosystem and several key packages:
 
 ## Documentation
 
-Comprehensive documentation for developers is available in the [`docs/` directory](./docs/master/overview.md), covering architecture, development conventions, and workflow guides.
+This project maintains comprehensive developer documentation to ensure consistency, clarity, and efficient onboarding. All guides are located within the [`/docs`](/docs) directory.
+
+### Key Documents
+
+*   **[Project Overview](docs/project-overview.md)**: The best starting point for a high-level understanding of the project's vision, core principles, technology stack, and documentation structure.
+*   **[Main Documentation Overview](docs/main/main-documentation-overview.md)**: A deeper dive into core architectural principles, development workflows, coding conventions, and available tools.
+*   **[Version History](docs/versions/versions-overview.md)**: Details on specific application releases and their scope.
+
+For more detailed guides on architecture, conventions, testing, and more, please explore the `docs/main` directory.
 
 ## Contributing
 

@@ -170,7 +170,7 @@ To assert an exception, wrap the code that is expected to throw it within a clos
 This example demonstrates a full-circle test for a service method that throws a project-specific `AppException` with a namespaced translation key.
 
 **1. The Service Method**
-Assume the `UserService` has a method to delete a user, which throws an exception if you try to delete the protected 'owner'.
+Assume the `UserService` has a method to delete a user, which throws an exception if you try to delete the protected 'super-admin'.
 
 *File: `modules/User/src/Services/UserService.php`*
 ```php
@@ -178,9 +178,9 @@ class UserService
 {
     public function delete(User $userToDelete): bool
     {
-        if ($userToDelete->hasRole('owner')) {
+        if ($userToDelete->hasRole('super-admin')) {
             throw new \Modules\Shared\Exceptions\AppException(
-                userMessage: 'user::exceptions.owner_cannot_be_deleted',
+                userMessage: 'user::exceptions.super_admin_cannot_be_deleted',
                 code: 403
             );
         }
@@ -196,12 +196,12 @@ The corresponding translation key must exist in the module's language file.
 ```php
 <?php
 return [
-    'owner_cannot_be_deleted' => 'The owner account cannot be deleted.',
+    'super_admin_cannot_be_deleted' => 'The SuperAdmin account cannot be deleted.',
 ];
 ```
 
 **3. The Pest Test**
-The test should assert that calling the method with the owner user throws an `AppException` with the correctly translated message.
+The test should assert that calling the method with the SuperAdmin user throws an `AppException` with the correctly translated message.
 
 *File: `modules/User/tests/Feature/Services/UserServiceTest.php`*
 ```php
@@ -214,16 +214,16 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-test('it throws an exception when trying to delete the owner user', function () {
-    // Arrange: Create an owner user and the service
-    $owner = User::factory()->create()->assignRole('owner');
+test('it throws an exception when trying to delete the SuperAdmin user', function () {
+    // Arrange: Create a SuperAdmin user and the service
+    $superAdmin = User::factory()->create()->assignRole('super-admin');
     $userService = app(UserService::class);
 
     // Retrieve the expected translated message
     $expectedMessage = __('user::exceptions.owner_cannot_be_deleted');
 
     // Act & Assert: Expect the specific exception with the correct translated message
-    expect(fn () => $userService->delete($owner))
+    expect(fn () => $userService->delete($superAdmin))
         ->toThrow(AppException::class, $expectedMessage);
 });
 ```

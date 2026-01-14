@@ -17,8 +17,8 @@ class DashboardRedirectMiddleware
 
         if ($user) {
             // Check in order of precedence (Admin > Teacher > Student)
-            if ($user->hasRole('admin') || $user->hasRole('owner')) {
-                // If the user is an admin/owner and is not already on the admin dashboard route, redirect them.
+            if ($user->hasRole('admin') || $user->hasRole('super-admin')) {
+                // If the user is an admin/super-admin and is not already on the admin dashboard route, redirect them.
                 if (! $request->routeIs('dashboard.admin')) {
                     return redirect()->route('dashboard.admin');
                 }
