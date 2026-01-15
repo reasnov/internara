@@ -45,7 +45,7 @@ class $CLASS$ extends ServiceProvider
     protected function bindings(): array
     {
         return [
-            // 'SomeContract::class' => 'SomeConcrete::class'
+            // \Modules\Example\Services\Contract\YourContractService::class => \Modules\Example\Services\YourService::class
         ];
     }
 }

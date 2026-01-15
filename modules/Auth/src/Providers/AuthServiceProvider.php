@@ -50,6 +50,7 @@ class AuthServiceProvider extends BaseAuthServiceProvider
     {
         return [
             \Modules\Auth\Services\Contracts\AuthService::class => \Modules\Auth\Services\AuthService::class,
+            \Modules\Auth\Services\Contracts\RedirectService::class => \Modules\Auth\Services\RedirectService::class,
         ];
     }
 

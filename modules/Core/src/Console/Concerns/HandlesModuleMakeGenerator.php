@@ -91,8 +91,8 @@ trait HandlesModuleMakeGenerator
         $basePath = $this->getBasePath();
         $subPath = $this->getTargetSubPath();
 
-        if ($subPath && Str::contains($subPath, $basePath)) {
-            return Formatter::path($appPath, $subPath);
+        if (Str::startsWith($basePath, $appPath)) {
+            return Formatter::path($basePath, $subPath);
         }
 
         return Formatter::path($appPath, $basePath, $subPath);

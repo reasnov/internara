@@ -3,7 +3,7 @@
     <div class="flex flex-col gap-8">
         <x-ui::form class="text-start" wire:submit="login">
             <x-ui::input type="text" label="Email atau Username" placeholder="Masukkan Email atau Username Anda"
-                wire:model="email" required />
+                wire:model="identifier" required />
 
             <div class="relative w-full">
                 <x-ui::input type="password" label="Kata Sandi" placeholder="Masukkan Kata Sandi Anda"

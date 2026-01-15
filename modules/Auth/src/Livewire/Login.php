@@ -6,6 +6,7 @@ use Illuminate\View\View;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 use Modules\Auth\Services\Contracts\AuthService;
+use Modules\Auth\Services\Contracts\RedirectService;
 use Modules\Exception\AppException;
 
 /**
@@ -17,6 +18,7 @@ use Modules\Exception\AppException;
 class Login extends Component
 {
     protected AuthService $authService;
+    protected RedirectService $redirectService;
 
     #[Rule('required|string')]
     public string $identifier = '';
@@ -54,32 +56,31 @@ class Login extends Component
     }
 
     /**
-     * Initializes the component with the AuthService.
-     *
-     * @param  \Modules\User\Contracts\Services\AuthService  $authService  The authentication service.
+     * Initializes the component with the AuthService and RedirectService.
      */
-    public function boot(\Modules\Auth\Services\Contracts\AuthService $authService): void
+    public function boot(AuthService $authService, RedirectService $redirectService): void
     {
         $this->authService = $authService;
+        $this->redirectService = $redirectService;
     }
 
     /**
      * Handles the login attempt.
      *
      * Validates the credentials, attempts to log in the user via AuthService,
-     * and redirects to the dashboard on success or adds an error on failure.
+     * and redirects to the appropriate dashboard on success.
      */
     public function login(): void
     {
         $this->validate();
 
         try {
-            $this->authService->login([
+            $user = $this->authService->login([
                 'identifier' => $this->identifier,
                 'password' => $this->password,
             ], $this->remember);
 
-            $this->redirect(route('dashboard'), navigate: true);
+            $this->redirect($this->redirectService->getTargetUrl($user), navigate: true);
         } catch (AppException $e) {
             $this->addError('identifier', $e->getUserMessage());
         }
