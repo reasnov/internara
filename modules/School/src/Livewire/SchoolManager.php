@@ -4,7 +4,7 @@ namespace Modules\School\Livewire;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Modules\School\Contracts\Services\SchoolService;
+use Modules\School\Services\Contracts\SchoolService;
 use Modules\School\Livewire\Forms\SchoolForm;
 
 class SchoolManager extends Component

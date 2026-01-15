@@ -47,7 +47,7 @@ class SchoolServiceProvider extends ServiceProvider
     protected function bindings(): array
     {
         return [
-            \Modules\School\Contracts\Services\SchoolService::class => \Modules\School\Services\SchoolService::class,
+            \Modules\School\Services\Contracts\SchoolService::class => \Modules\School\Services\SchoolService::class,
         ];
     }
 

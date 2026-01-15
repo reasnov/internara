@@ -46,7 +46,7 @@ class DepartmentServiceProvider extends ServiceProvider
     protected function bindings(): array
     {
         return [
-            \Modules\Department\Contracts\Services\DepartmentService::class => \Modules\Department\Services\DepartmentService::class,
+            \Modules\Department\Services\Contracts\DepartmentService::class => \Modules\Department\Services\DepartmentService::class,
         ];
     }
 }

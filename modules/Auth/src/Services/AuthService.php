@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Modules\Auth\Services\Contracts\AuthService as AuthServiceContract;
 use Modules\Exception\AppException;
-use Modules\User\Contracts\Services\UserService;
+use Modules\User\Services\Contracts\UserService;
 use Modules\User\Models\User;
 
 /**

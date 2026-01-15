@@ -4,7 +4,7 @@ namespace Modules\Setup\Livewire;
 
 use Illuminate\View\View;
 use Livewire\Component;
-use Modules\Setup\Contracts\Services\SetupService;
+use Modules\Setup\Services\Contracts\SetupService;
 
 /**
  * Represents the final 'Completion' step in the application setup process.
