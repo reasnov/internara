@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Shared\Providers\Concerns;
 
 use Illuminate\Support\Facades\Blade;
@@ -8,23 +10,50 @@ use Modules\UI\Facades\SlotRegistry;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
+/**
+ * Trait ManagesModuleProvider
+ *
+ * Provides standardized methods for module service providers to handle
+ * configuration, translations, views, migrations, and bindings.
+ */
 trait ManagesModuleProvider
 {
+    /**
+     * Standard module registration logic.
+     * Call this in your provider's register() method.
+     */
+    protected function registerModule(): void
+    {
+        $this->registerConfig();
+        $this->registerBindings();
+    }
+
+    /**
+     * Standard module boot logic.
+     * Call this in your provider's boot() method.
+     */
+    protected function bootModule(): void
+    {
+        $this->registerTranslations();
+        $this->registerViews();
+        $this->registerMigrations();
+        $this->registerCommands();
+        $this->registerViewSlots();
+    }
+
     /**
      * Register the module's service bindings.
      */
     protected function registerBindings(): void
     {
-        // Logic from ManagesBindings trait
+        if (! $this instanceof ServiceProvider) {
+            throw new \LogicException('The ManagesModuleProvider trait must be used in a class that extends Illuminate\Support\ServiceProvider.');
+        }
+
         foreach ($this->bindings() as $abstract => $concrete) {
-            if (! $this instanceof ServiceProvider) {
-                throw new \LogicException('The ManagesModuleProvider trait must be used in a class that extends Illuminate\Support\ServiceProvider.');
-            }
-            if (is_string($concrete) && (new \ReflectionClass($concrete))->isInstantiable()) {
-                // Assume singleton if concrete is a class name and instantiable
+            if (is_string($concrete) && class_exists($concrete) && (new \ReflectionClass($concrete))->isInstantiable()) {
                 $this->app->singleton($abstract, $concrete);
             } else {
-                // Or bind if it's a closure or non-instantiable class name (e.g., interface)
                 $this->app->bind($abstract, $concrete);
             }
         }
@@ -45,18 +74,7 @@ trait ManagesModuleProvider
      */
     protected function registerCommands(): void
     {
-        // $this->commands([]);
-    }
-
-    /**
-     * Register command Schedules.
-     */
-    protected function registerCommandSchedules(): void
-    {
-        // $this->app->booted(function () {
-        //     $schedule = $this->app->make(Schedule::class);
-        //     $schedule->command('inspire')->hourly();
-        // });
+        // To be overridden by the module provider if needed.
     }
 
     /**
@@ -64,8 +82,7 @@ trait ManagesModuleProvider
      */
     protected function registerTranslations(): void
     {
-        // Use $this->nameLower from the concrete provider
-        $langPath = resource_path('lang/modules/'.$this->nameLower);
+        $langPath = resource_path('lang/modules/' . $this->nameLower);
 
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, $this->nameLower);
@@ -81,20 +98,18 @@ trait ManagesModuleProvider
      */
     protected function registerConfig(): void
     {
-        // Use $this->name from the concrete provider
-        $configPath = module_path($this->name, config('modules.paths.generator.config.path'));
+        $configPath = module_path($this->name, config('modules.paths.generator.config.path', 'config'));
 
         if (is_dir($configPath)) {
             $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($configPath));
 
             foreach ($iterator as $file) {
                 if ($file->isFile() && $file->getExtension() === 'php') {
-                    $config = str_replace($configPath.DIRECTORY_SEPARATOR, '', $file->getPathname());
-                    $config_key = str_replace([DIRECTORY_SEPARATOR, '.php'], ['.', ''], $config);
-                    // Use $this->nameLower from the concrete provider
-                    $segments = explode('.', $this->nameLower.'.'.$config_key);
+                    $config = str_replace($configPath . DIRECTORY_SEPARATOR, '', $file->getPathname());
+                    $configKey = str_replace([DIRECTORY_SEPARATOR, '.php'], ['.', ''], $config);
+                    $segments = explode('.', $this->nameLower . '.' . $configKey);
 
-                    // Remove duplicated adjacent segments
+                    // Remove duplicated adjacent segments (e.g. user.user -> user)
                     $normalized = [];
                     foreach ($segments as $segment) {
                         if (end($normalized) !== $segment) {
@@ -105,7 +120,7 @@ trait ManagesModuleProvider
                     $key = ($config === 'config.php') ? $this->nameLower : implode('.', $normalized);
 
                     $this->publishes([$file->getPathname() => config_path($config)], 'config');
-                    $this->merge_config_from($file->getPathname(), $key);
+                    $this->mergeConfigFromRecursive($file->getPathname(), $key);
                 }
             }
         }
@@ -114,12 +129,12 @@ trait ManagesModuleProvider
     /**
      * Merge config from the given path recursively.
      */
-    protected function merge_config_from(string $path, string $key): void
+    protected function mergeConfigFromRecursive(string $path, string $key): void
     {
         $existing = config($key, []);
-        $module_config = require $path;
+        $moduleConfig = require $path;
 
-        config([$key => array_replace_recursive($existing, $module_config)]);
+        config([$key => array_replace_recursive($existing, $moduleConfig)]);
     }
 
     /**
@@ -127,16 +142,22 @@ trait ManagesModuleProvider
      */
     protected function registerViews(): void
     {
-        // Use $this->nameLower from the concrete provider
-        $viewPath = resource_path('views/modules/'.$this->nameLower);
-        // Use $this->name from the concrete provider
+        $viewPath = resource_path('views/modules/' . $this->nameLower);
         $sourcePath = module_path($this->name, 'resources/views');
 
-        $this->publishes([$sourcePath => $viewPath], ['views', $this->nameLower.'-module-views']);
+        $this->publishes([$sourcePath => $viewPath], ['views', $this->nameLower . '-module-views']);
 
         $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->nameLower);
 
-        Blade::componentNamespace(config('modules.namespace').'\\'.$this->name.'\\View\\Components', $this->nameLower);
+        Blade::componentNamespace(config('modules.namespace') . '\\' . $this->name . '\\View\\Components', $this->nameLower);
+    }
+
+    /**
+     * Register migrations.
+     */
+    protected function registerMigrations(): void
+    {
+        $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
     }
 
     /**
@@ -147,13 +168,15 @@ trait ManagesModuleProvider
         return [];
     }
 
+    /**
+     * Get paths for publishable views.
+     */
     private function getPublishableViewPaths(): array
     {
         $paths = [];
         foreach (config('view.paths') as $path) {
-            // Use $this->nameLower from the concrete provider
-            if (is_dir($path.'/modules/'.$this->nameLower)) {
-                $paths[] = $path.'/modules/'.$this->nameLower;
+            if (is_dir($path . '/modules/' . $this->nameLower)) {
+                $paths[] = $path . '/modules/' . $this->nameLower;
             }
         }
 
@@ -161,13 +184,18 @@ trait ManagesModuleProvider
     }
 
     /**
-     * Register components for the main navbar slots.
+     * Register components for UI slots.
      */
     protected function registerViewSlots(): void
     {
-        SlotRegistry::configure($this->viewSlots());
+        if (class_exists(SlotRegistry::class)) {
+            SlotRegistry::configure($this->viewSlots());
+        }
     }
 
+    /**
+     * Define view slots for UI injection.
+     */
     protected function viewSlots(): array
     {
         return [];

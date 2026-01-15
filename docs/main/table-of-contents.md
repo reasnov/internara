@@ -22,6 +22,7 @@ Rules to follow while writing code.
 
 ## 4. Core System Implementation
 Deep dives into specific architectural components.
+-   **[ManagesModuleProvider Trait](module-provider-concerns.md)**: Standardized module bootstrapping process.
 -   **[Service Binding & Auto-Discovery](service-binding-auto-discovery.md)**: How dependency injection works automatically.
 -   **[Role & Permission Management Guide](role-permission-management.md)**: Implementing RBAC using Policies and Permissions.
 
