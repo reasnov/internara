@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Permission\Providers;
 
 use Illuminate\Support\Facades\Gate;
@@ -8,12 +10,10 @@ use Modules\Permission\Contracts\PermissionManager as PermissionManagerContract;
 use Modules\Permission\Services\PermissionManager;
 use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
 use Modules\User\Models\User;
-use Nwidart\Modules\Traits\PathNamespace;
 
 class PermissionServiceProvider extends ServiceProvider
 {
     use ManagesModuleProvider;
-    use PathNamespace;
 
     protected string $name = 'Permission';
 
@@ -24,26 +24,8 @@ class PermissionServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->registerCommands();
-        $this->registerCommandSchedules();
-        $this->registerTranslations();
-        $this->registerConfig();
-        $this->overrideSpatieConfig();
-        $this->registerViews();
-        $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+        $this->bootModule();
         $this->registerPolicies();
-    }
-
-    /**
-     * Override Spatie Permission configuration at runtime.
-     * This ensures the module is isolated and portable.
-     */
-    protected function overrideSpatieConfig(): void
-    {
-        config([
-            'permission.models.role' => \Modules\Permission\Models\Role::class,
-            'permission.models.permission' => \Modules\Permission\Models\Permission::class,
-        ]);
     }
 
     /**
@@ -51,9 +33,22 @@ class PermissionServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->registerBindings();
+        $this->overrideSpatieConfig();
+        $this->registerModule();
+
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+    }
+
+    /**
+     * Override Spatie Permission configuration at runtime.
+     */
+    protected function overrideSpatieConfig(): void
+    {
+        config([
+            'permission.models.role'       => \Modules\Permission\Models\Role::class,
+            'permission.models.permission' => \Modules\Permission\Models\Permission::class,
+        ]);
     }
 
     /**

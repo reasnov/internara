@@ -1,15 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Permission\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 use Modules\Permission\Database\Factories\PermissionFactory;
+use Modules\Shared\Models\Concerns\HasUuid;
 use Spatie\Permission\Models\Permission as BasePermission;
 
 class Permission extends BasePermission
 {
     use HasFactory;
+    use HasUuid;
 
     /**
      * The attributes that are mass assignable.
@@ -39,28 +43,11 @@ class Permission extends BasePermission
     }
 
     /**
-     * Create a new Eloquent model instance.
+     * Determine if the model should use UUIDs.
      */
-    public function __construct(array $attributes = [])
+    protected function usesUuid(): bool
     {
-        parent::__construct($attributes);
-
-        if (config('permission.model_key_type') === 'uuid') {
-            $this->incrementing = false;
-            $this->keyType = 'string';
-        }
-    }
-
-    /**
-     * The "booted" method of the model.
-     */
-    protected static function booted(): void
-    {
-        static::creating(function (Permission $permission) {
-            if (config('permission.model_key_type') === 'uuid' && empty($permission->id)) {
-                $permission->id = (string) \Illuminate\Support\Str::uuid();
-            }
-        });
+        return config('permission.model_key_type') === 'uuid';
     }
 
     protected static function newFactory(): PermissionFactory
