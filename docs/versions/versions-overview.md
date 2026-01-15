@@ -16,7 +16,7 @@ Detailed guidelines on Internara's Semantic Versioning, Series Codes (e.g., `ARC
 ## Release History
 
 ### Completed Releases
--   **[v0.1.x-alpha (ARC01-INIT)](v0.1.x-alpha.md)**: **Project Initiation Phase**. Environment setup, framework installation, and establishing the modular architecture foundation.
+-   **v0.1.1-alpha** ([Documentation v0.1.x-alpha](v0.1.x-alpha.md)): **Project Initiation Phase**. Environment setup, framework installation, and establishing the modular architecture foundation.
 
 ### In Progress
 -   *None at this time.*
