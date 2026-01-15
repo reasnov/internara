@@ -7,9 +7,9 @@
 ![PHP](https://img.shields.io/badge/PHP-%3E%3D%208.4-777bb4?style=flat-square&logo=php)
 ![Laravel](https://img.shields.io/badge/Laravel-v12-ff2d20?style=flat-square&logo=laravel)
 
-**Internara** is an open-source internship management system built with **Laravel 12**,
-**Livewire 3**, and a **Modular Monolith** architecture. It is designed to streamline the entire
-internship lifecycle, from registration and journal logging to final reporting and evaluation.
+**Internara** is an open-source internship management system built with **Laravel 12**, **Livewire
+3**, and a **Modular Monolith** architecture. It is designed to streamline the entire internship
+lifecycle, from registration and journal logging to final reporting and evaluation.
 
 ## Features
 
@@ -101,12 +101,12 @@ This project is built upon the Laravel ecosystem and several key packages:
 
 ### Version History
 
-| Version          | Series Code  | Status           | Key Focus                  |
-| :--------------- | :----------- | :--------------- | :------------------------- |
-| **v0.4.x-alpha** | `ARC01-INST` | 🛠️ *In Progress* | Institutional & Academic   |
-| **v0.3.0-alpha** | `ARC01-USER` | ✅ *Completed*   | User & Profile Management  |
-| **v0.2.0-alpha** | `ARC01-CORE` | ✅ *Completed*   | Core & Shared Systems      |
-| **v0.1.1-alpha** | `ARC01-INIT` | ✅ *Completed*   | Project Initiation         |
+| Version          | Series Code  | Status           | Key Focus                 |
+| :--------------- | :----------- | :--------------- | :------------------------ |
+| **v0.4.x-alpha** | `ARC01-INST` | 🛠️ _In Progress_ | Institutional & Academic  |
+| **v0.3.0-alpha** | `ARC01-USER` | ✅ _Completed_   | User & Profile Management |
+| **v0.2.0-alpha** | `ARC01-CORE` | ✅ _Completed_   | Core & Shared Systems     |
+| **v0.1.1-alpha** | `ARC01-INIT` | ✅ _Completed_   | Project Initiation        |
 
 ### Support Status
 

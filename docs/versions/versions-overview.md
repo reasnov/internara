@@ -33,10 +33,11 @@ standard format for documenting releases.
 - **v0.1.1-alpha** ([Documentation v0.1.x-alpha](v0.1.x-alpha.md)): **Project Initiation Phase**.
   Environment setup, framework installation, and establishing the modular architecture foundation.
 
-### Next Up
+### In Progress
 
-- **v0.4.x-alpha (ARC01-INST)**: **Institutional & Academic Phase**. Implementation of School,
-  Department, and Internship registration foundation.
+- **[v0.4.x-alpha (ARC01-INST)](v0.4.x-alpha.md)**: **Institutional & Academic Phase**.
+  Implementation of School, Department management, and foundational Internship registration
+  workflows.
 
 ---
 
