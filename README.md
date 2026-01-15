@@ -111,6 +111,8 @@ This project maintains comprehensive developer documentation to ensure consisten
 ### Key Documents
 
 *   **[Project Overview](docs/project-overview.md)**: The best starting point for a high-level understanding of the project's vision, core principles, technology stack, and documentation structure.
+*   **[Architecture Guide](docs/main/architecture-guide.md)**: Detailed technical overview of the Modular Monolith structure, layers, and communication rules.
+*   **[Modular Monolith Workflow](docs/main/modular-monolith-workflow.md)**: **(Crucial)** Step-by-step developer guide for implementing new features (Models, Services, UI).
 *   **[Main Documentation Overview](docs/main/main-documentation-overview.md)**: A deeper dive into core architectural principles, development workflows, coding conventions, and available tools.
 *   **[Version History](docs/versions/versions-overview.md)**: Details on specific application releases and their scope.
 

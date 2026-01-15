@@ -60,8 +60,11 @@ These directives guide all technical workflows for the Internara project. For de
 -   **Cross-check Project Documentation**
     Always cross-reference and adhere to existing project documentation (especially within the `/docs` directory). For comprehensive navigation, prioritize:
     - [docs/table-of-contents.md](docs/table-of-contents.md)
+    - [docs/main/architecture-guide.md](docs/main/architecture-guide.md)
+    - [docs/main/modular-monolith-workflow.md](docs/main/modular-monolith-workflow.md)
     - [docs/main/main-documentation-overview.md](docs/main/main-documentation-overview.md)
     - [docs/main/development-conventions.md](docs/main/development-conventions.md)
+    - [docs/main/development-lifecycle-guide.md](docs/main/development-lifecycle-guide.md)
     - [docs/versions/versions-overview.md](docs/versions/versions-overview.md)
     - [docs/versions/v0.1.x-alpha.md](docs/versions/v0.1.x-alpha.md)
 
