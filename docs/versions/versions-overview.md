@@ -20,17 +20,23 @@ standard format for documenting releases.
 
 ## Release History
 
-### Completed Releases
+### Newest Releases
+
+- **v0.3.0-alpha** ([Documentation v0.3.x-alpha](v0.3.x-alpha.md)): **User & Profile Management
+  Phase**. Implementation of User management, profile systems, auth refinements, and security
+  hardening.
+
+### Previous Releases
 
 - **v0.2.0-alpha** ([Documentation v0.2.x-alpha](v0.2.x-alpha.md)): **Core & Shared Systems Phase**.
   Implementation of the Shared (Utilities) and Permission (RBAC) modules.
 - **v0.1.1-alpha** ([Documentation v0.1.x-alpha](v0.1.x-alpha.md)): **Project Initiation Phase**.
   Environment setup, framework installation, and establishing the modular architecture foundation.
 
-### In Progress
+### Next Up
 
-- **[v0.3.x-alpha (ARC01-USER)](v0.3.x-alpha.md)**: **User & Profile Management Phase**.
-  Implementation of User management, profile systems, and auth refinements.
+- **v0.4.x-alpha (ARC01-INST)**: **Institutional & Academic Phase**. Implementation of School,
+  Department, and Internship registration foundation.
 
 ---
 
