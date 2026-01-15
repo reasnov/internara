@@ -42,10 +42,17 @@ class School extends Model implements HasMedia
         return $this->getFirstMediaUrl('school_logo') ?: null;
     }
 
-    public function changeLogo(string|UploadedFile $file, string $collectionName = 'school_logo'): bool
+    /**
+     * Set the school's logo.
+     *
+     * @param  string|\Illuminate\Http\UploadedFile  $file  The logo file or path.
+     * @param  string  $collectionName  The media collection name.
+     * @return bool True if successful.
+     */
+    public function setLogo(string|UploadedFile $file, string $collectionName = 'school_logo'): bool
     {
-        $this->clearMediaCollection('school_logo');
+        $this->clearMediaCollection($collectionName);
 
-        return (bool) $this->addMedia($file)->toMediaCollection($collectionName) ?? false;
+        return (bool) $this->addMedia($file)->toMediaCollection($collectionName);
     }
 }

@@ -116,9 +116,9 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     }
 
     /**
-     * Change the user's avatar.
+     * Set the user's avatar.
      */
-    public function changeAvatar(string|UploadedFile $file, string $collectionName = 'user_avatar'): bool
+    public function setAvatar(string|UploadedFile $file, string $collectionName = 'user_avatar'): bool
     {
         $this->clearMediaCollection($collectionName);
 

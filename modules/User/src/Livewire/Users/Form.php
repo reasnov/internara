@@ -35,6 +35,7 @@ class Form extends Component
     public string $email = '';
     public string $username = '';
     public string $password = '';
+    public string $status = 'active';
     public array $selectedRoles = [];
     public $avatar;
 
@@ -68,6 +69,7 @@ class Form extends Component
             $this->name = $this->user->name;
             $this->email = $this->user->email;
             $this->username = $this->user->username;
+            $this->status = $this->user->latestStatus()?->name ?? 'active';
             $this->selectedRoles = $this->user->roles->pluck('name')->toArray();
         }
     }
@@ -82,12 +84,14 @@ class Form extends Component
             'email'         => 'required|email|unique:users,email,' . ($this->user?->id ?? 'NULL'),
             'username'      => 'required|string|max:255|unique:users,username,' . ($this->user?->id ?? 'NULL'),
             'password'      => ($this->user ? 'nullable' : 'required') . '|string|min:8',
+            'status'        => 'required|string|in:active,inactive,pending',
             'selectedRoles' => 'required|array|min:1',
             'avatar'        => 'nullable|image|max:1024',
         ];
 
         $data = $this->validate($rules);
         $data['roles'] = $this->selectedRoles;
+        $data['status'] = $this->status;
         $data['avatar_file'] = $this->avatar;
 
         try {

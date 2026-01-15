@@ -177,6 +177,6 @@ class SuperAdminService extends EloquentQuery implements Contracts\SuperAdminSer
 
     protected function handleSuperAdminAvatar(User &$superAdmin, UploadedFile|string|null $avatar = null): bool
     {
-        return isset($avatar) ? $superAdmin->changeAvatar($avatar) : false;
+        return isset($avatar) ? $superAdmin->setAvatar($avatar) : false;
     }
 }

@@ -142,8 +142,8 @@ class SchoolService extends EloquentQuery implements SchoolServiceContract
         return $model->belongsTo($this->model::class, $foreignKey, $ownerKey, $relation);
     }
 
-    protected function handleSchoolLogo(School &$school, string|UploadedFile|null $file): bool
+    protected function handleSchoolLogo(School &$school, UploadedFile|string|null $logo = null): bool
     {
-        return isset($logo) ? $school->changeLogo($file) : false;
+        return isset($logo) ? $school->setLogo($logo) : false;
     }
 }

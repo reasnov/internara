@@ -11,6 +11,18 @@
                         <x-mary-input label="{{ __('Email Address') }}" wire:model="email" icon="o-envelope" type="email" required />
                         <x-mary-input label="{{ __('Password') }}" wire:model="password" icon="o-key" type="password" 
                             hint="{{ $user ? __('Leave blank to keep current password.') : '' }}" />
+                        
+                        <x-mary-select
+                            label="{{ __('Account Status') }}"
+                            wire:model="status"
+                            :options="[
+                                ['id' => 'active', 'name' => __('Active')],
+                                ['id' => 'pending', 'name' => __('Pending')],
+                                ['id' => 'inactive', 'name' => __('Inactive')],
+                            ]"
+                            icon="o-swatches"
+                            required
+                        />
                     </div>
 
                     <div class="mt-6">

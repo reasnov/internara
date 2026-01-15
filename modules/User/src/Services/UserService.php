@@ -36,7 +36,8 @@ class UserService extends EloquentQuery implements Contract
     public function create(array $data): User
     {
         $roles = $data['roles'] ?? null;
-        unset($data['roles']);
+        $status = $data['status'] ?? 'active';
+        unset($data['roles'], $data['status']);
 
         if ($roles !== null) {
             $roles = Arr::wrap($roles);
@@ -57,6 +58,8 @@ class UserService extends EloquentQuery implements Contract
                 $user->markEmailAsVerified();
             }
         }
+
+        $user->setStatus($status);
 
         return $user;
     }
@@ -89,7 +92,8 @@ class UserService extends EloquentQuery implements Contract
         }
 
         $roles = $data['roles'] ?? null;
-        unset($data['roles']);
+        $status = $data['status'] ?? null;
+        unset($data['roles'], $data['status']);
 
         if ($user->hasRole('super-admin')) {
             return $this->superAdminService->update($id, $data);
@@ -104,6 +108,10 @@ class UserService extends EloquentQuery implements Contract
 
         if ($roles !== null) {
             $updatedUser->syncRoles($roles);
+        }
+
+        if ($status !== null) {
+            $updatedUser->setStatus($status);
         }
 
         return $updatedUser;
@@ -132,6 +140,6 @@ class UserService extends EloquentQuery implements Contract
      */
     protected function handleUserAvatar(User &$user, UploadedFile|string|null $avatar = null): bool
     {
-        return isset($avatar) ? $user->changeAvatar($avatar) : false;
+        return isset($avatar) ? $user->setAvatar($avatar) : false;
     }
 }
