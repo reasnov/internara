@@ -42,6 +42,12 @@ Each development cycle is identified by a `SERIES-CODE`.
 
 Every version document (e.g., `v0.1.x.md`) must be structured to reflect the engineering lifecycle. Do not simply list features; tell the story of **Why**, **How**, and **Proof**.
 
+### Documentation Maintenance Principle
+
+**Prioritize Updates Over Creation:** Always prioritize updating existing documentation files to reflect changes or new features rather than creating new ones. New documentation files should only be introduced for entirely new domains, major architectural shifts, or distinct technical topics that cannot be logically integrated into existing guides. This prevents information fragmentation and ensures a "single source of truth" for each topic.
+
+---
+
 ### Phase 1: Pre-Production (The Planning Context)
 
 This section defines the "Rules of Engagement" established _before_ code was written.
@@ -108,6 +114,14 @@ This section provides the _proof_ of quality and the bridge to the next version.
 
 -   **Purpose:** To document known vulnerabilities addressed or discovered.
 -   **What to Write:** Severity, Impact, and Description of any security-related findings. If none, state "No critical issues identified."
+
+#### Section: `Documentation Checks`
+
+-   **Purpose:** To ensure that all architectural changes, new features, and technical conventions introduced in this version are accurately reflected in the project's documentation.
+-   **What to Write:**
+    -   Verification that new features have corresponding documentation in `docs/main/`.
+    -   Confirmation that all cross-module communication or shared utilities are documented.
+    -   Ensuring the Version History and TOCs are updated.
 
 #### Section: `Roadmap & Next Steps`
 
@@ -180,11 +194,17 @@ _(Choose Option A or B based on release type)_
 
 -   [ ] ...
 
-### 4.3. Security Issues
+### 4.3. Documentation Checks
+
+-   [ ] New features documented in `docs/main/`.
+-   [ ] All technical conventions updated.
+-   [ ] Root TOC and Module TOCs updated.
+
+### 4.4. Security Issues
 
 -   ...
 
-### 4.4. Roadmap & Next Steps
+### 4.5. Roadmap & Next Steps
 
 -   [ ] ...
 ```
