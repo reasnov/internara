@@ -22,5 +22,6 @@
     "Media": true,
     "Student": false,
     "Teacher": false,
-    "TestModule": true
+    "TestModule": true,
+    "Profile": true
 }

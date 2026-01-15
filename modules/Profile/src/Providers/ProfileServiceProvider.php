@@ -2,19 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Modules\Core\Providers;
+namespace Modules\Profile\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Modules\Core\Console\Commands\AppInfoCommand;
+use Modules\Profile\Services\Contracts\ProfileService as ProfileServiceContract;
+use Modules\Profile\Services\ProfileService;
 use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
 
-class CoreServiceProvider extends ServiceProvider
+class ProfileServiceProvider extends ServiceProvider
 {
     use ManagesModuleProvider;
 
-    protected string $name = 'Core';
+    protected string $name = 'Profile';
 
-    protected string $nameLower = 'core';
+    protected string $nameLower = 'profile';
 
     /**
      * Boot the application events.
@@ -31,18 +32,7 @@ class CoreServiceProvider extends ServiceProvider
     {
         $this->registerModule();
 
-        $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
-    }
-
-    /**
-     * Register commands for the module.
-     */
-    protected function registerCommands(): void
-    {
-        $this->commands([
-            AppInfoCommand::class,
-        ]);
     }
 
     /**
@@ -52,6 +42,8 @@ class CoreServiceProvider extends ServiceProvider
      */
     protected function bindings(): array
     {
-        return [];
+        return [
+            ProfileServiceContract::class => ProfileService::class,
+        ];
     }
 }

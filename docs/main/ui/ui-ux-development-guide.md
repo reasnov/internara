@@ -365,4 +365,4 @@ The slot system is designed for server-rendered HTML (Blade and Livewire compone
 
 
 
-[← Previous: Shared Model Traits](shared-traits.md) | [Next: Exception Handling Guidelines →](exception-handling-guidelines.md)
+[← Previous: UI Module Overview](ui-overview.md) | [Next: Exception Handling Guidelines →](../exception-handling-guidelines.md)

@@ -99,6 +99,14 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     }
 
     /**
+     * Get the user's profile.
+     */
+    public function profile(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(\Modules\Profile\Models\Profile::class);
+    }
+
+    /**
      * Register the media collections for the user's avatar.
      */
     public function registerMediaCollections(): void

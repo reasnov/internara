@@ -63,6 +63,12 @@ This document provides a comprehensive and categorized reference of all availabl
 | `tinker` | Interact with your application through a powerful REPL (Read-Eval-Print Loop). |
 | `up` | Bring the application out of maintenance mode. |
 
+## 1. Application (`app`) Commands
+
+| Command | Description |
+|---|---|
+| `app:info` | Display application identity, version, and author information. |
+
 ## 2. Authentication (`auth`) Commands
 
 | Command | Description |

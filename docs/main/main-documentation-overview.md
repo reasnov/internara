@@ -12,7 +12,7 @@ This document serves as the central entry point for the primary developer docume
 -   **[Service Binding & Auto-Discovery](service-binding-auto-discovery.md)**: Detailed documentation on the automated dependency injection system, configuration, caching, and manual overrides.
 -   **[Module Structure Overview](foundational-module-philosophy.md)**: Provides an overview of the Core, Shared, Support, and Domain modules, detailing their purpose and contents.
 -   **[Best Practices Guide](conceptual-best-practices.md)**: A conceptual overview of core architectural principles, development conventions, testing philosophy.
--   **[UI/UX Development Guide](ui-ux-development-guide.md)**: Comprehensive guide detailing UI/UX principles, standards, and technical specifications for frontend implementation.
+-   **[UI Module TOC](ui/table-of-contents.md)**: Comprehensive guide detailing UI/UX principles, shared components, and technical specifications for frontend implementation.
 -   **[Development Conventions](development-conventions.md)**: Outlines the coding and development conventions for the project, ensuring consistency and maintainability, including important namespace conventions for modular development.
 -   **[Role & Permission Management Guide](role-permission-management.md)**: The primary guide for creating, managing, and using Roles and Permissions, detailing the conventions and separation of concerns between modules.
 -   **[Permission Seeders](permission-seeders.md)**: Details on the foundational roles and permissions seeded during system setup.
