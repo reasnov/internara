@@ -12,6 +12,7 @@ use Modules\Exception\RecordNotFoundException;
 use Modules\Profile\Services\Contracts\ProfileService;
 use Modules\Shared\Services\EloquentQuery;
 use Modules\User\Models\User;
+use Modules\User\Notifications\WelcomeUserNotification;
 use Modules\User\Services\Contracts\SuperAdminService;
 use Modules\User\Services\Contracts\UserService as Contract;
 
@@ -75,6 +76,9 @@ class UserService extends EloquentQuery implements Contract
         }
 
         $user->setStatus($status);
+
+        // Notify the new user
+        $user->notify(new WelcomeUserNotification($user));
 
         return $user;
     }

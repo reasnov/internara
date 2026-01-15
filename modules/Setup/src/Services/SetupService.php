@@ -153,7 +153,7 @@ class SetupService implements Contracts\SetupService
         $settings = [
             'brand_name' => $schoolRecord->name,
             'brand_logo' => $schoolRecord->logo_url ?? null,
-            'site_title' => $schoolRecord->name,
+            'site_title' => $schoolRecord->name.' - Sistem Informasi Manajemen PKL',
             'app_installed' => true,
         ];
 

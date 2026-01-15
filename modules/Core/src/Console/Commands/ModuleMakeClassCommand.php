@@ -53,9 +53,21 @@ class ModuleMakeClassCommand extends GeneratorCommand
      */
     protected function getTemplateContents(): string
     {
+        $interface = $this->option('interface');
+        $implements = '';
+        $imports = '';
+
+        if ($interface) {
+            $interfaceName = class_basename($interface);
+            $implements = " implements $interfaceName";
+            $imports = "use $interface;\n";
+        }
+
         return (new Stub($this->getStub(), [
             'NAMESPACE' => $this->getTargetNamespace(),
+            'IMPORTS' => $imports,
             'CLASS' => $this->getTargetName(),
+            'IMPLEMENTS' => $implements,
         ]))->render();
     }
 
@@ -89,6 +101,12 @@ class ModuleMakeClassCommand extends GeneratorCommand
                 null,
                 InputOption::VALUE_NONE,
                 'Create the class even if the class already exists.',
+            ],
+            [
+                'interface',
+                'i',
+                InputOption::VALUE_OPTIONAL,
+                'The interface that the class should implement.',
             ],
         ];
     }

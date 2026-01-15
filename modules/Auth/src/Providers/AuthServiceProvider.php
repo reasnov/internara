@@ -52,7 +52,7 @@ class AuthServiceProvider extends BaseAuthServiceProvider
                 ->line(__('auth::emails.verification_line_3'))
                 ->salutation(
                     __('auth::emails.verification_salutation', [
-                        'school' => setting('site_title', 'Sekolah/Instansi'),
+                        'school' => setting('brand_name', 'Sekolah/Instansi'),
                     ]),
                 );
         });

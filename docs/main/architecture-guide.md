@@ -260,7 +260,10 @@ When communicating _between modules_, strictly adhere to the **Interface-First P
 standard Laravel interfaces.
 
 - **Service Interaction:** If Module A needs to call a service in Module B, it should depend on an
-  interface (e.g., `Modules\User\Contracts\Services\UserService`), not the concrete class.
+  interface (e.g., `Modules\User\Services\Contracts\UserService`), not the concrete class.
+- **Example:** The `AuthService` (Auth module) depends on the `UserService` (User module) to handle
+  user creation. It type-hints the `UserService` interface, allowing the User module to change its
+  internal implementation without affecting the Auth module.
 - **Authorization Interaction:** Modules should use Laravel's standard `Gate` and `Policy` systems
   (e.g., `$user->can()`) to interact with the authorization layer, ensuring modules remain isolated
   from the specific implementation of Role/Permission management.
@@ -277,13 +280,21 @@ The most critical rule for maintaining a loosely coupled and maintainable modula
 
 This rule is non-negotiable. It is the foundation for a scalable and maintainable application.
 
-### 5.1 Pattern 1: Service-to-Service Calls (Synchronous)
+### 5.1. Pattern 1: Service-to-Service Calls (Synchronous)
 
 Use this pattern when an action in `Module A` **immediately** requires a result or a direct
 interaction with `Module B`.
 
-- **Usage:** For direct, synchronous dependencies where one module needs to invoke specific logic
-  from another and get an immediate response.
+- **Usage:** For direct, synchronous dependencies.
+- **Real-world Example:** The `UserService` (in `User` module) requires initializing a profile
+  whenever a user is created.
+    1.  `UserService` type-hints `Modules\Profile\Services\Contracts\ProfileService`.
+    2.  The `Profile` module provides the implementation via its `ProfileServiceProvider`.
+    3.  `UserService` calls `$this->profileService->getByUserId($user->id)` without knowing about
+        the `Profile` model or its internal logic.
+- **How it Works:**
+    1.  `Module B` defines a `Service Interface` (e.g.,
+        `Modules\User\Services\Contracts\UserService`) and provides a concrete implementation.
 - **How it Works:**
     1.  `Module B` defines a `Service Interface` (e.g.,
         `Modules\User\Contracts\Services\UserService`) and provides a concrete implementation.
@@ -292,13 +303,15 @@ interaction with `Module B`.
     3.  Laravel's Service Container automatically injects the concrete `UserService` implementation
         without `InternshipService` knowing the specific class.
 
-### 5.2 Pattern 2: Events & Listeners (Decoupled Actions)
+### 5.2. Pattern 2: Events & Listeners (Decoupled Actions)
 
-This is the preferred approach for handling side effects or when one action should trigger several
-independent outcomes across different modules without tight coupling.
+This is the preferred approach for handling side effects.
 
-- **Usage:** When an action occurs in `Module A`, and other modules might need to react to it
-  without `Module A` needing to know or care who those reactors are.
+- **Usage:** When an action occurs in `Module A`, and other modules might need to react to it.
+- **Real-world Example:** When a user's email is verified in the `Auth` module.
+    1.  `AuthService` dispatches the standard Laravel `Illuminate\Auth\Events\Verified` event.
+    2.  Other modules (like `Internship` or `Notification`) can listen to this event to unlock
+        features or send congratulatory messages without the `Auth` module being aware of them.
 - **How it Works:**
     1.  `Module A` (e.g., `InternshipService`) dispatches an `Event`. This event should carry
         necessary data.

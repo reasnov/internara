@@ -27,19 +27,26 @@ We follow the standard `MAJOR.MINOR.PATCH` format:
 
 Each development cycle is identified by a `SERIES-CODE`.
 
-- **Format:** `{codename}-{stage}-{scope}`
-- **Example:** `ARC01-ALPHA-FND`
+- **Format:** `{codename}-{scope}-{sequence}`
+- **Example:** `ARC01-INIT`, `BRC02-FEAT`, `RCX01-SEC-01`
 
 #### Components:
 
-- **`{codename}`**: Unique abstract identifier (e.g., `ARC01`, `CYGNUS2`).
-- **`{stage}`**: `ALPHA`, `BETA`, `RC`, `STABLE`.
-- **`{scope}`**:
+- **`{codename}`**: A unique, abstract identifier in **ALL CAPS**. It must start with the initial(s)
+  of the development stage:
+    - `A` for **Alpha**.
+    - `B` for **Beta**.
+    - `RC` for **Release Candidate**.
+    - `S` for **Stable**.
+    - Followed by a random and unique alphanumeric code of sufficient length (abstract).
+- **`{scope}`**: The primary focus of the cycle:
     - `INIT`: Initiation & Setup.
     - `FND`: Foundational (architecture, core setup).
     - `FEAT`: Feature-driven.
     - `RFT`: Refactor.
     - `SEC`: Security.
+- **`{sequence}`** (Optional): A sequence added for special development or release cases (e.g.,
+  sub-cycles or specific release variants).
 
 ---
 

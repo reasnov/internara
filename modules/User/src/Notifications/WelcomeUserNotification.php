@@ -35,12 +35,16 @@ class WelcomeUserNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $brandName = setting('brand_name', 'Sekolah/Instansi');
+
         return (new MailMessage)
-            ->subject('Welcome to Internara!')
-            ->greeting('Hello '.$this->user->name.'!')
-            ->line('Thank you for registering. We are excited to have you on board.')
-            ->action('View Your Profile', url('/user/profile')) // Example URL
-            ->line('Thank you for using our application!');
+            ->subject(__('user::notifications.welcome_subject', ['school' => $brandName]))
+            ->greeting(__('user::notifications.welcome_greeting', ['name' => $this->user->name]))
+            ->line(__('user::notifications.welcome_line_1', ['school' => $brandName]))
+            ->line(__('user::notifications.welcome_line_2'))
+            ->action(__('user::notifications.welcome_action'), route('profile.index'))
+            ->line(__('user::notifications.welcome_line_3'))
+            ->salutation(__('auth::emails.verification_salutation', ['school' => $brandName]));
     }
 
     /**
@@ -51,9 +55,11 @@ class WelcomeUserNotification extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'Welcome to Internara! We are excited to have you.',
-            'action_url' => url('/user/profile'), // Example URL
-            'sender_name' => 'Internara Team',
+            'message' => __('user::notifications.welcome_db_message', [
+                'school' => setting('brand_name', 'Sekolah'),
+            ]),
+            'action_url' => route('profile.index'),
+            'sender_name' => setting('brand_name', 'Internara Team'),
         ];
     }
 }

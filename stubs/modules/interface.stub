@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace $NAMESPACE$;
 
-interface $CLASS$ {}
+/**
+ * Interface $CLASS$
+ */
+interface $CLASS$
+{
+    //
+}
