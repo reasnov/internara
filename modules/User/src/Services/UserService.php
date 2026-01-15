@@ -81,6 +81,32 @@ class UserService extends EloquentQuery implements Contract
     }
 
     /**
+     * Toggle the status of a user between active and inactive.
+     */
+    public function toggleStatus(mixed $id): User
+    {
+        $user = $this->find($id);
+
+        if (! $user) {
+            throw new RecordNotFoundException(replace: ['record' => 'User', 'id' => $id]);
+        }
+
+        if ($user->hasRole('super-admin')) {
+            throw new AppException(
+                userMessage: 'user::exceptions.super_admin_status_cannot_be_changed',
+                code: 403
+            );
+        }
+
+        $currentStatus = $user->latestStatus()?->name;
+        $newStatus = $currentStatus === 'active' ? 'inactive' : 'active';
+
+        $user->setStatus($newStatus);
+
+        return $user;
+    }
+
+    /**
      * Update a user's details with specific business rules.
      */
     public function update(mixed $id, array $data): User

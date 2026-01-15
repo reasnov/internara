@@ -31,6 +31,10 @@
                 </div>
             @endscope
 
+            @scope('cell_status', $user)
+                <x-mary-badge :label="$user->getStatusLabel()" :class="$user->getStatusColor()" class="badge-outline" />
+            @endscope
+
             @scope('cell_created_at', $user)
                 <span class="text-xs">
                     {{ $user->created_at?->format('d M Y') }}
@@ -39,6 +43,14 @@
 
             @scope('actions', $user)
                 <div class="flex items-center gap-2">
+                    @if(! $user->hasRole('super-admin'))
+                        <x-mary-button 
+                            icon="{{ $user->latestStatus()?->name === 'active' ? 'o-lock-closed' : 'o-lock-open' }}" 
+                            class="btn-ghost btn-sm {{ $user->latestStatus()?->name === 'active' ? 'text-warning' : 'text-success' }}" 
+                            wire:click="toggleStatus('{{ $user->id }}')" 
+                            tooltip="{{ $user->latestStatus()?->name === 'active' ? __('Deactivate') : __('Activate') }}" 
+                        />
+                    @endif
                     <x-mary-button icon="o-pencil" class="btn-ghost btn-sm" link="/users/{{ $user->id }}/edit" tooltip="{{ __('Edit') }}" />
                     @if(! $user->hasRole('super-admin'))
                         <x-mary-button icon="o-trash" class="btn-ghost btn-sm text-error" wire:click="delete('{{ $user->id }}')" 

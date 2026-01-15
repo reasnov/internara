@@ -17,8 +17,24 @@ interface UserService extends EloquentQuery
      */
     public function findByEmail(string $email): ?User;
 
-    /**
-     * Find a user by their username.
-     */
-    public function findByUsername(string $username): ?User;
-}
+        /**
+
+         * Find a user by their username.
+
+         */
+
+        public function findByUsername(string $username): ?User;
+
+    
+
+        /**
+
+         * Toggle the status of a user.
+
+         */
+
+        public function toggleStatus(mixed $id): User;
+
+    }
+
+    

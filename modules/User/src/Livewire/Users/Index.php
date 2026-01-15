@@ -73,6 +73,19 @@ class Index extends Component
     }
 
     /**
+     * Toggle a user's account status.
+     */
+    public function toggleStatus(string $id): void
+    {
+        try {
+            $this->userService->toggleStatus($id);
+            $this->dispatch('success', message: __('User status updated.'));
+        } catch (\Throwable $e) {
+            $this->handleAppExceptionInLivewire($e);
+        }
+    }
+
+    /**
      * Render the component.
      */
     public function render()
@@ -98,6 +111,7 @@ class Index extends Component
             ['key' => 'name', 'label' => __('Name'), 'sortable' => true],
             ['key' => 'email', 'label' => __('Email'), 'sortable' => true],
             ['key' => 'roles', 'label' => __('Roles'), 'sortable' => false],
+            ['key' => 'status', 'label' => __('Status'), 'sortable' => false],
             ['key' => 'created_at', 'label' => __('Joined'), 'sortable' => true],
         ];
     }

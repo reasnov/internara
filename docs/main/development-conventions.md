@@ -30,7 +30,9 @@ This document outlines the coding and development conventions for the Internara 
 ## 1. General Conventions
 
 -   **Language:** All code, comments, and documentation **must be written in English.**
--   **Naming:** Use descriptive names for variables, methods, classes, and modules (e.g., `isRegisteredForDiscounts` instead of `discount()`).
+-   **Naming:** 
+    -   Use descriptive names for variables, methods, classes, and modules (e.g., `isRegisteredForDiscounts` instead of `discount()`).
+    -   **Setters:** Use the `set` prefix for methods that modify model state or related resources (e.g., `setAvatar()`, `setLogo()`, `setPassword()`) instead of `change` or other prefixes.
 -   **DRY Principle:** Reuse existing components, classes, and functions before creating new ones. Avoid unnecessary duplication.
 -   **Directory Structure:** Adhere strictly to the existing directory structure. **Do not create new base folders without explicit approval.**
 -   **Comments & PHPDoc:** Use comprehensive PHPDoc for every method and class. Focus comments on _why_ a piece of code exists or its complex logic, rather than _what_ it does.
