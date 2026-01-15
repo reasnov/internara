@@ -91,6 +91,20 @@ with the principles detailed in the [Architecture Guide](architecture.md).
 - **Configuration:** Access configuration values via `config('app.name')`. **Never use `env()`
   directly outside of configuration files**.
 
+### 3.1. Account Status Management
+
+For entities utilizing the `HasStatus` trait (especially the `User` model), the following
+standardized status names must be used to ensure consistency across the system:
+
+- **`active`**: The account is fully operational. This is the default status for verified users.
+- **`inactive`**: The account has been administratively disabled. Users with this status cannot log
+  in or perform any actions.
+- **`pending`**: The account is awaiting further action (e.g., administrator approval or completing
+  initial registration steps).
+
+Status transitions must be handled exclusively through the **Service Layer** to ensure auditability
+and consistent business rule enforcement.
+
 ## 4. Modular Architecture (Laravel Modules) Conventions
 
 Adhere strictly to the modular monolith architecture principles detailed in the
