@@ -229,4 +229,6 @@ Use this pattern for cross-cutting concerns like authorization.
 
 **Navigation**
 
-[← Previous: Installation Guide](installation-guide.md) | [Next: Module Structure Overview →](foundational-module-philosophy.md)
+
+
+[← Previous: Installation Guide](installation-guide.md) | [Next: EloquentQuery Base Service →](eloquent-query-service.md)

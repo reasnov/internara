@@ -123,4 +123,6 @@ When a module uses the `ManagesModuleProvider` trait and explicitly binds an int
 
 **Navigation**
 
-[← Previous: Exception Handling Guidelines](exception-handling-guidelines.md) | [Next: Role & Permission Management Guide →](role-permission-management.md)
+
+
+[← Previous: ManagesModuleProvider Trait](module-provider-concerns.md) | [Next: Role & Permission Management Guide →](role-permission-management.md)

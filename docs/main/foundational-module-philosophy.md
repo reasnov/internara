@@ -58,4 +58,6 @@ Domain modules (e.g., `User`, `Internship`) represent distinct business areas.
 
 **Navigation**
 
-[← Previous: Architecture Guide](architecture-guide.md) | [Next: Best Practices Guide →](conceptual-best-practices.md)
+
+
+[← Previous: EloquentQuery Base Service](eloquent-query-service.md) | [Next: Best Practices Guide →](conceptual-best-practices.md)

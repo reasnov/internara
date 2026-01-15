@@ -108,4 +108,8 @@ class UserService extends EloquentQuery implements Contract
 1.  **Always use the Contract:** Type-hint the interface in your controllers or other services, not the concrete class.
 2.  **Initialize in Constructor:** Set the model and searchable/sortable columns in the `__construct` method.
 3.  **Use `setBaseQuery` for Eager Loading:** If a service almost always needs certain relationships, define them in a base query.
-4.  **Delegate Logic:** If a business operation involves multiple models or complex side effects, it should still live in the Service layer but might use multiple `EloquentQuery` instances or custom logic beyond simple CRUD.
+---
+
+**Navigation**
+
+[← Previous: Architecture Guide](architecture-guide.md) | [Next: Module Structure Overview →](foundational-module-philosophy.md)

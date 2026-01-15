@@ -224,4 +224,4 @@ Laravel's `App\Exceptions\Handler.php` is the central hub for defining how all e
 
 **Navigation**
 
-[← Previous: UI/UX Development Guide](ui-ux-development-guide.md) | [Next: Service Binding & Auto-Discovery →](service-binding-auto-discovery.md)
+[← Previous: UI/UX Development Guide](ui-ux-development-guide.md) | [Next: ManagesModuleProvider Trait →](module-provider-concerns.md)

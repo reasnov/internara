@@ -1,61 +1,65 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Core\Console\Concerns;
 
 use Illuminate\Support\Str;
 use Modules\Shared\Support\Formatter;
+use Nwidart\Modules\Facades\Module;
+use Nwidart\Modules\Module as ModuleInstance;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Nwidart\Modules\Support\Config\GeneratorPath;
 
 /**
+ * Trait HandlesModuleMakeGenerator
+ *
+ * Provides shared logic for module-specific Artisan generators, ensuring
+ * consistent path resolution and namespace management.
+ *
  * @mixin \Nwidart\Modules\Commands\Make\GeneratorCommand
  */
 trait HandlesModuleMakeGenerator
 {
     /**
-     * Get the module instance being operated on by the command.
-     *
-     * @return \Nwidart\Modules\Module The module instance.
+     * Get the module instance being operated on.
      */
-    protected function getModule(): \Nwidart\Modules\Module
+    protected function getModule(): ModuleInstance
     {
-        return \Nwidart\Modules\Facades\Module::findOrFail($this->argument('module'));
+        return Module::findOrFail($this->argument('module'));
     }
 
+    /**
+     * Get the module name in StudlyCase.
+     */
     protected function getModuleName(): string
     {
         return $this->getModule()->getStudlyName();
     }
 
     /**
-     * Get the base namespace for the given module.
-     *
-     * @return string The module's base namespace.
+     * Get the base namespace for the module.
      */
     protected function getModuleNamespace(): string
     {
         $moduleName = $this->getModuleName();
-        $baseNamespace = config('modules.namespace', 'Modules');
+        $baseNamespace = (string) config('modules.namespace', 'Modules');
 
         return Formatter::namespace($baseNamespace, $moduleName);
     }
 
     /**
-     * Get the target name for the generated file, extracting it from the full path if provided.
-     *
-     * @return string The target name.
+     * Get the target name for the generated file.
      */
     protected function getTargetName(): string
     {
-        $name = $this->argument('name');
+        $name = (string) $this->argument('name');
 
         return Str::contains($name, '/') ? Str::afterLast($name, '/') : $name;
     }
 
     /**
      * Get the target namespace for the generated class.
-     *
-     * @return string The target namespace.
      */
     protected function getTargetNamespace(): string
     {
@@ -70,20 +74,16 @@ trait HandlesModuleMakeGenerator
 
     /**
      * Get the full file path for the generated file.
-     *
-     * @return string The target file path.
      */
     protected function getTargetFilePath(): string
     {
-        $filePath = Formatter::path($this->getTargetPath(), $this->getTargetName()).'.php';
+        $filePath = Formatter::path($this->getTargetPath(), $this->getTargetName()) . '.php';
 
         return module_path($this->getModule()->getName(), $filePath);
     }
 
     /**
      * Get the full target path for the generated file.
-     *
-     * @return string The full target path.
      */
     protected function getTargetPath(): string
     {
@@ -100,12 +100,10 @@ trait HandlesModuleMakeGenerator
 
     /**
      * Get the subdirectory path for the generated file.
-     *
-     * @return string The target subdirectory path.
      */
     protected function getTargetSubPath(): string
     {
-        $name = $this->argument('name');
+        $name = (string) $this->argument('name');
 
         if (Str::contains($name, '/')) {
             return Formatter::path(Str::beforeLast($name, '/'));
@@ -116,8 +114,6 @@ trait HandlesModuleMakeGenerator
 
     /**
      * Get the base path for module files.
-     *
-     * @return string The base path.
      */
     protected function getBasePath(): string
     {
@@ -128,21 +124,17 @@ trait HandlesModuleMakeGenerator
     }
 
     /**
-     * Get the application path for the module.
-     *
-     * @return string The application path.
+     * Get the application path for the module (e.g., src/).
      */
     protected function getAppPath(): string
     {
-        $appPath = config('modules.paths.app_folder', 'src/');
+        $appPath = (string) config('modules.paths.app_folder', 'src/');
 
         return Formatter::path($appPath);
     }
 
     /**
      * Get the configuration key for the generator.
-     *
-     * @return string The configuration key.
      */
     protected function getConfigKey(): string
     {
@@ -151,9 +143,6 @@ trait HandlesModuleMakeGenerator
 
     /**
      * Get the configuration reader for a given key.
-     *
-     * @param  string  $key  The configuration key.
-     * @return \Nwidart\Modules\Support\Config\GeneratorPath The generator path configuration.
      */
     protected function getConfigReader(string $key): GeneratorPath
     {

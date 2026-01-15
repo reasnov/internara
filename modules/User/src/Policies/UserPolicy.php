@@ -1,9 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\User\Policies;
 
 use Modules\User\Models\User;
 
+/**
+ * Class UserPolicy
+ *
+ * Controls access to User model operations.
+ */
 class UserPolicy
 {
     /**

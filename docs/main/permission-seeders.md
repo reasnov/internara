@@ -40,3 +40,9 @@ When creating a new domain module, you should:
 1.  **Add Permissions:** Update `PermissionSeeder` with your module's specific actions.
 2.  **Update Roles:** Assign those permissions to existing roles in `RoleSeeder` if applicable.
 3.  **Use Policies:** Enforce these permissions using Laravel Policies in your module.
+
+---
+
+**Navigation**
+
+[← Previous: Role & Permission Management Guide](role-permission-management.md) | [Next: Policy Patterns →](policy-patterns.md)

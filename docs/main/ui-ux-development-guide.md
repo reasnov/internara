@@ -363,4 +363,6 @@ The slot system is designed for server-rendered HTML (Blade and Livewire compone
 
 **Navigation**
 
-[← Previous: Development Conventions](development-conventions.md) | [Next: Exception Handling Guidelines →](exception-handling-guidelines.md)
+
+
+[← Previous: Shared Model Traits](shared-traits.md) | [Next: Exception Handling Guidelines →](exception-handling-guidelines.md)

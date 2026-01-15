@@ -63,3 +63,9 @@ class Internship extends Model
 1.  **UUID for Security:** Use `HasUuid` for any model whose ID is exposed in URLs to prevent enumeration attacks.
 2.  **Status over Booleans:** Prefer using `HasStatus` instead of multiple boolean flags (e.g., `is_active`, `is_verified`) for better auditability and flexibility.
 3.  **Standardize Labels:** Always define status translations in `modules/Shared/lang/{locale}/status.php` or within the domain module's language files using the prefix.
+
+---
+
+**Navigation**
+
+[← Previous: Development Conventions](development-conventions.md) | [Next: UI/UX Development Guide →](ui-ux-development-guide.md)

@@ -6,6 +6,7 @@ This document serves as the central entry point for the primary developer docume
 
 -   **[Architecture Guide](architecture-guide.md)**: Provides a high-level, developer-friendly guide to Internara's modular architecture, explaining the core concepts, layers (UI, Services, Repositories, Entities), and module communication best practices.
 -   **[EloquentQuery Base Service](eloquent-query-service.md)**: Technical reference for the standardized service layer implementation used for model interactions.
+-   **[Policy Patterns](policy-patterns.md)**: Standards for implementing authorization logic within modules using Laravel Policies.
 -   **[ManagesModuleProvider Trait](module-provider-concerns.md)**: Guide on the standardized bootstrapping process for modular service providers.
 -   **[Shared Model Traits](shared-traits.md)**: Reference for reusable Eloquent traits like UUID and Status management.
 -   **[Service Binding & Auto-Discovery](service-binding-auto-discovery.md)**: Detailed documentation on the automated dependency injection system, configuration, caching, and manual overrides.

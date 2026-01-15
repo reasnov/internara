@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Core\Console\Commands;
 
 use Modules\Core\Console\Concerns\HandlesModuleMakeGenerator;
@@ -10,6 +12,9 @@ use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class ModuleMakeTraitCommand
+ *
+ * Generates a PHP trait within a module, respecting the project's
+ * namespace and directory conventions.
  */
 class ModuleMakeTraitCommand extends GeneratorCommand
 {
@@ -17,29 +22,21 @@ class ModuleMakeTraitCommand extends GeneratorCommand
 
     /**
      * The name and signature of the console command.
-     *
-     * @var string
      */
     protected $name = 'module:make-trait';
 
     /**
      * The console command description.
-     *
-     * @var string
      */
     protected $description = 'Create a new trait for the specified module, with a direct namespace.';
 
     /**
      * The argument name of the module.
-     *
-     * @var string
      */
     protected $argumentName = 'name';
 
     /**
      * The configuration key for the command.
-     *
-     * @var string
      */
     protected $configKey = 'traits';
 
@@ -58,14 +55,12 @@ class ModuleMakeTraitCommand extends GeneratorCommand
     {
         return (new Stub($this->getStub(), [
             'NAMESPACE' => $this->getTargetNamespace(),
-            'CLASS' => $this->getTargetName(),
+            'CLASS'     => $this->getTargetName(),
         ]))->render();
     }
 
     /**
      * Get the destination file path for the generated trait.
-     *
-     * @return string The destination file path.
      */
     protected function getDestinationFilePath(): string
     {
@@ -74,21 +69,17 @@ class ModuleMakeTraitCommand extends GeneratorCommand
 
     /**
      * Get the console command arguments.
-     *
-     * @return array The array of arguments.
      */
     protected function getArguments(): array
     {
         return [
             ['name', InputArgument::REQUIRED, 'The name of the trait. Subdirectories are allowed (e.g., Concerns/MyTrait).'],
-            ['module', InputArgument::REQUIRED, 'The name of module will be used.'],
+            ['module', InputArgument::REQUIRED, 'The name of the module.'],
         ];
     }
 
     /**
      * Get the console command options.
-     *
-     * @return array The array of options.
      */
     protected function getOptions(): array
     {

@@ -77,3 +77,9 @@ class InternshipPolicy
 1.  **Check Permissions, Not Roles:** Always use `$user->can('permission.name')` instead of `$user->hasRole('role.name')` in your business logic. Roles should only be used for high-level grouping.
 2.  **Seed Centrally:** Define all foundational roles and permissions in the `Permission` module seeders to maintain a single source of truth.
 3.  **Modular Ownership:** When creating permissions, assign them to a `module` (using the `module` column in the permissions table) to keep the system organized.
+
+---
+
+**Navigation**
+
+[← Previous: Service Binding & Auto-Discovery](service-binding-auto-discovery.md) | [Next: Permission Seeders →](permission-seeders.md)

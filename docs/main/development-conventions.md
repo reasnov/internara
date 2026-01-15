@@ -159,4 +159,4 @@ Adhere strictly to the modular monolith architecture principles detailed in the 
 
 **Navigation**
 
-[← Previous: Conceptual Best Practices](conceptual-best-practices.md) | [Next: UI/UX Development Guide →](ui-ux-development-guide.md)
+[← Previous: Conceptual Best Practices](conceptual-best-practices.md) | [Next: Shared Model Traits →](shared-traits.md)

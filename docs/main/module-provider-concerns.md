@@ -87,3 +87,9 @@ class UserServiceProvider extends ServiceProvider
 1.  **Always define `$name` and `$nameLower`:** These properties are required by the trait to locate resources.
 2.  **Use `registerModule()` and `bootModule()`:** Prefer these wrapper methods over calling individual registration methods unless you need highly granular control.
 3.  **Keep Providers Thin:** Use the `bindings()` method for DI registration instead of manual `app()->bind()` calls inside the `register` method.
+
+---
+
+**Navigation**
+
+[← Previous: Exception Handling Guide](exception-handling-guidelines.md) | [Next: Service Binding & Auto-Discovery →](service-binding-auto-discovery.md)
