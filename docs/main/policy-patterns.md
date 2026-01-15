@@ -98,4 +98,4 @@ public function update(mixed $id, array $data): Model
 
 **Navigation**
 
-[← Previous: Permission Seeders](permission-seeders.md) | [Next: Workflow Developer Guide →](modular-monolith-workflow.md)
+[← Previous: Permission Seeders](permission-seeders.md) | [Next: Permission UI Components →](permission-ui-components.md)

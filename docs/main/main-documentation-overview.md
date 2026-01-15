@@ -16,6 +16,7 @@ This document serves as the central entry point for the primary developer docume
 -   **[Development Conventions](development-conventions.md)**: Outlines the coding and development conventions for the project, ensuring consistency and maintainability, including important namespace conventions for modular development.
 -   **[Role & Permission Management Guide](role-permission-management.md)**: The primary guide for creating, managing, and using Roles and Permissions, detailing the conventions and separation of concerns between modules.
 -   **[Permission Seeders](permission-seeders.md)**: Details on the foundational roles and permissions seeded during system setup.
+-   **[Permission UI Components](permission-ui-components.md)**: Documentation for shared UI elements related to authorization.
 -   **[Workflow Developer Guide](modular-monolith-workflow.md)**: A practical, step-by-step guide for creating new features within a module, including concrete Artisan commands and code examples for Models, Entities, Repositories, Services, and UI components.
 -   **[Testing Guide](testing-guide.md)**: A comprehensive guide covering the project's testing philosophy, Pest framework usage, test directory structure, writing tests, and running tests.
 -   **[Artisan Commands Reference](artisan-commands-reference.md)**: A comprehensive list of all available Artisan commands within the Internara application, categorized for easy reference.

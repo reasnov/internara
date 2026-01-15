@@ -184,4 +184,4 @@ Basic commands for module testing include:
 
 **Navigation**
 
-[← Previous: Policy Patterns](policy-patterns.md) | [Next: Artisan Commands Reference →](artisan-commands-reference.md)
+[← Previous: Permission UI Components](permission-ui-components.md) | [Next: Artisan Commands Reference →](artisan-commands-reference.md)
