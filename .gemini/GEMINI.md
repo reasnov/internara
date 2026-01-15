@@ -113,6 +113,10 @@ These directives guide all technical workflows for the Internara project. For de
 -   **No "App" Logic:** The `app/` directory must remain minimal. All business and framework logic must reside in `modules/`.
 -   **No Business Features:** Do not create "Users", "Schools", or "Internships" models/features yet. Focus on building the capability and infrastructure (UI, Exceptions, Shared, etc.).
 
+### Versioning & Documentation Policy
+-   **'x' Notation:** Version notations using 'x' (e.g., `v0.1.x`, `v1.x`) signify compatibility with the entire sequence within that parent version.
+-   **Single Source of Truth:** Do not create new documentation files for every patch or minor release within a sequence. Use the parent documentation file (e.g., `docs/versions/v0.1.x-alpha.md`) to maintain a single, comprehensive history for that version series.
+
 ### Namespace Convention
 Namespaces **must omit the `src` segment**:
 - *Correct:* `namespace Modules\User\Services;`
