@@ -15,10 +15,16 @@ use Modules\User\Models\User;
 class RedirectService implements Contract
 {
     /**
-     * Get the target URL for a user based on their roles.
+     * Get the target URL for a user based on their roles and status.
      */
     public function getTargetUrl(User $user): string
     {
+        // If the user is not an admin and hasn't verified their email,
+        // redirect them to the verification notice page.
+        if (! $user->hasAnyRole(['super-admin', 'admin']) && ! $user->hasVerifiedEmail()) {
+            return route('verification.notice');
+        }
+
         if ($user->hasAnyRole(['super-admin', 'admin'])) {
             return route('dashboard.admin');
         }
@@ -28,7 +34,7 @@ class RedirectService implements Contract
         }
 
         if ($user->hasRole('student')) {
-            return route('dashboard'); // Assuming 'dashboard' is the student dashboard
+            return route('dashboard');
         }
 
         return route('dashboard');

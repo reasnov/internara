@@ -36,7 +36,8 @@ class Register extends Component
         $validated = $this->validate();
 
         try {
-            $user = $this->authService->register($validated);
+            // Register user and trigger email verification
+            $user = $this->authService->register($validated, sendEmailVerification: true);
 
             $this->authService->login([
                 'email' => $user->email,

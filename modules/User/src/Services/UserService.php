@@ -42,6 +42,11 @@ class UserService extends EloquentQuery implements Contract
         $profileData = $data['profile'] ?? [];
         unset($data['roles'], $data['status'], $data['profile']);
 
+        // Default role for new users if not specified (e.g., from public registration)
+        if ($roles === null) {
+            $roles = ['student'];
+        }
+
         if ($roles !== null) {
             $roles = Arr::wrap($roles);
             if (in_array('super-admin', $roles)) {

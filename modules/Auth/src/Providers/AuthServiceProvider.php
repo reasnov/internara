@@ -2,7 +2,10 @@
 
 namespace Modules\Auth\Providers;
 
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as BaseAuthServiceProvider;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Lang;
 use Modules\Shared\Providers\Concerns\ManagesModuleProvider;
 use Nwidart\Modules\Traits\PathNamespace;
 
@@ -28,6 +31,26 @@ class AuthServiceProvider extends BaseAuthServiceProvider
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
         $this->registerViewSlots();
+
+        // Customize the verification email to sound like it's from the school
+        $this->customizeVerificationEmail();
+    }
+
+    /**
+     * Configure the customized email verification message.
+     */
+    protected function customizeVerificationEmail(): void
+    {
+        VerifyEmail::toMailUsing(function ($notifiable, $url) {
+            return (new MailMessage)
+                ->subject(__('auth::emails.verification_subject'))
+                ->greeting(__('auth::emails.verification_greeting', ['name' => $notifiable->name]))
+                ->line(__('auth::emails.verification_line_1'))
+                ->line(__('auth::emails.verification_line_2'))
+                ->action(__('auth::emails.verification_action'), $url)
+                ->line(__('auth::emails.verification_line_3'))
+                ->salutation(__('auth::emails.verification_salutation', ['school' => setting('site_title', 'Sekolah/Instansi')]));
+        });
     }
 
     /**
