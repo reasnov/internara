@@ -36,6 +36,8 @@ class Form extends Component
     public string $username = '';
     public string $password = '';
     public string $status = 'active';
+    public string $nip = '';
+    public string $nisn = '';
     public array $selectedRoles = [];
     public $avatar;
 
@@ -71,6 +73,10 @@ class Form extends Component
             $this->username = $this->user->username;
             $this->status = $this->user->latestStatus()?->name ?? 'active';
             $this->selectedRoles = $this->user->roles->pluck('name')->toArray();
+
+            // Load profile data
+            $this->nip = $this->user->profile->nip ?? '';
+            $this->nisn = $this->user->profile->nisn ?? '';
         }
     }
 
@@ -87,12 +93,25 @@ class Form extends Component
             'status'        => 'required|string|in:active,inactive,pending',
             'selectedRoles' => 'required|array|min:1',
             'avatar'        => 'nullable|image|max:1024',
+            'nip'           => 'nullable|string|max:50|unique:profiles,nip,' . ($this->user?->profile?->id ?? 'NULL'),
+            'nisn'          => 'nullable|string|max:50|unique:profiles,nisn,' . ($this->user?->profile?->id ?? 'NULL'),
         ];
 
-        $data = $this->validate($rules);
-        $data['roles'] = $this->selectedRoles;
-        $data['status'] = $this->status;
-        $data['avatar_file'] = $this->avatar;
+        $validated = $this->validate($rules);
+        
+        $data = [
+            'name'     => $validated['name'],
+            'email'    => $validated['email'],
+            'username' => $validated['username'],
+            'password' => $validated['password'],
+            'roles'    => $this->selectedRoles,
+            'status'   => $this->status,
+            'avatar_file' => $this->avatar,
+            'profile'  => [
+                'nip'  => $this->nip,
+                'nisn' => $this->nisn,
+            ],
+        ];
 
         try {
             if ($this->user) {

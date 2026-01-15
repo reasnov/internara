@@ -23,6 +23,14 @@
                             icon="o-swatches"
                             required
                         />
+
+                        @if(in_array('teacher', $selectedRoles))
+                            <x-mary-input label="{{ __('NIP') }}" wire:model="nip" icon="o-identification" hint="{{ __('Required for Teachers') }}" />
+                        @endif
+
+                        @if(in_array('student', $selectedRoles))
+                            <x-mary-input label="{{ __('NISN') }}" wire:model="nisn" icon="o-academic-cap" hint="{{ __('Required for Students') }}" />
+                        @endif
                     </div>
 
                     <div class="mt-6">

@@ -9,6 +9,7 @@ use Illuminate\Support\Arr;
 use Modules\Exception\AppException;
 use Modules\Exception\RecordNotFoundException;
 use Modules\Shared\Services\EloquentQuery;
+use Modules\Profile\Services\Contracts\ProfileService;
 use Modules\User\Models\User;
 use Modules\User\Services\Contracts\SuperAdminService;
 use Modules\User\Services\Contracts\UserService as Contract;
@@ -23,7 +24,8 @@ class UserService extends EloquentQuery implements Contract
      */
     public function __construct(
         User $model,
-        protected SuperAdminService $superAdminService
+        protected SuperAdminService $superAdminService,
+        protected ProfileService $profileService
     ) {
         $this->setModel($model);
         $this->setSearchable(['name', 'email', 'username']);
@@ -37,7 +39,8 @@ class UserService extends EloquentQuery implements Contract
     {
         $roles = $data['roles'] ?? null;
         $status = $data['status'] ?? 'active';
-        unset($data['roles'], $data['status']);
+        $profileData = $data['profile'] ?? [];
+        unset($data['roles'], $data['status'], $data['profile']);
 
         if ($roles !== null) {
             $roles = Arr::wrap($roles);
@@ -49,6 +52,12 @@ class UserService extends EloquentQuery implements Contract
 
         $user = parent::create($data);
         $this->handleUserAvatar($user, $data['avatar_file'] ?? null);
+
+        // Initialize Profile
+        $profile = $this->profileService->getByUserId($user->id);
+        if (! empty($profileData)) {
+            $this->profileService->update($profile->id, $profileData);
+        }
 
         if ($roles !== null) {
             $user->assignRole($roles);
@@ -119,7 +128,8 @@ class UserService extends EloquentQuery implements Contract
 
         $roles = $data['roles'] ?? null;
         $status = $data['status'] ?? null;
-        unset($data['roles'], $data['status']);
+        $profileData = $data['profile'] ?? [];
+        unset($data['roles'], $data['status'], $data['profile']);
 
         if ($user->hasRole('super-admin')) {
             return $this->superAdminService->update($id, $data);
@@ -131,6 +141,12 @@ class UserService extends EloquentQuery implements Contract
 
         $updatedUser = parent::update($id, $data);
         $this->handleUserAvatar($updatedUser, $data['avatar_file'] ?? null);
+
+        // Update Profile
+        if (! empty($profileData)) {
+            $profile = $this->profileService->getByUserId($updatedUser->id);
+            $this->profileService->update($profile->id, $profileData);
+        }
 
         if ($roles !== null) {
             $updatedUser->syncRoles($roles);
