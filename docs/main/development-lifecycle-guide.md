@@ -145,9 +145,11 @@ This section provides the _proof_ of quality and the bridge to the next version.
 
 #### Section: `Roadmap & Next Steps`
 
-- **Purpose:** To define the transition to the next version.
-- **What to Write:** A bulleted list of high-level objectives for the immediate next release (e.g.,
-  "Implement User Module," "Setup Shared Utilities").
+- **Purpose:** To define the transition to the next version and strictly limit future scope.
+- **What to Write:** Categorized high-level objectives for the immediate next release:
+    - **Must Have:** Critical features or technical requirements that define the core value.
+    - **Should Have:** Important but non-critical improvements or side features (medium priority).
+    - **Won't Have:** Explicit exclusions to prevent scope creep or premature implementation.
 
 ---
 
@@ -226,6 +228,16 @@ _(Choose Option A or B based on release type)_
 - ...
 
 ### 4.5. Roadmap & Next Steps
+
+#### Must Have
+
+- ...
+
+#### Should Have
+
+- ...
+
+#### Won't Have
 
 - ...
 ```
