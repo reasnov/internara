@@ -78,8 +78,12 @@ These directives guide all technical workflows for the Internara project. For de
 2. **Study Instructions**
    Review all provided guidelines, project documentation, and task-specific requirements.
 
-3. **Build Knowledge**
-   Use available tools (`search-docs`, `glob`, `read_file`, `codebase_investigator`) to understand the codebase and relevant context.
+3. **Build Knowledge (Targeted Context & History)**
+   - Start by reading the **Priority Documentation** listed above.
+   - **Historical Review:** Examine the current and at least **2 previous version documents** in `docs/versions/`. This provides the necessary historical scope to ensure development is sustainable and aligned with the project's evolution.
+   - Conclude which specific modules, classes, or documentation files are relevant to the task.
+   - **Do not** attempt to study the entire documentation or codebase at once. Focus on "Just-in-Time" context to maintain flexibility and avoid performance/inconsistency issues.
+   - Analyze surrounding code patterns without performing modification actions during this phase.
 
 4. **Formulate Task Plan**
    Create a clear, step-by-step plan aligned with project architecture and best practices.
@@ -98,25 +102,17 @@ These directives guide all technical workflows for the Internara project. For de
 
 ---
 
+## Knowledge Construction Principles
+
+-   **Priority-First:** Always start with the core documentation. It provides the "Source of Truth" for the project's identity.
+-   **Selective Contextualization:** Deep-dive only into the relevant domain modules. Ingesting too much context can lead to rigid responses and inability to handle "special cases" that may require pragmatic deviations from convention.
+-   **The Balance:** Prioritize Internara-specific conventions, but balance them with **Global Industry Standards** (e.g., PSR, SOLID, Clean Code). The codebase should remain universal and accessible to entry-level developers.
+-   **Informed Flexibility:** While conventions are rules, architecture should not be a prison. If a task requires a "convention break" for a better technical outcome, justify it clearly in the planning phase.
+
+---
+
 ## Foundational Technical Context
-
-### Environment & Stack
--   **PHP Version:** 8.4.1
--   **Laravel Framework:** v12.43.1
--   **Database:** SQLite (Initiation Phase)
--   **Frontend:** TALL Stack (Tailwind CSS v4.1.18, Alpine.js, Laravel, Livewire v3.7.3)
--   **Component Library:** DaisyUI + MaryUI
--   **Architecture:** Modular Monolith using `nwidart/laravel-modules`
--   **Active Application Version:** `v0.3.x-alpha` (`ARC01-USER`) - User & Profile Management Phase
-
-### Current Version Constraints (v0.1.x-alpha)
--   **No "App" Logic:** The `app/` directory must remain minimal. All business and framework logic must reside in `modules/`.
--   **No Business Features:** Do not create "Users", "Schools", or "Internships" models/features yet. Focus on building the capability and infrastructure (UI, Exceptions, Shared, etc.).
-
-### Versioning & Documentation Policy
--   **'x' Notation:** Version notations using 'x' (e.g., `v0.1.x`, `v1.x`) signify compatibility with the entire sequence within that parent version.
--   **Single Source of Truth:** Do not create new documentation files for every patch or minor release within a sequence. Use the parent documentation file (e.g., `docs/versions/v0.1.x-alpha.md`) to maintain a single, comprehensive history for that version series.
-
+...
 ### Namespace Convention
 Namespaces **must omit the `src` segment**:
 - *Correct:* `namespace Modules\User\Services;`
@@ -126,32 +122,13 @@ Namespaces **must omit the `src` segment**:
 
 ## Technical Conventions
 
+### Multi-Language Support
+-   The application must be built as **multi-language** from the start.
+-   Supported locales: **English (`en`)** and **Indonesian (`id`)**.
+-   All user-facing strings, exceptions, and validation messages must use translation keys.
+
 ### Service Layer
--   Most services should extend `Modules\Shared\Services\EloquentQuery`.
--   Services must implement an interface (contract) that extends `Modules\Shared\Services\Contracts\EloquentQuery`.
--   Initialize the associated Model in the constructor using `$this->setModel(new YourModel())`.
-
-### Inter-Module Communication
--   **Synchronous:** Use **Interfaces** (Contracts). Type-hint the interface, not the concrete class.
--   **Asynchronous:** Use **Events**.
--   **Isolation:** Modules MUST NOT directly reference concrete classes or internal models of other modules.
-
-### UI & Component Preference
-1.  Existing **UI Module** Components (`<x-ui::... />`).
-2.  **MaryUI** Components.
-3.  New Custom Component in **UI Module**.
-
-### Cross-Module UI Injection (Slot System)
--   Use `@slotRender('slot.name')` in Blade to allow other modules to inject UI elements.
--   Register components to slots via `SlotRegistry::register()` in Service Providers.
-
-### Exception Handling
--   Use `Modules\Exception\AppException` for domain errors.
--   Use translation keys: `{module_name}::exceptions.{key_name}`.
-
-### Testing & Formatting
--   **Framework:** All tests must be written using **Pest**.
--   **Pint:** Always run `vendor/bin/pint --dirty` before finalizing changes.
+...
 
 ---
 
