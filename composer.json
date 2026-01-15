@@ -21,6 +21,7 @@
         "robsontenorio/mary": "^2.4",
         "secondnetwork/blade-tabler-icons": "^3.36",
         "spatie/laravel-medialibrary": "^11.17",
+        "spatie/laravel-model-status": "^1.18",
         "spatie/laravel-permission": "^6.24"
     },
     "require-dev": {
