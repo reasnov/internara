@@ -32,6 +32,30 @@ Gate::before(function (User $user, string $ability) {
 });
 ```
 
+## Role Definitions (v0.3.x Scope)
+
+### 1. SuperAdmin
+-   **Purpose:** System Owner.
+-   **Scope:** Absolute access to all modules.
+-   **Protection:** Cannot be deleted or have its role changed via standard UI.
+-   **Verification:** Automatically marked as **Verified** upon creation/registration.
+
+### 2. Admin
+-   **Purpose:** School/Organization Administrator.
+-   **Scope:** Manages users, school settings, departments, and foundational data.
+-   **Limitations:** Cannot manage SuperAdmin accounts.
+-   **Verification:** Automatically marked as **Verified** upon creation by another administrator.
+
+### 3. Teacher
+-   **Purpose:** Internship Supervisor.
+-   **Scope:** Manages assigned students, reviews journals, and performs assessments.
+-   **Special Fields:** Requires **NIP** (Nomor Induk Pegawai).
+
+### 4. Student
+-   **Purpose:** Internship Participant.
+-   **Scope:** Manages own internship application, logs daily journals, and views assessments.
+-   **Special Fields:** Requires **NISN** (Nomor Induk Siswa Nasional).
+
 ---
 
 ## Development Workflow

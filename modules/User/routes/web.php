@@ -1,12 +1,15 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+declare(strict_types=1);
+
+use Illuminate\Support\Facades\Route;
+use Modules\User\Livewire\Users\Form;
+use Modules\User\Livewire\Users\Index;
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', Index::class)->name('index')->middleware('permission:user.view');
+        Route::get('/create', Form::class)->name('create')->middleware('permission:user.create');
+        Route::get('/{id}/edit', Form::class)->name('edit')->middleware('permission:user.update');
+    });
+});

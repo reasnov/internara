@@ -1,15 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\User\Models;
 
 use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Builder; // Added this import
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Modules\Shared\Models\Concerns\HasStatus;
+use Modules\Shared\Models\Concerns\HasUuid;
 use Modules\User\Database\Factories\UserFactory;
 use Modules\User\Support\UsernameGenerator;
 use Spatie\MediaLibrary\HasMedia;
@@ -18,27 +22,13 @@ use Spatie\Permission\Traits\HasRoles;
 
 /**
  * Represents a user in the system.
- *
- * @property int|string $id
- * @property string $name
- * @property string $email
- * @property string $username
- * @property \Illuminate\Support\Carbon|null $email_verified_at
- * @property string $password
- * @property-read string|null $remember_token
- * @property-read \Illuminate\Support\Carbon|null $created_at
- * @property-read \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
- * @property-read \Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property string|null $avatar_url
- *
- * @method static \Illuminate\Database\Eloquent\Builder<static> superAdmin()
  */
 class User extends Authenticatable implements HasMedia, MustVerifyEmail
 {
     use HasFactory;
     use HasRoles;
+    use HasStatus;
+    use HasUuid;
     use InteractsWithMedia;
     use MustVerifyEmailTrait;
     use Notifiable;
@@ -66,28 +56,11 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     ];
 
     /**
-     * Create a new Eloquent model instance.
-     */
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-
-        if (config('user.type_id') === 'uuid') {
-            $this->incrementing = false;
-            $this->keyType = 'string';
-        }
-    }
-
-    /**
      * The "booted" method of the model.
      */
     protected static function booted(): void
     {
         static::creating(function (User $user) {
-            if (config('user.type_id') === 'uuid' && empty($user->id)) {
-                $user->id = (string) Str::uuid();
-            }
-
             if (empty($user->username)) {
                 $user->username = UsernameGenerator::generate();
             }
@@ -95,23 +68,21 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     }
 
     /**
-     * Create a new factory instance for the model.
+     * Determine if the model should use UUIDs.
      */
-    protected static function newFactory(): UserFactory
+    protected function usesUuid(): bool
     {
-        return UserFactory::new();
+        return config('user.type_id') === 'uuid';
     }
 
     /**
      * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
     }
 
@@ -144,21 +115,29 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         return $this->getFirstMediaUrl('user_avatar') ?: null;
     }
 
+    /**
+     * Change the user's avatar.
+     */
     public function changeAvatar(string|UploadedFile $file, string $collectionName = 'user_avatar'): bool
     {
-        $this->clearMediaCollection('user_avatar');
+        $this->clearMediaCollection($collectionName);
 
-        return (bool) $this->addMedia($file)->toMediaCollection($collectionName) ?? false;
+        return (bool) $this->addMedia($file)->toMediaCollection($collectionName);
     }
 
     /**
      * Scope a query to only include users with the 'super-admin' role.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder<static>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<static>
      */
     public function scopeSuperAdmin(Builder $query): Builder
     {
         return $query->role('super-admin');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): UserFactory
+    {
+        return UserFactory::new();
     }
 }

@@ -56,6 +56,7 @@ class SuperAdminService extends EloquentQuery implements Contracts\SuperAdminSer
         $this->handleSuperAdminAvatar($superAdmin, $data['avatar_file'] ?? null);
 
         $superAdmin->assignRole('super-admin');
+        $superAdmin->markEmailAsVerified();
 
         return $superAdmin;
     }
@@ -121,6 +122,7 @@ class SuperAdminService extends EloquentQuery implements Contracts\SuperAdminSer
         $this->handleSuperAdminAvatar($superAdmin, $allData['avatar_file'] ?? null);
 
         $superAdmin->assignRole('super-admin');
+        $superAdmin->markEmailAsVerified();
         $superAdmin->loadMissing(['roles', 'permissions']);
 
         return $superAdmin;
