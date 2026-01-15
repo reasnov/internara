@@ -104,7 +104,7 @@ These directives guide all technical workflows for the Internara project. For de
 -   **Frontend:** TALL Stack (Tailwind CSS v4.1.18, Alpine.js, Laravel, Livewire v3.7.3)
 -   **Component Library:** DaisyUI + MaryUI
 -   **Architecture:** Modular Monolith using `nwidart/laravel-modules`
--   **Active Application Version:** `v0.2.x-alpha` (`ARC01-CORE`) - Core & Shared Systems Phase
+-   **Active Application Version:** `v0.3.x-alpha` (`ARC01-USER`) - User & Profile Management Phase
 
 ### Current Version Constraints (v0.1.x-alpha)
 -   **No "App" Logic:** The `app/` directory must remain minimal. All business and framework logic must reside in `modules/`.
