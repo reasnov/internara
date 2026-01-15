@@ -54,11 +54,8 @@ These directives guide all technical workflows for the Internara project. For de
 -   **Professional PHPDoc**
     Every class and method must include concise and professional PHPDoc in English. Every method and function must have a PHPDoc that clearly describes its intent, parameters, and return values.
 
--   **Code Cleanliness and Hygiene**
-    Always ensure the codebase remains clean and professional by:
-    -   Removing unnecessary, commented-out, or redundant code.
-    -   Eliminating excessive whitespace, empty lines, and ensuring consistent spacing.
-    -   Removing comments that do not add value or are redundant with the code itself.
+-   **Mandatory Documentation**
+    Every new feature, standardized pattern, or significant technical change must be accompanied by comprehensive documentation in the `docs/` directory. Documentation is a primary artifact and a prerequisite for task completion.
 
 -   **Cross-check Project Documentation**
     Always cross-reference and adhere to existing project documentation (especially within the `/docs` directory). For comprehensive navigation, prioritize:
