@@ -24,7 +24,6 @@ trait ManagesModuleProvider
      */
     protected function registerModule(): void
     {
-        $this->registerConfig();
         $this->registerBindings();
     }
 
@@ -34,10 +33,12 @@ trait ManagesModuleProvider
      */
     protected function bootModule(): void
     {
+        $this->registerConfig();
         $this->registerTranslations();
         $this->registerViews();
         $this->registerMigrations();
         $this->registerCommands();
+        $this->registerCommandSchedules();
         $this->registerViewSlots();
     }
 
@@ -73,6 +74,14 @@ trait ManagesModuleProvider
      * Register commands in the format of Command::class
      */
     protected function registerCommands(): void
+    {
+        // To be overridden by the module provider if needed.
+    }
+
+    /**
+     * Register command Schedules.
+     */
+    protected function registerCommandSchedules(): void
     {
         // To be overridden by the module provider if needed.
     }

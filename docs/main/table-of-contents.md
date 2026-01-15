@@ -25,6 +25,7 @@ Deep dives into specific architectural components.
 -   **[ManagesModuleProvider Trait](module-provider-concerns.md)**: Standardized module bootstrapping process.
 -   **[Service Binding & Auto-Discovery](service-binding-auto-discovery.md)**: How dependency injection works automatically.
 -   **[Role & Permission Management Guide](role-permission-management.md)**: Implementing RBAC using Policies and Permissions.
+-   **[Permission Seeders](permission-seeders.md)**: Foundational roles and permissions.
 
 ## 5. Daily Development Workflow
 Practical guides for building features.

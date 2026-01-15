@@ -24,6 +24,7 @@ class PermissionServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->overrideSpatieConfig();
         $this->bootModule();
         $this->registerPolicies();
     }
@@ -33,7 +34,6 @@ class PermissionServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->overrideSpatieConfig();
         $this->registerModule();
 
         $this->app->register(EventServiceProvider::class);
@@ -45,10 +45,8 @@ class PermissionServiceProvider extends ServiceProvider
      */
     protected function overrideSpatieConfig(): void
     {
-        config([
-            'permission.models.role'       => \Modules\Permission\Models\Role::class,
-            'permission.models.permission' => \Modules\Permission\Models\Permission::class,
-        ]);
+        $this->app['config']->set('permission.models.role', \Modules\Permission\Models\Role::class);
+        $this->app['config']->set('permission.models.permission', \Modules\Permission\Models\Permission::class);
     }
 
     /**

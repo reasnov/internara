@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Permission\Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -12,47 +14,58 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $coreRoles = [
-            'Teacher' => 'Supervising and assessing students',
-            'Student' => 'Internship participants',
+        $roles = [
+            'super-admin' => ['Full system ownership', 'Core'],
+            'admin'       => ['General management', 'Core'],
+            'teacher'     => ['Student supervisor', 'Core'],
+            'student'     => ['Internship participant', 'Core'],
         ];
 
-        $userRoles = [
-            'SuperAdmin' => 'Full system access and ownership',
-            'Admin' => 'Administrative management',
-        ];
-
-        $allRoles = array_merge($coreRoles, $userRoles);
-
-        // Define all permissions for admin-level roles
-        $adminPermissions = [
-            // Core permissions
-            'core.manage',
-            'core.view-dashboard',
-            // User permissions
-            'user.view',
-            'user.create',
-            'user.update',
-            'user.delete',
-            'user.manage',
-        ];
-
-        foreach ($allRoles as $name => $description) {
-            $module = in_array($name, array_keys($coreRoles)) ? 'Core' : 'User'; // Determine original module
-
+        foreach ($roles as $name => $data) {
             /** @var Role $role */
             $role = Role::updateOrCreate(
                 ['name' => $name, 'guard_name' => 'web'],
                 [
-                    'description' => $description,
-                    'module' => $module,
+                    'description' => $data[0],
+                    'module'      => $data[1],
                 ]
             );
 
-            // Assign permissions if it's an admin-level role
-            if (in_array($name, ['SuperAdmin', 'Admin'])) {
-                $role->givePermissionTo($adminPermissions);
-            }
+            $this->assignPermissionsToRole($role);
+        }
+    }
+
+    /**
+     * Assign relevant permissions based on role name.
+     */
+    protected function assignPermissionsToRole(Role $role): void
+    {
+        if ($role->name === 'super-admin') {
+            // SuperAdmin has Gate::before bypass, but we seed all permissions anyway for UI clarity
+            $role->syncPermissions(\Modules\Permission\Models\Permission::all());
+            return;
+        }
+
+        $permissions = match ($role->name) {
+            'admin' => [
+                'core.view-dashboard',
+                'user.view', 'user.create', 'user.update',
+                'school.view', 'school.update',
+                'department.view', 'department.create', 'department.update',
+                'internship.view',
+            ],
+            'teacher' => [
+                'core.view-dashboard',
+                'internship.view', 'internship.approve',
+            ],
+            'student' => [
+                'internship.view', 'internship.create',
+            ],
+            default => [],
+        };
+
+        if (! empty($permissions)) {
+            $role->syncPermissions($permissions);
         }
     }
 }

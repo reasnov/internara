@@ -16,9 +16,6 @@
         }
     },
     "autoload": {
-        "files": [
-            "src/Support/helpers.php"
-        ],
         "psr-4": {
             "Modules\\Shared\\": "src/",
             "Modules\\Shared\\Database\\Factories\\": "database/factories/",
