@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Shared\Services;
 
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -163,6 +166,11 @@ abstract class EloquentQuery implements EloquentQueryContract
     public function update(mixed $id, array $data): Model
     {
         $model = $this->find($id);
+
+        if (! $model) {
+            throw (new ModelNotFoundException)->setModel(get_class($this->model), [$id]);
+        }
+
         $filteredData = $this->filterFillable($data);
         $model->update($filteredData);
 
