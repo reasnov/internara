@@ -363,4 +363,4 @@ The slot system is designed for server-rendered HTML (Blade and Livewire compone
 
 **Navigation**
 
-[← Previous: Utilities](components/utilities.md) | [Next: Exception Handling Guidelines →](../exception-handling-guidelines.md)
+[← Previous: Utilities](ui/components/utilities.md) | [Next: Exception Handling Guidelines →](exception-handling-guidelines.md)

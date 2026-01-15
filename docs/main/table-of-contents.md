@@ -17,7 +17,9 @@ Understanding the "Why" and "How" of the system structure.
 ## 3. Standards & Conventions
 Rules to follow while writing code.
 -   **[Development Conventions](development-conventions.md)**: Coding standards, namespace rules, and directory structures.
+-   **[Development Lifecycle Guide](development-lifecycle-guide.md)**: Strategy and standards for development lifecycle and versioning.
 -   **[Shared Model Traits](shared-traits.md)**: Reusable behaviors for Eloquent models (UUID, Status).
+-   **[UI/UX Development Guide](ui-ux-development-guide.md)**: Global design principles and standards.
 -   **[UI Module TOC](ui/table-of-contents.md)**: Index of shared UI components and design system.
 -   **[Exception Handling Guide](exception-handling-guidelines.md)**: Standardized error handling and user feedback.
 
