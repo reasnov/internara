@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Modules\Shared\Services\EloquentQuery;
-use Tests\TestCase;
 
 /**
  * Concrete Model for testing.
@@ -17,7 +16,9 @@ use Tests\TestCase;
 class EloquentQueryTestModel extends Model
 {
     protected $table = 'test_eloquent_query_models';
+
     protected $fillable = ['name', 'value'];
+
     public $timestamps = false;
 }
 
@@ -28,7 +29,7 @@ class TestEloquentQueryService extends EloquentQuery
 {
     public function __construct()
     {
-        $this->setModel(new EloquentQueryTestModel());
+        $this->setModel(new EloquentQueryTestModel);
         $this->setSearchable(['name']);
         $this->setSortable(['name']);
     }
@@ -41,7 +42,7 @@ beforeEach(function () {
         $table->integer('value')->default(0);
     });
 
-    $this->service = new TestEloquentQueryService();
+    $this->service = new TestEloquentQueryService;
 });
 
 afterEach(function () {
@@ -51,9 +52,12 @@ afterEach(function () {
 test('it can create a record', function () {
     $record = $this->service->create(['name' => 'Test', 'value' => 100]);
 
-    expect($record)->toBeInstanceOf(EloquentQueryTestModel::class)
-        ->and($record->name)->toBe('Test')
-        ->and($record->value)->toBe(100);
+    expect($record)
+        ->toBeInstanceOf(EloquentQueryTestModel::class)
+        ->and($record->name)
+        ->toBe('Test')
+        ->and($record->value)
+        ->toBe(100);
 });
 
 test('it can update a record', function () {
@@ -83,8 +87,10 @@ test('it can search records', function () {
 
     $results = $this->service->get(['search' => 'Match']);
 
-    expect($results)->toHaveCount(1)
-        ->and($results->first()->name)->toBe('Match');
+    expect($results)
+        ->toHaveCount(1)
+        ->and($results->first()->name)
+        ->toBe('Match');
 });
 
 test('it can sort records', function () {

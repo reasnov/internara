@@ -47,7 +47,7 @@ class SuperAdminService extends EloquentQuery implements Contracts\SuperAdminSer
             throw new AppException(
                 userMessage: 'user::exceptions.super_admin_exists',
                 logMessage: 'Attempted to create a second SuperAdmin account.',
-                code: 409
+                code: 409,
             );
         }
 
@@ -78,10 +78,11 @@ class SuperAdminService extends EloquentQuery implements Contracts\SuperAdminSer
         /** @var User|null $existingOwner */
         $existingOwner = $this->query(columns: ['id'])->first(); // Use the superAdmin scope to get the single SuperAdmin
 
-        if (! $existingOwner) { // No SuperAdmin exists at all
+        if (! $existingOwner) {
+            // No SuperAdmin exists at all
             throw new RecordNotFoundException(
                 userMessage: 'user::exceptions.super_admin_not_found',
-                code: 404
+                code: 404,
             );
         }
 
@@ -90,7 +91,7 @@ class SuperAdminService extends EloquentQuery implements Contracts\SuperAdminSer
                 userMessage: 'user::exceptions.super_admin_not_found',
                 replace: ['id' => $id],
                 logMessage: 'Attempted to update SuperAdmin, but no SuperAdmin account exists.',
-                code: 404
+                code: 404,
             );
         }
 
@@ -139,7 +140,7 @@ class SuperAdminService extends EloquentQuery implements Contracts\SuperAdminSer
 
         throw new AppException(
             userMessage: 'user::exceptions.super_admin_cannot_be_deleted',
-            code: 403
+            code: 403,
         );
     }
 
@@ -171,12 +172,14 @@ class SuperAdminService extends EloquentQuery implements Contracts\SuperAdminSer
         throw new AppException(
             userMessage: 'user::exceptions.cannot_get_multiple_super_admins',
             logMessage: 'Attempted to get a collection of SuperAdmins, which is not allowed.',
-            code: 405
+            code: 405,
         );
     }
 
-    protected function handleSuperAdminAvatar(User &$superAdmin, UploadedFile|string|null $avatar = null): bool
-    {
+    protected function handleSuperAdminAvatar(
+        User &$superAdmin,
+        UploadedFile|string|null $avatar = null,
+    ): bool {
         return isset($avatar) ? $superAdmin->setAvatar($avatar) : false;
     }
 }

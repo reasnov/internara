@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Setting\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -36,13 +38,7 @@ class Setting extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'key',
-        'value',
-        'type',
-        'description',
-        'group',
-    ];
+    protected $fillable = ['key', 'value', 'type', 'description', 'group'];
 
     /**
      * The model's attributes that should be cast.

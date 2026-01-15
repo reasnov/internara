@@ -6,10 +6,11 @@ namespace Modules\User\Services;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Gate;
 use Modules\Exception\AppException;
 use Modules\Exception\RecordNotFoundException;
-use Modules\Shared\Services\EloquentQuery;
 use Modules\Profile\Services\Contracts\ProfileService;
+use Modules\Shared\Services\EloquentQuery;
 use Modules\User\Models\User;
 use Modules\User\Services\Contracts\SuperAdminService;
 use Modules\User\Services\Contracts\UserService as Contract;
@@ -25,7 +26,7 @@ class UserService extends EloquentQuery implements Contract
     public function __construct(
         User $model,
         protected SuperAdminService $superAdminService,
-        protected ProfileService $profileService
+        protected ProfileService $profileService,
     ) {
         $this->setModel($model);
         $this->setSearchable(['name', 'email', 'username']);
@@ -105,10 +106,12 @@ class UserService extends EloquentQuery implements Contract
             throw new RecordNotFoundException(replace: ['record' => 'User', 'id' => $id]);
         }
 
+        Gate::authorize('update', $user);
+
         if ($user->hasRole('super-admin')) {
             throw new AppException(
                 userMessage: 'user::exceptions.super_admin_status_cannot_be_changed',
-                code: 403
+                code: 403,
             );
         }
 
@@ -130,6 +133,8 @@ class UserService extends EloquentQuery implements Contract
         if (! $user) {
             throw new RecordNotFoundException(replace: ['record' => 'User', 'id' => $id]);
         }
+
+        Gate::authorize('update', $user);
 
         $roles = $data['roles'] ?? null;
         $status = $data['status'] ?? null;
@@ -174,6 +179,8 @@ class UserService extends EloquentQuery implements Contract
         if (! $user) {
             throw new RecordNotFoundException(replace: ['record' => 'User', 'id' => $id]);
         }
+
+        Gate::authorize('delete', $user);
 
         if ($user->hasRole('super-admin')) {
             return $this->superAdminService->delete($id, $force);

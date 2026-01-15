@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Setup\Livewire;
 
 use Illuminate\View\View;
@@ -17,7 +19,7 @@ class SetupWelcome extends Component
     /**
      * Boots the component and injects the SetupService.
      *
-     * @param  SetupService  $setupService  The service for handling setup logic.
+     * @param SetupService $setupService The service for handling setup logic.
      */
     public function boot(SetupService $setupService): void
     {
@@ -29,10 +31,7 @@ class SetupWelcome extends Component
      */
     public function mount(): void
     {
-        $this->initSetupProps(
-            currentStep: 'welcome',
-            nextStep: 'account',
-        );
+        $this->initSetupProps(currentStep: 'welcome', nextStep: 'account');
     }
 
     /**
@@ -42,11 +41,10 @@ class SetupWelcome extends Component
      */
     public function render(): View
     {
-        return view('setup::livewire.setup-welcome')
-            ->layout('setup::components.layouts.setup', [
-                'title' => __('Mulai Instalasi | :site_title', [
-                    'site_title' => setting('site_title', 'Internara'),
-                ]),
-            ]);
+        return view('setup::livewire.setup-welcome')->layout('setup::components.layouts.setup', [
+            'title' => __('Mulai Instalasi | :site_title', [
+                'site_title' => setting('site_title', 'Internara'),
+            ]),
+        ]);
     }
 }

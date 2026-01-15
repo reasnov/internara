@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\User\Support;
 
 use Modules\User\Models\User;
@@ -27,7 +29,9 @@ class UsernameGenerator
             $attempt++;
 
             if ($attempt > $maxAttempts) {
-                throw new \RuntimeException("Unable to generate a unique username after {$maxAttempts} attempts.");
+                throw new \RuntimeException(
+                    "Unable to generate a unique username after {$maxAttempts} attempts.",
+                );
             }
         } while (User::where('username', $username)->exists());
 

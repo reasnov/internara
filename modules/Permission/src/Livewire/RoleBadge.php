@@ -43,7 +43,7 @@ class RoleBadge extends Component
 
         return view('permission::livewire.role-badge', [
             'roleName' => $roleName,
-            'color'    => $color,
+            'color' => $color,
         ]);
     }
 
@@ -54,10 +54,10 @@ class RoleBadge extends Component
     {
         return match (strtolower($name)) {
             'super-admin' => 'badge-error',
-            'admin'       => 'badge-primary',
-            'teacher'     => 'badge-secondary',
-            'student'     => 'badge-accent',
-            default       => 'badge-ghost',
+            'admin' => 'badge-primary',
+            'teacher' => 'badge-secondary',
+            'student' => 'badge-accent',
+            default => 'badge-ghost',
         };
     }
 }

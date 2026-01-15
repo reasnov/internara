@@ -36,24 +36,51 @@ class AppInfoCommand extends Command
         $this->newLine();
         $this->components->info('Internara Application Information');
 
-        $this->components->twoColumnDetail('Application Name', (string) config('app.name', 'Unknown'));
-        $this->components->twoColumnDetail('Version', (string) config('core.info.version', 'Unknown'));
-        $this->components->twoColumnDetail('Series Code', (string) config('core.info.series_code', 'Unknown'));
-        $this->components->twoColumnDetail('Status', (string) config('core.info.status', 'Unknown'));
+        $this->components->twoColumnDetail(
+            'Application Name',
+            (string) config('app.name', 'Unknown'),
+        );
+        $this->components->twoColumnDetail(
+            'Version',
+            (string) config('core.info.version', 'Unknown'),
+        );
+        $this->components->twoColumnDetail(
+            'Series Code',
+            (string) config('core.info.series_code', 'Unknown'),
+        );
+        $this->components->twoColumnDetail(
+            'Status',
+            (string) config('core.info.status', 'Unknown'),
+        );
 
         $this->newLine();
         $this->components->info('Author Information');
-        $this->components->twoColumnDetail('Author', (string) config('core.author.name', 'Unknown'));
-        $this->components->twoColumnDetail('GitHub', (string) config('core.author.github', 'Unknown'));
-        $this->components->twoColumnDetail('Email', (string) config('core.author.email', 'Unknown'));
+        $this->components->twoColumnDetail(
+            'Author',
+            (string) config('core.author.name', 'Unknown'),
+        );
+        $this->components->twoColumnDetail(
+            'GitHub',
+            (string) config('core.author.github', 'Unknown'),
+        );
+        $this->components->twoColumnDetail(
+            'Email',
+            (string) config('core.author.email', 'Unknown'),
+        );
 
         $this->newLine();
         $this->components->info('Environment Details');
         $this->components->twoColumnDetail('Laravel Version', App::version());
         $this->components->twoColumnDetail('PHP Version', PHP_VERSION);
         $this->components->twoColumnDetail('Environment', (string) App::environment());
-        $this->components->twoColumnDetail('Debug Mode', config('app.debug') ? '<fg=yellow>Enabled</>' : '<fg=green>Disabled</>');
-        $this->components->twoColumnDetail('Database Driver', (string) config('database.default', 'Unknown'));
+        $this->components->twoColumnDetail(
+            'Debug Mode',
+            config('app.debug') ? '<fg=yellow>Enabled</>' : '<fg=green>Disabled</>',
+        );
+        $this->components->twoColumnDetail(
+            'Database Driver',
+            (string) config('database.default', 'Unknown'),
+        );
 
         $this->newLine();
 

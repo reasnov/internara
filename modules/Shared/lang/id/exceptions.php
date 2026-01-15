@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'not_found' => 'Data dengan ID :id tidak dapat ditemukan.',
     'creation_failed' => 'Gagal membuat :record.',

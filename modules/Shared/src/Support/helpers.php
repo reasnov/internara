@@ -18,6 +18,6 @@ if (! function_exists('shared_static_url')) {
      */
     function shared_static_url(string $path): string
     {
-        return asset('modules/shared/' . ltrim($path, '/'));
+        return asset('modules/shared/'.ltrim($path, '/'));
     }
 }

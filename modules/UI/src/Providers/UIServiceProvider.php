@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\UI\Providers;
 
 use Illuminate\Support\Facades\Blade;
@@ -67,10 +69,7 @@ class UIServiceProvider extends ServiceProvider
     {
         return [
             'navbar.brand' => 'ui::components.brand',
-            'navbar.actions' => [
-                'ui::components.user-menu',
-                'ui::components.theme-toggle',
-            ],
+            'navbar.actions' => ['ui::components.user-menu', 'ui::components.theme-toggle'],
             'footer.app-credit' => 'ui::components.app-credit',
         ];
     }

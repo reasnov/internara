@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Permission\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -23,16 +25,23 @@ class RoleService extends EloquentQuery implements RoleServiceContract
     /**
      * List roles with optional filtering and pagination.
      *
-     * @param  array<string, mixed>  $filters  Filter criteria (e.g., 'search', 'module').
-     * @param  int  $perPage  Number of records per page.
-     * @param  array<int, string>  $columns  Columns to retrieve.
+     * @param array<string, mixed> $filters Filter criteria (e.g., 'search', 'module').
+     * @param int $perPage Number of records per page.
+     * @param array<int, string> $columns Columns to retrieve.
+     *
      * @return LengthAwarePaginator Paginated list of roles.
      */
-    public function list(array $filters = [], int $perPage = 10, array $columns = ['*']): LengthAwarePaginator
-    {
-        return $this->model->query()->select($columns)
+    public function list(
+        array $filters = [],
+        int $perPage = 10,
+        array $columns = ['*'],
+    ): LengthAwarePaginator {
+        return $this->model
+            ->query()
+            ->select($columns)
             ->when($filters['search'] ?? null, function (Builder $query, string $search) {
-                $query->where('name', 'like', "%{$search}%")
+                $query
+                    ->where('name', 'like', "%{$search}%")
                     ->orWhere('module', 'like', "%{$search}%");
             })
             ->when($filters['module'] ?? null, function (Builder $query, string $module) {
@@ -45,8 +54,9 @@ class RoleService extends EloquentQuery implements RoleServiceContract
     /**
      * Sync permissions to a role.
      *
-     * @param  string  $id  The UUID of the role.
-     * @param  array<int, string>  $permissions  An array of permission names to sync.
+     * @param string $id The UUID of the role.
+     * @param array<int, string> $permissions An array of permission names to sync.
+     *
      * @return Role The role with updated permissions.
      */
     public function syncPermissions(string $id, array $permissions): Role

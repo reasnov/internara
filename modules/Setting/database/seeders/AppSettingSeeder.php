@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Setting\Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -61,7 +63,10 @@ class AppSettingSeeder extends Seeder
             ],
             [
                 'key' => 'site_title',
-                'value' => config('setting.site_title', 'Internara - Sistem Informasi Manajemen PKL'),
+                'value' => config(
+                    'setting.site_title',
+                    'Internara - Sistem Informasi Manajemen PKL',
+                ),
                 'type' => 'string',
                 'description' => 'The title of the site',
                 'group' => 'general',
@@ -74,7 +79,9 @@ class AppSettingSeeder extends Seeder
 
         foreach ($rawSettings as $setting) {
             // Apply the SettingValueCast::set logic manually to each setting
-            $processed = $caster->set($dummyModel, 'value', $setting['value'], ['type' => $setting['type'] ?? 'string']);
+            $processed = $caster->set($dummyModel, 'value', $setting['value'], [
+                'type' => $setting['type'] ?? 'string',
+            ]);
 
             $settingsToUpsert[] = array_merge($setting, [
                 'value' => $processed['value'],
@@ -82,10 +89,6 @@ class AppSettingSeeder extends Seeder
             ]);
         }
 
-        Setting::upsert(
-            $settingsToUpsert,
-            ['key'],
-            ['value', 'type', 'description', 'group']
-        );
+        Setting::upsert($settingsToUpsert, ['key'], ['value', 'type', 'description', 'group']);
     }
 }

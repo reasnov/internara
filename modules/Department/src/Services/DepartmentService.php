@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Department\Services;
 
 use Modules\Department\Models\Department;

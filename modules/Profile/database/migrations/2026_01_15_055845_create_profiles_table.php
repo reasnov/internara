@@ -19,11 +19,11 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
             $table->text('bio')->nullable();
-            
+
             // Role-specific fields
             $table->string('nip')->nullable()->unique()->comment('For Teachers');
             $table->string('nisn')->nullable()->unique()->comment('For Students');
-            
+
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

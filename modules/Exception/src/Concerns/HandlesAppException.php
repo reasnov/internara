@@ -35,7 +35,7 @@ trait HandlesAppException
         ?string $logMessage = null,
         int $code = 422,
         ?Throwable $previous = null,
-        array $context = []
+        array $context = [],
     ): AppException {
         return new AppException(
             userMessage: $userMessage,
@@ -44,7 +44,7 @@ trait HandlesAppException
             logMessage: $logMessage,
             code: $code,
             previous: $previous,
-            context: $context
+            context: $context,
         );
     }
 
@@ -60,7 +60,7 @@ trait HandlesAppException
         ?string $logMessage = null,
         int $code = 422,
         ?Throwable $previous = null,
-        array $context = []
+        array $context = [],
     ): void {
         throw $this->newAppException(
             userMessage: $userMessage,
@@ -69,7 +69,7 @@ trait HandlesAppException
             logMessage: $logMessage,
             code: $code,
             previous: $previous,
-            context: $context
+            context: $context,
         );
     }
 
@@ -84,8 +84,10 @@ trait HandlesAppException
     /**
      * Render an AppException into an HTTP response.
      */
-    protected function renderAppException(AppException $exception, Request $request): JsonResponse|RedirectResponse
-    {
+    protected function renderAppException(
+        AppException $exception,
+        Request $request,
+    ): JsonResponse|RedirectResponse {
         return $exception->render($request);
     }
 
@@ -108,8 +110,10 @@ trait HandlesAppException
     /**
      * Handle an exception comprehensively based on the request type.
      */
-    protected function handleAppException(Throwable $exception, Request $request): JsonResponse|RedirectResponse|array|null
-    {
+    protected function handleAppException(
+        Throwable $exception,
+        Request $request,
+    ): JsonResponse|RedirectResponse|array|null {
         $this->reportException($exception);
 
         if ($request->isLivewire()) {
@@ -121,14 +125,24 @@ trait HandlesAppException
         }
 
         if ($request->expectsJson()) {
-            return response()->json([
-                'message' => config('app.debug') ? $exception->getMessage() : __('An unexpected error occurred.'),
-            ], method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : 500);
+            return response()->json(
+                [
+                    'message' => config('app.debug')
+                        ? $exception->getMessage()
+                        : __('An unexpected error occurred.'),
+                ],
+                method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : 500,
+            );
         }
 
         return redirect()
             ->back()
             ->withInput($request->input())
-            ->with('error', config('app.debug') ? $exception->getMessage() : __('An unexpected error occurred.'));
+            ->with(
+                'error',
+                config('app.debug')
+                    ? $exception->getMessage()
+                    : __('An unexpected error occurred.'),
+            );
     }
 }

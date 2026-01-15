@@ -4,7 +4,8 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "format": "prettier --write \"**/*.{php,blade.php,js,css,md}\""
     },
     "dependencies": {
         "autoprefixer": "^10.4.20",
@@ -19,8 +20,11 @@
         "lightningcss-linux-x64-gnu": "^1.29.1"
     },
     "devDependencies": {
+        "@prettier/plugin-php": "^0.24.0",
         "@tailwindcss/vite": "^4.1.18",
         "daisyui": "^5.5.14",
+        "prettier": "^3.8.0",
+        "prettier-plugin-blade": "^2.1.21",
         "tailwindcss": "^4.1.18"
     }
 }

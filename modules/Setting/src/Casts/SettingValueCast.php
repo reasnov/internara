@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Setting\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
@@ -10,7 +12,8 @@ class SettingValueCast implements CastsAttributes
     /**
      * Cast the setting's value from the database to its appropriate PHP type.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
+     *
      * @return mixed The casted value (e.g., bool, int, float, array, string, or null).
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
@@ -40,7 +43,8 @@ class SettingValueCast implements CastsAttributes
      * value for database storage. It returns an array containing both the serialized
      * 'value' and the detected 'type' to be updated on the model.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
+     *
      * @return array{'value': string|null, 'type': string}
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): array
@@ -52,14 +56,14 @@ class SettingValueCast implements CastsAttributes
             'boolean' => 'boolean',
             'integer' => 'integer',
             'double' => 'float', // Map PHP 'double' to our 'float' type.
-            'NULL' => 'null',     // Handle null values.
+            'NULL' => 'null', // Handle null values.
             default => 'string',
         };
 
         $storableValue = match ($dbType) {
             'json' => json_encode($value),
             'boolean' => (int) $value, // Store booleans as 0 or 1.
-            'null' => null,             // Store actual null in the database.
+            'null' => null, // Store actual null in the database.
             default => (string) $value, // Cast everything else to a string.
         };
 

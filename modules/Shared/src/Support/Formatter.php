@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Shared\Support;
 
 use Illuminate\Support\Str;
@@ -31,8 +33,12 @@ final class Formatter
 
     protected static function normalizeNamespace(string $namespace): string
     {
-        $namespace = Str::startsWith($namespace, '\\') ? Str::replaceFirst('\\', '', $namespace) : $namespace;
-        $namespace = Str::endsWith($namespace, '\\') ? Str::replaceLast('\\', '', $namespace) : $namespace;
+        $namespace = Str::startsWith($namespace, '\\')
+            ? Str::replaceFirst('\\', '', $namespace)
+            : $namespace;
+        $namespace = Str::endsWith($namespace, '\\')
+            ? Str::replaceLast('\\', '', $namespace)
+            : $namespace;
         $namespace = Str::replace(['/', '//', '\\\\'], '\\', $namespace);
 
         return $namespace;

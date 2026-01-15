@@ -55,7 +55,7 @@ class ModuleMakeTraitCommand extends GeneratorCommand
     {
         return (new Stub($this->getStub(), [
             'NAMESPACE' => $this->getTargetNamespace(),
-            'CLASS'     => $this->getTargetName(),
+            'CLASS' => $this->getTargetName(),
         ]))->render();
     }
 
@@ -73,7 +73,11 @@ class ModuleMakeTraitCommand extends GeneratorCommand
     protected function getArguments(): array
     {
         return [
-            ['name', InputArgument::REQUIRED, 'The name of the trait. Subdirectories are allowed (e.g., Concerns/MyTrait).'],
+            [
+                'name',
+                InputArgument::REQUIRED,
+                'The name of the trait. Subdirectories are allowed (e.g., Concerns/MyTrait).',
+            ],
             ['module', InputArgument::REQUIRED, 'The name of the module.'],
         ];
     }
@@ -84,7 +88,12 @@ class ModuleMakeTraitCommand extends GeneratorCommand
     protected function getOptions(): array
     {
         return [
-            ['force', null, InputOption::VALUE_NONE, 'Create the trait even if the trait already exists.'],
+            [
+                'force',
+                null,
+                InputOption::VALUE_NONE,
+                'Create the trait even if the trait already exists.',
+            ],
         ];
     }
 }

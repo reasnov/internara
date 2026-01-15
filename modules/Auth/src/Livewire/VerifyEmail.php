@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Auth\Livewire;
 
 use Livewire\Component;
@@ -31,18 +33,23 @@ class VerifyEmail extends Component
     public function verify()
     {
         if (! auth()->check()) {
-            // If the user is not authenticated, log them in
-            $user = User::findOrFail($this->id);
-            auth()->login($user);
+            return redirect()->route('login');
+        }
+
+        // Ensure the authenticated user is the one being verified
+        if ((string) auth()->id() !== (string) $this->id) {
+            session()->flash('error', 'Tindakan ini tidak sah.');
+
+            return redirect()->route('verification.notice');
         }
 
         if ($this->authService->verifyEmail($this->id, $this->hash)) {
-            session()->flash('status', 'Your email has been verified!');
+            session()->flash('status', 'Email Anda telah berhasil diverifikasi!');
 
             return redirect()->intended($this->redirectPath());
         }
 
-        session()->flash('error', 'Invalid verification link or email already verified.');
+        session()->flash('error', 'Tautan verifikasi tidak valid atau email sudah diverifikasi.');
 
         return redirect()->route('verification.notice');
     }
@@ -51,7 +58,10 @@ class VerifyEmail extends Component
     {
         if (auth()->check() && ! auth()->user()->hasVerifiedEmail()) {
             $this->authService->resendVerificationEmail(auth()->user());
-            session()->flash('status', 'A fresh verification link has been sent to your email address.');
+            session()->flash(
+                'status',
+                'A fresh verification link has been sent to your email address.',
+            );
         } else {
             session()->flash('error', 'You are already verified or not logged in.');
         }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Modules\User\Livewire\Users;
 
 use Illuminate\Support\Collection;
-use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Modules\Exception\Concerns\HandlesAppException;
@@ -32,13 +31,21 @@ class Form extends Component
      * Form properties.
      */
     public string $name = '';
+
     public string $email = '';
+
     public string $username = '';
+
     public string $password = '';
+
     public string $status = 'active';
+
     public string $nip = '';
+
     public string $nisn = '';
+
     public array $selectedRoles = [];
+
     public $avatar;
 
     /**
@@ -68,6 +75,10 @@ class Form extends Component
 
         if ($id) {
             $this->user = User::findOrFail($id);
+
+            // Check if the current user is authorized to edit this user
+            $this->authorize('update', $this->user);
+
             $this->name = $this->user->name;
             $this->email = $this->user->email;
             $this->username = $this->user->username;
@@ -77,6 +88,9 @@ class Form extends Component
             // Load profile data
             $this->nip = $this->user->profile->nip ?? '';
             $this->nisn = $this->user->profile->nisn ?? '';
+        } else {
+            // Check if the current user is authorized to create users
+            $this->authorize('create', User::class);
         }
     }
 
@@ -86,29 +100,38 @@ class Form extends Component
     public function save(): void
     {
         $rules = [
-            'name'          => 'required|string|max:255',
-            'email'         => 'required|email|unique:users,email,' . ($this->user?->id ?? 'NULL'),
-            'username'      => 'required|string|max:255|unique:users,username,' . ($this->user?->id ?? 'NULL'),
-            'password'      => ($this->user ? 'nullable' : 'required') . '|string|min:8',
-            'status'        => 'required|string|in:active,inactive,pending',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,'.($this->user?->id ?? 'NULL'),
+            'username' => 'required|string|max:255|unique:users,username,'.($this->user?->id ?? 'NULL'),
+            'password' => ($this->user ? 'nullable' : 'required').'|string|min:8',
+            'status' => 'required|string|in:active,inactive,pending',
             'selectedRoles' => 'required|array|min:1',
-            'avatar'        => 'nullable|image|max:1024',
-            'nip'           => 'nullable|string|max:50|unique:profiles,nip,' . ($this->user?->profile?->id ?? 'NULL'),
-            'nisn'          => 'nullable|string|max:50|unique:profiles,nisn,' . ($this->user?->profile?->id ?? 'NULL'),
+            'avatar' => 'nullable|image|max:1024',
+            'nip' => 'nullable|string|max:50|unique:profiles,nip,'.
+                ($this->user?->profile?->id ?? 'NULL'),
+            'nisn' => 'nullable|string|max:50|unique:profiles,nisn,'.
+                ($this->user?->profile?->id ?? 'NULL'),
         ];
 
         $validated = $this->validate($rules);
-        
+
+        // Perform final authorization check before saving
+        if ($this->user) {
+            $this->authorize('update', $this->user);
+        } else {
+            $this->authorize('create', User::class);
+        }
+
         $data = [
-            'name'     => $validated['name'],
-            'email'    => $validated['email'],
+            'name' => $validated['name'],
+            'email' => $validated['email'],
             'username' => $validated['username'],
             'password' => $validated['password'],
-            'roles'    => $this->selectedRoles,
-            'status'   => $this->status,
+            'roles' => $this->selectedRoles,
+            'status' => $this->status,
             'avatar_file' => $this->avatar,
-            'profile'  => [
-                'nip'  => $this->nip,
+            'profile' => [
+                'nip' => $this->nip,
                 'nisn' => $this->nisn,
             ],
         ];

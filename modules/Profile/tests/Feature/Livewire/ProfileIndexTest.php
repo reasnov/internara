@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
+use Modules\Permission\Models\Role;
 use Modules\Profile\Livewire\Index;
 use Modules\User\Models\User;
-use Modules\Permission\Models\Role;
 
 uses(RefreshDatabase::class);
 

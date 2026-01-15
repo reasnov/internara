@@ -19,11 +19,7 @@ class Permission extends BasePermission
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'guard_name',
-        'module',
-    ];
+    protected $fillable = ['name', 'guard_name', 'module'];
 
     /**
      * Determine if the model should use UUIDs.

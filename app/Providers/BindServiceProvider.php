@@ -33,7 +33,11 @@ class BindServiceProvider extends ServiceProvider
 
         foreach ($bindings as $abstract => $concrete) {
             /** Ensure that the abstract is an existing interface and the concrete is an existing class */
-            if (interface_exists($abstract) && class_exists($concrete) && ! interface_exists($concrete)) {
+            if (
+                interface_exists($abstract) &&
+                class_exists($concrete) &&
+                ! interface_exists($concrete)
+            ) {
                 $this->app->{$method}($abstract, $concrete);
             }
         }
@@ -54,7 +58,7 @@ class BindServiceProvider extends ServiceProvider
         foreach ($paths as $path => $rootNamespace) {
             $discoveredBindings = array_merge(
                 $discoveredBindings,
-                $this->scanDirectory($path, $rootNamespace)
+                $this->scanDirectory($path, $rootNamespace),
             );
         }
 
@@ -101,7 +105,8 @@ class BindServiceProvider extends ServiceProvider
                 if ($moduleDir->isDir() && ! $moduleDir->isDot()) {
                     $moduleName = $moduleDir->getBasename();
                     $baseNamespace = $modulesNamespace.'\\'.$moduleName;
-                    $contractPath = $moduleDir->getPathname().'/'.trim($moduleAppPath, '/').'/Contracts';
+                    $contractPath =
+                        $moduleDir->getPathname().'/'.trim($moduleAppPath, '/').'/Contracts';
 
                     if (file_exists($contractPath)) {
                         $paths[$contractPath] = $baseNamespace;
@@ -192,7 +197,6 @@ class BindServiceProvider extends ServiceProvider
             }
 
             return [$abstract, $name];
-
         } catch (\Throwable $e) {
             return null;
         }
@@ -237,7 +241,7 @@ class BindServiceProvider extends ServiceProvider
             return str_replace(
                 ['{{root}}', '{{short}}'],
                 [$rootNamespace, $shortNamespace],
-                $pattern
+                $pattern,
             );
         }, $patterns);
     }
@@ -251,7 +255,8 @@ class BindServiceProvider extends ServiceProvider
 
         foreach ($contextualBindings as $binding) {
             if (isset($binding['when'], $binding['needs'], $binding['give'])) {
-                $this->app->when($binding['when'])
+                $this->app
+                    ->when($binding['when'])
                     ->needs($binding['needs'])
                     ->give($binding['give']);
             }

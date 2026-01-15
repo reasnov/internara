@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\UI\Core;
 
 use Closure;
@@ -44,9 +46,9 @@ class SlotRegistry implements SlotRegistryContract
     /**
      * Register a renderable component for a given slot.
      *
-     * @param  string  $slot  The name of the slot.
-     * @param  string|Closure|View  $view  The component to render.
-     * @param  array  $data  Optional data to pass to the component.
+     * @param string $slot The name of the slot.
+     * @param string|Closure|View $view The component to render.
+     * @param array $data Optional data to pass to the component.
      */
     public function register(string $slot, string|Closure|View $view, array $data = []): void
     {
@@ -59,7 +61,8 @@ class SlotRegistry implements SlotRegistryContract
     /**
      * Get all registered components for a given slot.
      *
-     * @param  string  $slot  The name of the slot.
+     * @param string $slot The name of the slot.
+     *
      * @return array The registered components.
      */
     public function getSlotsFor(string $slot): array

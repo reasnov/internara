@@ -40,9 +40,7 @@ class CoreServiceProvider extends ServiceProvider
      */
     protected function registerCommands(): void
     {
-        $this->commands([
-            AppInfoCommand::class,
-        ]);
+        $this->commands([AppInfoCommand::class]);
     }
 
     /**

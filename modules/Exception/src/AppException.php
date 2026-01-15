@@ -28,13 +28,13 @@ class AppException extends Exception
     /**
      * Create a new exception instance.
      *
-     * @param  string  $userMessage  The translation key for the user-friendly message (e.g., "user::exceptions.not_found").
-     * @param  array  $replace  Parameters to pass to the translator for replacement (e.g., ['name' => 'John']).
-     * @param  string|null  $locale  Specific locale to use for the user message, or null for default.
-     * @param  string|null  $logMessage  The technical message for logging (optional, defaults to $userMessage).
-     * @param  int  $code  The HTTP status code or internal error code (default 422 - Unprocessable Content).
-     * @param  Throwable|null  $previous  The previous exception used for chaining (optional).
-     * @param  array  $context  Additional context data to be logged with the exception.
+     * @param string $userMessage The translation key for the user-friendly message (e.g., "user::exceptions.not_found").
+     * @param array $replace Parameters to pass to the translator for replacement (e.g., ['name' => 'John']).
+     * @param string|null $locale Specific locale to use for the user message, or null for default.
+     * @param string|null $logMessage The technical message for logging (optional, defaults to $userMessage).
+     * @param int $code The HTTP status code or internal error code (default 422 - Unprocessable Content).
+     * @param Throwable|null $previous The previous exception used for chaining (optional).
+     * @param array $context Additional context data to be logged with the exception.
      */
     public function __construct(
         string $userMessage,
@@ -43,7 +43,7 @@ class AppException extends Exception
         ?string $logMessage = null,
         int $code = 422,
         ?Throwable $previous = null,
-        protected array $context = []
+        protected array $context = [],
     ) {
         $this->userMessage = trim($userMessage);
         $this->logMessage = trim($logMessage ?? $this->userMessage);
@@ -98,16 +98,20 @@ class AppException extends Exception
      */
     public function context(): array
     {
-        return array_merge([
-            'user_message' => $this->getUserMessage(),
-            'log_message' => $this->getLogMessage(),
-        ], $this->getContext());
+        return array_merge(
+            [
+                'user_message' => $this->getUserMessage(),
+                'log_message' => $this->getLogMessage(),
+            ],
+            $this->getContext(),
+        );
     }
 
     /**
      * Get a subset of the exception trace stack.
      *
-     * @param  int  $limit  The maximum number of trace stacks to include.
+     * @param int $limit The maximum number of trace stacks to include.
+     *
      * @return array The trace stacks.
      */
     public function getSubTrace(int $limit = 6): array

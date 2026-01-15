@@ -1,3 +1,5 @@
-@props(['name'])
+@props([
+    'name',
+])
 
 @svg($name, $attributes)

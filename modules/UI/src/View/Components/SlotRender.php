@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\UI\View\Components;
 
 use Illuminate\View\Component;
@@ -18,7 +20,7 @@ class SlotRender extends Component
     /**
      * Create a new component instance.
      *
-     * @param  string  $name  The name of the slot to render.
+     * @param string $name The name of the slot to render.
      */
     public function __construct(protected readonly string $name) {}
 

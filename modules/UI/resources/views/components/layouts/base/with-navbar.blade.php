@@ -14,6 +14,6 @@
 
                 <x-ui::footer />
             </x-slot:footer>
-            </x-maimain>
+        </x-mary-main>
     </div>
 </x-ui::layouts.base>

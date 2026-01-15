@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Auth\Livewire;
 
 use Illuminate\View\View;
@@ -18,6 +20,7 @@ use Modules\Exception\AppException;
 class Login extends Component
 {
     protected AuthService $authService;
+
     protected RedirectService $redirectService;
 
     #[Rule('required|string')]
@@ -42,7 +45,11 @@ class Login extends Component
     protected function rules(): array
     {
         return [
-            'identifier' => ['required', 'string', $this->isEmail($this->identifier) ? 'email' : null],
+            'identifier' => [
+                'required',
+                'string',
+                $this->isEmail($this->identifier) ? 'email' : null,
+            ],
             'password' => 'required|string',
         ];
     }
@@ -75,10 +82,13 @@ class Login extends Component
         $this->validate();
 
         try {
-            $user = $this->authService->login([
-                'identifier' => $this->identifier,
-                'password' => $this->password,
-            ], $this->remember);
+            $user = $this->authService->login(
+                [
+                    'identifier' => $this->identifier,
+                    'password' => $this->password,
+                ],
+                $this->remember,
+            );
 
             $this->redirect($this->redirectService->getTargetUrl($user), navigate: true);
         } catch (AppException $e) {
@@ -91,11 +101,10 @@ class Login extends Component
      */
     public function render(): View
     {
-        return view('auth::livewire.login')
-            ->layout('auth::components.layouts.auth', [
-                'title' => __('Login to Dashboard | :site_title', [
-                    'site_title' => setting('site_title', 'Internara'),
-                ]),
-            ]);
+        return view('auth::livewire.login')->layout('auth::components.layouts.auth', [
+            'title' => __('Login to Dashboard | :site_title', [
+                'site_title' => setting('site_title', 'Internara'),
+            ]),
+        ]);
     }
 }

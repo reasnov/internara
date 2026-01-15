@@ -38,22 +38,14 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'username',
-        'password',
-    ];
+    protected $fillable = ['name', 'email', 'username', 'password'];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
     /**
      * The "booted" method of the model.
@@ -82,7 +74,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
-            'password'          => 'hashed',
+            'password' => 'hashed',
         ];
     }
 
@@ -111,8 +103,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
      */
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('user_avatar')
-            ->singleFile();
+        $this->addMediaCollection('user_avatar')->singleFile();
     }
 
     /**
@@ -126,8 +117,10 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     /**
      * Set the user's avatar.
      */
-    public function setAvatar(string|UploadedFile $file, string $collectionName = 'user_avatar'): bool
-    {
+    public function setAvatar(
+        string|UploadedFile $file,
+        string $collectionName = 'user_avatar',
+    ): bool {
         $this->clearMediaCollection($collectionName);
 
         return (bool) $this->addMedia($file)->toMediaCollection($collectionName);

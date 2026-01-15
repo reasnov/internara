@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Department\Livewire;
 
 use Illuminate\View\View;
@@ -10,8 +12,9 @@ class DepartmentManager extends Component
 {
     use ManagesRecords;
 
-    public function mount(\Modules\Department\Services\Contracts\DepartmentService $departmentService): void
-    {
+    public function mount(
+        \Modules\Department\Services\Contracts\DepartmentService $departmentService,
+    ): void {
         $this->service = $departmentService;
     }
 

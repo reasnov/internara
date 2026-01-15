@@ -49,8 +49,8 @@ class PermissionSeeder extends Seeder
                 ['name' => $name, 'guard_name' => 'web'],
                 [
                     'description' => $data[0],
-                    'module'      => $data[1],
-                ]
+                    'module' => $data[1],
+                ],
             );
         }
     }

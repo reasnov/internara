@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'record_created' => 'Data berhasil dibuat.',
     'record_updated' => 'Data berhasil diperbarui.',

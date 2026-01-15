@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\FormBuilder;
 
 use Illuminate\Support\Collection;
@@ -37,10 +39,11 @@ class Schema
         return $schema;
     }
 
-    public function header(string|callable|null $title = null, string|callable|null $description = null): self
-    {
-        return $this->title($title)
-            ->description($description);
+    public function header(
+        string|callable|null $title = null,
+        string|callable|null $description = null,
+    ): self {
+        return $this->title($title)->description($description);
     }
 
     public function title(string|callable|null $title = null): self
@@ -66,7 +69,7 @@ class Schema
     }
 
     /**
-     * @param  array<int, \Modules\FormBuilder\Contracts\Input>  $schemas
+     * @param array<int, \Modules\FormBuilder\Contracts\Input> $schemas
      */
     public function form(array $schemas = []): self
     {
@@ -86,7 +89,7 @@ class Schema
     }
 
     /**
-     * @param  array<string, class-string>  $viewClasses
+     * @param array<string, class-string> $viewClasses
      */
     public function registerInputViews(array $viewClasses = []): void
     {
@@ -111,13 +114,14 @@ class Schema
             return collect();
         }
 
-        return collect($schemas)
-            ->map(function ($schema) {
-                if (! ($schema instanceof InputContract)) {
-                    throw new InvalidArgumentException(sprintf('The schema must be instance of %s.', InputContract::class));
-                }
+        return collect($schemas)->map(function ($schema) {
+            if (! ($schema instanceof InputContract)) {
+                throw new InvalidArgumentException(
+                    sprintf('The schema must be instance of %s.', InputContract::class),
+                );
+            }
 
-                return $schema;
-            });
+            return $schema;
+        });
     }
 }

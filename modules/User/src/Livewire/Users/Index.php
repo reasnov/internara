@@ -91,11 +91,15 @@ class Index extends Component
     public function render()
     {
         return view('user::livewire.users.index', [
-            'users' => $this->userService->paginate([
-                'search'   => $this->search,
-                'sort_by'  => $this->sortBy,
-                'sort_dir' => $this->sortDir,
-            ], 10, ['id', 'name', 'email', 'username', 'created_at']),
+            'users' => $this->userService->paginate(
+                [
+                    'search' => $this->search,
+                    'sort_by' => $this->sortBy,
+                    'sort_dir' => $this->sortDir,
+                ],
+                10,
+                ['id', 'name', 'email', 'username', 'created_at'],
+            ),
             'headers' => $this->getHeaders(),
         ]);
     }

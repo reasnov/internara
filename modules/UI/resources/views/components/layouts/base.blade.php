@@ -2,7 +2,6 @@
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
     <head>
         <x-ui::layouts.base.head :$title />
     </head>
@@ -20,5 +19,4 @@
 
         @stack('scripts')
     </body>
-
 </html>

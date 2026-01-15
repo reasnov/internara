@@ -55,7 +55,7 @@ class ModuleMakeClassCommand extends GeneratorCommand
     {
         return (new Stub($this->getStub(), [
             'NAMESPACE' => $this->getTargetNamespace(),
-            'CLASS'     => $this->getTargetName(),
+            'CLASS' => $this->getTargetName(),
         ]))->render();
     }
 
@@ -84,7 +84,12 @@ class ModuleMakeClassCommand extends GeneratorCommand
     protected function getOptions(): array
     {
         return [
-            ['force', null, InputOption::VALUE_NONE, 'Create the class even if the class already exists.'],
+            [
+                'force',
+                null,
+                InputOption::VALUE_NONE,
+                'Create the class even if the class already exists.',
+            ],
         ];
     }
 }

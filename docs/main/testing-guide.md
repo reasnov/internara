@@ -1,75 +1,99 @@
 # Testing Guide
 
-This document outlines the philosophy, conventions, and workflow for writing tests within the Internara project. High code quality and stability are paramount, and a robust testing strategy is fundamental to achieving these goals.
+This document outlines the philosophy, conventions, and workflow for writing tests within the
+Internara project. High code quality and stability are paramount, and a robust testing strategy is
+fundamental to achieving these goals.
 
 ## Table of Contents
 
--   [Internara - Testing Guide](#internara---testing-guide)
-    -   [Table of Contents](#table-of-contents)
-    -   [Testing Philosophy](#testing-philosophy)
-        -   [Unit Tests vs. Feature Tests: Clear Responsibilities](#unit-tests-vs-feature-tests-clear-responsibilities)
-    -   [Core Framework: Pest](#core-framework-pest)
-    -   [Test Directory Structure](#test-directory-structure)
-    -   [Writing Tests with Pest](#writing-tests-with-pest)
-        -   [Basic Test Structure](#basic-test-structure)
-        -   [Global Test Configuration (`tests/Pest.php`)](#global-test-configuration-testspestphp)
-        -   [Feature Tests](#feature-tests)
-        -   [Unit Tests](#unit-tests)
-    -   [Creating \& Running Tests](#creating--running-tests)
-        -   [Creating Application-Level Tests](#creating-application-level-tests)
-        -   [Creating Module-Level Tests](#creating-module-level-tests)
-        -   [Running Tests](#running-tests)
-    -   [Fakes \& Mocks](#fakes--mocks)
-    -   [Appendix: Class-Based PHPUnit Style Tests](#appendix-class-based-phpunit-style-tests)
-        -   [Application Feature Test Example](#application-feature-test-example)
-        -   [Application Unit Test Example](#application-unit-test-example)
-        -   [Module Feature Test Example](#module-feature-test-example)
+- [Internara - Testing Guide](#internara---testing-guide)
+    - [Table of Contents](#table-of-contents)
+    - [Testing Philosophy](#testing-philosophy)
+        - [Unit Tests vs. Feature Tests: Clear Responsibilities](#unit-tests-vs-feature-tests-clear-responsibilities)
+    - [Core Framework: Pest](#core-framework-pest)
+    - [Test Directory Structure](#test-directory-structure)
+    - [Writing Tests with Pest](#writing-tests-with-pest)
+        - [Basic Test Structure](#basic-test-structure)
+        - [Global Test Configuration (`tests/Pest.php`)](#global-test-configuration-testspestphp)
+        - [Feature Tests](#feature-tests)
+        - [Unit Tests](#unit-tests)
+    - [Creating \& Running Tests](#creating--running-tests)
+        - [Creating Application-Level Tests](#creating-application-level-tests)
+        - [Creating Module-Level Tests](#creating-module-level-tests)
+        - [Running Tests](#running-tests)
+    - [Fakes \& Mocks](#fakes--mocks)
+    - [Appendix: Class-Based PHPUnit Style Tests](#appendix-class-based-phpunit-style-tests)
+        - [Application Feature Test Example](#application-feature-test-example)
+        - [Application Unit Test Example](#application-unit-test-example)
+        - [Module Feature Test Example](#module-feature-test-example)
 
 ## Testing Philosophy
 
--   **Test-Driven Development (TDD) principles**: Embrace writing tests before or alongside new feature development. This approach fosters better design, more maintainable code, and clearer requirements.
--   **Comprehensive Coverage**: Ensure every new feature, bug fix, or significant modification is accompanied by relevant tests. This practice verifies functionality and prevents regressions.
--   **Maintain Test Suites**: Treat tests as first-class citizens. Avoid deleting existing tests; instead, update them to reflect changes in functionality.
+- **Test-Driven Development (TDD) principles**: Embrace writing tests before or alongside new
+  feature development. This approach fosters better design, more maintainable code, and clearer
+  requirements.
+- **Comprehensive Coverage**: Ensure every new feature, bug fix, or significant modification is
+  accompanied by relevant tests. This practice verifies functionality and prevents regressions.
+- **Maintain Test Suites**: Treat tests as first-class citizens. Avoid deleting existing tests;
+  instead, update them to reflect changes in functionality.
 
 ### Unit Tests vs. Feature Tests: Clear Responsibilities
 
-Understanding the distinct roles of Unit and Feature tests is crucial for an effective testing strategy.
+Understanding the distinct roles of Unit and Feature tests is crucial for an effective testing
+strategy.
 
--   **Unit Tests**:
+- **Unit Tests**:
+    - **Focus**: Isolated components (e.g., a single function, method, or small class).
+    - **Goal**: Verify that each unit of code performs its specific task correctly in isolation.
+    - **Characteristics**: Fast execution, mock external dependencies (database, HTTP requests,
+      other services) to ensure only the unit under test is evaluated. They do not interact with the
+      application's infrastructure.
+    - **When to use**: For testing algorithms, helper functions, model logic (without database
+      interaction), service methods (with mocked dependencies).
 
-    -   **Focus**: Isolated components (e.g., a single function, method, or small class).
-    -   **Goal**: Verify that each unit of code performs its specific task correctly in isolation.
-    -   **Characteristics**: Fast execution, mock external dependencies (database, HTTP requests, other services) to ensure only the unit under test is evaluated. They do not interact with the application's infrastructure.
-    -   **When to use**: For testing algorithms, helper functions, model logic (without database interaction), service methods (with mocked dependencies).
+- **Feature Tests**:
+    - **Focus**: Integration of multiple components, covering an entire feature or user story.
+    - **Goal**: Verify that different parts of the application (e.g., controller, service, model,
+      database, HTTP middleware) work together as expected to deliver a specific feature.
+    - **Characteristics**: Slower execution compared to unit tests. They often interact with the
+      database, simulate HTTP requests, and leverage the full Laravel application bootstrap.
+    - **When to use**: For testing API endpoints, form submissions, user authentication flows,
+      complex business processes involving multiple layers, and overall feature completeness.
 
--   **Feature Tests**:
-    -   **Focus**: Integration of multiple components, covering an entire feature or user story.
-    -   **Goal**: Verify that different parts of the application (e.g., controller, service, model, database, HTTP middleware) work together as expected to deliver a specific feature.
-    -   **Characteristics**: Slower execution compared to unit tests. They often interact with the database, simulate HTTP requests, and leverage the full Laravel application bootstrap.
-    -   **When to use**: For testing API endpoints, form submissions, user authentication flows, complex business processes involving multiple layers, and overall feature completeness.
-
-By maintaining this clear separation, we ensure that our codebase is both thoroughly tested at a granular level and that its integrated features function correctly end-to-end.
+By maintaining this clear separation, we ensure that our codebase is both thoroughly tested at a
+granular level and that its integrated features function correctly end-to-end.
 
 ## Core Framework: Pest
 
-Internara utilizes [Pest](https://pestphp.com/) as its primary testing framework. Built atop PHPUnit, Pest provides a highly expressive and developer-friendly syntax, enabling the creation of clean, elegant, and readable tests.
+Internara utilizes [Pest](https://pestphp.com/) as its primary testing framework. Built atop
+PHPUnit, Pest provides a highly expressive and developer-friendly syntax, enabling the creation of
+clean, elegant, and readable tests.
 
 ## Test Directory Structure
 
-Tests are organized into two main locations: the root `/tests` directory for application-wide tests and a dedicated `tests` directory within each module. The project's `phpunit.xml` is pre-configured to automatically discover tests from all these locations.
+Tests are organized into two main locations: the root `/tests` directory for application-wide tests
+and a dedicated `tests` directory within each module. The project's `phpunit.xml` is pre-configured
+to automatically discover tests from all these locations.
 
-**Crucially, test files should always be placed in a dedicated subdirectory within `Feature/` or `Unit/`, reflecting the layer they are testing.** For example, `Unit/Models`, `Feature/Services`, `Feature/Http/Controllers`, or `Feature/Policies`. **Avoid placing test files directly under `Feature/` or `Unit/`.**
+**Crucially, test files should always be placed in a dedicated subdirectory within `Feature/` or
+`Unit/`, reflecting the layer they are testing.** For example, `Unit/Models`, `Feature/Services`,
+`Feature/Http/Controllers`, or `Feature/Policies`. **Avoid placing test files directly under
+`Feature/` or `Unit/`.**
 
--   `/tests/Feature/{Layer}/{SubDir}`: For application-level Feature Tests (e.g., `tests/Feature/Http/Controllers`).
--   `/tests/Unit/{Layer}/{SubDir}`: For application-level Unit Tests (e.g., `tests/Unit/Models`).
--   `modules/{ModuleName}/tests/Feature/{Layer}/{SubDir}`: For module-specific Feature Tests (e.g., `modules/User/tests/Feature/Auth`).
--   `modules/{ModuleName}/tests/Unit/{Layer}/{SubDir}`: For module-specific Unit Tests (e.g., `modules/User/tests/Unit/Models`).
+- `/tests/Feature/{Layer}/{SubDir}`: For application-level Feature Tests (e.g.,
+  `tests/Feature/Http/Controllers`).
+- `/tests/Unit/{Layer}/{SubDir}`: For application-level Unit Tests (e.g., `tests/Unit/Models`).
+- `modules/{ModuleName}/tests/Feature/{Layer}/{SubDir}`: For module-specific Feature Tests (e.g.,
+  `modules/User/tests/Feature/Auth`).
+- `modules/{ModuleName}/tests/Unit/{Layer}/{SubDir}`: For module-specific Unit Tests (e.g.,
+  `modules/User/tests/Unit/Models`).
 
 ## Writing Tests with Pest
 
 ### Basic Test Structure
 
-Pest tests are defined as closures passed to a global `test()` or `it()` function. Adhering to the **Arrange, Act, Assert** pattern enhances test clarity and maintainability.
+Pest tests are defined as closures passed to a global `test()` or `it()` function. Adhering to the
+**Arrange, Act, Assert** pattern enhances test clarity and maintainability.
 
 ```php
 test('it should correctly process a valid input', function () {
@@ -86,7 +110,10 @@ test('it should correctly process a valid input', function () {
 
 ### Global Test Configuration (`tests/Pest.php`)
 
-The `tests/Pest.php` file centrally configures the testing environment. It extends `Tests\TestCase` to bind it to your test functions and specifies which directories automatically load this configuration. This ensures a consistent, bootstrapped Laravel environment for tests that require framework interaction.
+The `tests/Pest.php` file centrally configures the testing environment. It extends `Tests\TestCase`
+to bind it to your test functions and specifies which directories automatically load this
+configuration. This ensures a consistent, bootstrapped Laravel environment for tests that require
+framework interaction.
 
 ```php
 <?php
@@ -102,13 +129,9 @@ The `tests/Pest.php` file centrally configures the testing environment. It exten
 |
 */
 
-pest()->extend(Tests\TestCase::class)
-    ->in(
-        'Feature',
-        'Unit',
-        '../modules/*/tests/Feature',
-        '../modules/*/tests/Unit'
-    );
+pest()
+    ->extend(Tests\TestCase::class)
+    ->in('Feature', 'Unit', '../modules/*/tests/Feature', '../modules/*/tests/Unit');
 
 /*
 |--------------------------------------------------------------------------
@@ -128,7 +151,9 @@ expect()->extend('toBeOne', function () {
 
 ### Feature Tests
 
-Feature tests focus on how different components of your application interact, testing a broader scope, typically including HTTP requests and database interactions. For tests requiring database resets, the `RefreshDatabase` trait is commonly used.
+Feature tests focus on how different components of your application interact, testing a broader
+scope, typically including HTTP requests and database interactions. For tests requiring database
+resets, the `RefreshDatabase` trait is commonly used.
 
 ```php
 <?php
@@ -161,18 +186,24 @@ test('a user can log in with correct credentials', function () {
 
 ### Asserting Exceptions
 
-When testing code that is expected to throw exceptions, Pest provides the `toThrow` expectation to gracefully assert these scenarios. This is crucial for ensuring your error handling mechanisms, especially the custom `AppException`, work as intended with the localization system.
+When testing code that is expected to throw exceptions, Pest provides the `toThrow` expectation to
+gracefully assert these scenarios. This is crucial for ensuring your error handling mechanisms,
+especially the custom `AppException`, work as intended with the localization system.
 
-To assert an exception, wrap the code that is expected to throw it within a closure and use `expect()->toThrow()`. You can specify both the expected exception class and the exact exception message.
+To assert an exception, wrap the code that is expected to throw it within a closure and use
+`expect()->toThrow()`. You can specify both the expected exception class and the exact exception
+message.
 
 **Practical Example: Testing a Service Method with `AppException`**
 
-This example demonstrates a full-circle test for a service method that throws a project-specific `AppException` with a namespaced translation key.
+This example demonstrates a full-circle test for a service method that throws a project-specific
+`AppException` with a namespaced translation key.
 
-**1. The Service Method**
-Assume the `UserService` has a method to delete a user, which throws an exception if you try to delete the protected 'super-admin'.
+**1. The Service Method** Assume the `UserService` has a method to delete a user, which throws an
+exception if you try to delete the protected 'super-admin'.
 
-*File: `modules/User/src/Services/UserService.php`*
+_File: `modules/User/src/Services/UserService.php`_
+
 ```php
 class UserService
 {
@@ -181,7 +212,7 @@ class UserService
         if ($userToDelete->hasRole('super-admin')) {
             throw new \Modules\Shared\Exceptions\AppException(
                 userMessage: 'user::exceptions.super_admin_cannot_be_deleted',
-                code: 403
+                code: 403,
             );
         }
         // ... deletion logic
@@ -189,10 +220,10 @@ class UserService
 }
 ```
 
-**2. The Language File**
-The corresponding translation key must exist in the module's language file.
+**2. The Language File** The corresponding translation key must exist in the module's language file.
 
-*File: `modules/User/lang/en/exceptions.php`*
+_File: `modules/User/lang/en/exceptions.php`_
+
 ```php
 <?php
 return [
@@ -200,10 +231,11 @@ return [
 ];
 ```
 
-**3. The Pest Test**
-The test should assert that calling the method with the SuperAdmin user throws an `AppException` with the correctly translated message.
+**3. The Pest Test** The test should assert that calling the method with the SuperAdmin user throws
+an `AppException` with the correctly translated message.
 
-*File: `modules/User/tests/Feature/Services/UserServiceTest.php`*
+_File: `modules/User/tests/Feature/Services/UserServiceTest.php`_
+
 ```php
 <?php
 
@@ -223,15 +255,20 @@ test('it throws an exception when trying to delete the SuperAdmin user', functio
     $expectedMessage = __('user::exceptions.owner_cannot_be_deleted');
 
     // Act & Assert: Expect the specific exception with the correct translated message
-    expect(fn () => $userService->delete($superAdmin))
-        ->toThrow(AppException::class, $expectedMessage);
+    expect(fn() => $userService->delete($superAdmin))->toThrow(
+        AppException::class,
+        $expectedMessage,
+    );
 });
 ```
-This approach ensures that your test not only validates the exception logic but also confirms that your localization is correctly configured and being used.
+
+This approach ensures that your test not only validates the exception logic but also confirms that
+your localization is correctly configured and being used.
 
 ### Unit Tests
 
-Unit tests verify small, isolated parts of your code, such as individual functions or methods, without involving the broader framework or external dependencies.
+Unit tests verify small, isolated parts of your code, such as individual functions or methods,
+without involving the broader framework or external dependencies.
 
 ```php
 <?php
@@ -239,7 +276,7 @@ Unit tests verify small, isolated parts of your code, such as individual functio
 // tests/Unit/Support/StringHelperTest.php
 
 // Assuming a helper function `str_title` exists globally or is loaded.
-if (! function_exists('str_title')) {
+if (!function_exists('str_title')) {
     function str_title(string $value): string
     {
         return ucwords(strtolower($value));
@@ -262,7 +299,8 @@ test('the helper function correctly formats a string to title case', function ()
 
 ### Creating Application-Level Tests
 
-Use these Artisan commands to generate tests for the main application, which will be stored in the `/tests` directory. Remember to specify the desired subdirectory structure.
+Use these Artisan commands to generate tests for the main application, which will be stored in the
+`/tests` directory. Remember to specify the desired subdirectory structure.
 
 ```bash
 # Create a new Feature Test (e.g., tests/Feature/Http/Controllers/UserRegistrationTest.php)
@@ -274,7 +312,8 @@ php artisan make:test Unit/Support/StringHelperTest --unit
 
 ### Creating Module-Level Tests
 
-Use the `module:make-test` Artisan command to generate tests within a specific module's `tests` directory. Ensure you include the desired subdirectory structure.
+Use the `module:make-test` Artisan command to generate tests within a specific module's `tests`
+directory. Ensure you include the desired subdirectory structure.
 
 ```bash
 # Create a new Feature test for the "User" module (e.g., modules/User/tests/Feature/Auth/LoginTest.php)
@@ -307,7 +346,8 @@ php artisan test --filter=homepage
 
 ## Fakes & Mocks
 
-Laravel provides powerful `fake()` methods and mocking capabilities to isolate your code from external services and dependencies during testing.
+Laravel provides powerful `fake()` methods and mocking capabilities to isolate your code from
+external services and dependencies during testing.
 
 ```php
 <?php
@@ -347,9 +387,14 @@ test('a shipping email is sent when an order is completed', function () {
 
 ## Appendix: Class-Based PHPUnit Style Tests
 
-For all class-based PHPUnit style tests, test methods **must** always be prefixed with `test_`. This convention is mandatory and non-negotiable for proper test discovery and adherence to project standards.
+For all class-based PHPUnit style tests, test methods **must** always be prefixed with `test_`. This
+convention is mandatory and non-negotiable for proper test discovery and adherence to project
+standards.
 
-While Pest's functional style is preferred, the project fully supports traditional class-based testing using PHPUnit syntax. This approach can be beneficial for grouping numerous related tests within a single class or for leveraging `setUp()` and `tearDown()` methods for complex test arrangements.
+While Pest's functional style is preferred, the project fully supports traditional class-based
+testing using PHPUnit syntax. This approach can be beneficial for grouping numerous related tests
+within a single class or for leveraging `setUp()` and `tearDown()` methods for complex test
+arrangements.
 
 ### Application Feature Test Example
 
@@ -403,7 +448,9 @@ class ExampleUnitTest extends PHPUnitTestCase
 
 ### Module Feature Test Example
 
-This example demonstrates a class-based feature test for a module. Its location (`modules/User/tests/Feature/Auth/UserDashboardTest.php`) and namespace are the primary distinctions from an application-level test.
+This example demonstrates a class-based feature test for a module. Its location
+(`modules/User/tests/Feature/Auth/UserDashboardTest.php`) and namespace are the primary distinctions
+from an application-level test.
 
 ```php
 <?php

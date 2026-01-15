@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'verification_subject' => 'Confirm Your Email Address - Internship Program',
     'verification_greeting' => 'Hello, :name!',

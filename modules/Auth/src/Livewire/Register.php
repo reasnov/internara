@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Auth\Livewire;
 
 use Illuminate\View\View;
@@ -12,6 +14,7 @@ use Modules\Exception\AppException;
 class Register extends Component
 {
     protected AuthService $authService;
+
     protected RedirectService $redirectService;
 
     #[Rule('required|string|min:3')]
@@ -45,7 +48,6 @@ class Register extends Component
             ]);
 
             $this->redirect($this->redirectService->getTargetUrl($user), navigate: true);
-
         } catch (AppException $e) {
             $this->addError('email', $e->getMessage());
         }
@@ -53,11 +55,10 @@ class Register extends Component
 
     public function render(): View
     {
-        return view('auth::livewire.register')
-            ->layout('auth::components.layouts.auth', [
-                'title' => __('Daftar Akun | :site_title', [
-                    'site_title' => setting('site_title', 'Internara'),
-                ]),
-            ]);
+        return view('auth::livewire.register')->layout('auth::components.layouts.auth', [
+            'title' => __('Daftar Akun | :site_title', [
+                'site_title' => setting('site_title', 'Internara'),
+            ]),
+        ]);
     }
 }

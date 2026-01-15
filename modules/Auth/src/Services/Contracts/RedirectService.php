@@ -17,7 +17,8 @@ interface RedirectService
     /**
      * Get the target URL for a user based on their roles.
      *
-     * @param  User  $user  The authenticated user.
+     * @param User $user The authenticated user.
+     *
      * @return string The absolute URL to redirect to.
      */
     public function getTargetUrl(User $user): string;

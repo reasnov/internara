@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'super_admin_already_exists' => 'Akun SuperAdmin sudah ada. Tidak dapat membuat SuperAdmin baru.',
     'super_admin_role_cannot_be_removed' => 'Role SuperAdmin tidak dapat dihapus dari akun ini.',

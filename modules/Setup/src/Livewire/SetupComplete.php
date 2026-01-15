@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Setup\Livewire;
 
 use Illuminate\View\View;
@@ -17,7 +19,7 @@ class SetupComplete extends Component
     /**
      * Boots the component and injects the SetupService.
      *
-     * @param  \Modules\Setup\Contracts\Services\SetupService  $setupService  The service for handling setup logic.
+     * @param \Modules\Setup\Contracts\Services\SetupService $setupService The service for handling setup logic.
      */
     public function boot(SetupService $setupService): void
     {
@@ -29,10 +31,7 @@ class SetupComplete extends Component
      */
     public function mount(): void
     {
-        $this->initSetupStepProps(
-            currentStep: 'complete',
-            prevStep: 'internship',
-        );
+        $this->initSetupStepProps(currentStep: 'complete', prevStep: 'internship');
 
         $this->requireSetupAccess();
     }
@@ -44,11 +43,10 @@ class SetupComplete extends Component
      */
     public function render(): View
     {
-        return view('setup::livewire.setup-complete')
-            ->layout('setup::components.layouts.setup', [
-                'title' => __('Setup Selesai | :site_title', [
-                    'site_title' => setting('site_title', 'Internara'),
-                ]),
-            ]);
+        return view('setup::livewire.setup-complete')->layout('setup::components.layouts.setup', [
+            'title' => __('Setup Selesai | :site_title', [
+                'site_title' => setting('site_title', 'Internara'),
+            ]),
+        ]);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Auth\Livewire;
 
 use Livewire\Component;
@@ -35,7 +37,10 @@ class VerificationNotice extends Component
 
         try {
             $this->authService->resendVerificationEmail(auth()->user());
-            session()->flash('status', 'A fresh verification link has been sent to your email address.');
+            session()->flash(
+                'status',
+                'A fresh verification link has been sent to your email address.',
+            );
         } catch (AppException $e) {
             session()->flash('error', $e->getUserMessage());
         }

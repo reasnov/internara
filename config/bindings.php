@@ -1,7 +1,8 @@
 <?php
 
-return [
+declare(strict_types=1);
 
+return [
     /*
     |--------------------------------------------------------------------------
     | Auto Binding
@@ -66,9 +67,7 @@ return [
     |
     */
 
-    'ignored_namespaces' => [
-        'Modules\Core',
-    ],
+    'ignored_namespaces' => ['Modules\Core'],
 
     /*
     |--------------------------------------------------------------------------
@@ -101,5 +100,4 @@ return [
         //     'give'  => 'App\Services\LocalFilesystem',
         // ],
     ],
-
 ];

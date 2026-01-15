@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Setup\Livewire\Concerns;
 
 use Livewire\Attributes\Computed;
@@ -30,13 +32,17 @@ trait HandlesSetupSteps
     /**
      * Initializes the properties for the current setup step.
      *
-     * @param  string  $currentStep  The identifier for the current step.
-     * @param  string  $nextStep  The identifier for the next step.
-     * @param  string  $prevStep  The identifier for the previous step.
-     * @param  array<string, mixed>  $extra  Additional data for the step.
+     * @param string $currentStep The identifier for the current step.
+     * @param string $nextStep The identifier for the next step.
+     * @param string $prevStep The identifier for the previous step.
+     * @param array<string, mixed> $extra Additional data for the step.
      */
-    protected function initSetupStepProps(string $currentStep, string $nextStep = '', string $prevStep = '', array $extra = []): void
-    {
+    protected function initSetupStepProps(
+        string $currentStep,
+        string $nextStep = '',
+        string $prevStep = '',
+        array $extra = [],
+    ): void {
         $this->setupStepProps = [
             'currentStep' => $currentStep,
             'nextStep' => $nextStep,
@@ -92,7 +98,7 @@ trait HandlesSetupSteps
      * Determines if the 'next step' button should be disabled.
      * The button is disabled if a required record for the current step does not exist.
      */
-    #[Computed()]
+    #[Computed]
     public function disableNextStep(): bool
     {
         $record = $this->setupStepProps['extra']['req_record'] ?? null;
@@ -103,7 +109,7 @@ trait HandlesSetupSteps
     /**
      * Redirects to a named setup step route.
      *
-     * @param  string  $name  The name of the step to redirect to.
+     * @param string $name The name of the step to redirect to.
      */
     protected function redirectToStep(string $name): void
     {

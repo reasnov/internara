@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Setting\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -27,7 +29,7 @@ class SettingFactory extends Factory
     /**
      * Indicate that the setting should be of type 'string'.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
      */
     public function string(array $attributes = []): static
     {
@@ -37,7 +39,7 @@ class SettingFactory extends Factory
     /**
      * Indicate that the setting should be of type 'integer'.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
      */
     public function integer(array $attributes = []): static
     {
@@ -47,7 +49,7 @@ class SettingFactory extends Factory
     /**
      * Indicate that the setting should be of type 'float'.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
      */
     public function float(array $attributes = []): static
     {
@@ -57,7 +59,7 @@ class SettingFactory extends Factory
     /**
      * Indicate that the setting should be of type 'boolean'.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
      */
     public function boolean(array $attributes = []): static
     {
@@ -67,7 +69,7 @@ class SettingFactory extends Factory
     /**
      * Indicate that the setting should be of type 'array'.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
      */
     public function array(array $attributes = []): static
     {
@@ -77,7 +79,7 @@ class SettingFactory extends Factory
     /**
      * Indicate that the setting should be of type 'json'.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
      */
     public function json(array $attributes = []): static
     {
@@ -87,7 +89,7 @@ class SettingFactory extends Factory
     /**
      * Indicate that the setting should be of type 'null'.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
      */
     public function nullType(array $attributes = []): static
     {
@@ -98,8 +100,9 @@ class SettingFactory extends Factory
      * Build a state array with default values for a given setting type,
      * merged with any provided attribute overrides.
      *
-     * @param  string  $type  The type of the setting ('string', 'integer', etc.).
-     * @param  array<string, mixed>  $attributes  Attributes to override the defaults.
+     * @param string $type The type of the setting ('string', 'integer', etc.).
+     * @param array<string, mixed> $attributes Attributes to override the defaults.
+     *
      * @return array<string, mixed>
      */
     protected function buildState(string $type, array $attributes = []): array
@@ -109,7 +112,10 @@ class SettingFactory extends Factory
             'float' => $this->faker->randomFloat(2, 0, 1000),
             'boolean' => $this->faker->boolean(),
             'array' => ['item1' => $this->faker->word(), 'item2' => $this->faker->word()],
-            'json' => ['data_key' => $this->faker->word(), 'data_value' => $this->faker->sentence()],
+            'json' => [
+                'data_key' => $this->faker->word(),
+                'data_value' => $this->faker->sentence(),
+            ],
             'null' => null,
             default => $this->faker->sentence(), // 'string'
         };

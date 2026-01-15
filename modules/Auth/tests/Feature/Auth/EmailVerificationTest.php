@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\URL;
 use Modules\Auth\Services\Contracts\AuthService;
-use Modules\User\Models\User;
 use Modules\Permission\Models\Role;
+use Modules\User\Models\User;
 
 uses(RefreshDatabase::class);
 
@@ -18,12 +20,12 @@ test('a user can verify their email address', function () {
     $user->assignRole('student');
 
     $verificationUrl = URL::signedRoute('verification.verify', [
-        'id'   => $user->id,
+        'id' => $user->id,
         'hash' => sha1($user->getEmailForVerification()),
     ]);
 
     $authService = app(AuthService::class);
-    
+
     // Test the service logic (the component test is handled separately)
     $result = $authService->verifyEmail((string) $user->id, sha1($user->getEmailForVerification()));
 
@@ -35,7 +37,5 @@ test('unverified users are redirected from dashboard to verification notice', fu
     $user = User::factory()->create(['email_verified_at' => null]);
     $user->assignRole('student');
 
-    $this->actingAs($user)
-        ->get('/dashboard')
-        ->assertRedirect('/auth/email/verify');
+    $this->actingAs($user)->get('/dashboard')->assertRedirect('/auth/email/verify');
 });

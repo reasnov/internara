@@ -55,7 +55,7 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
     {
         return (new Stub($this->getStub(), [
             'NAMESPACE' => $this->getTargetNamespace(),
-            'CLASS'     => $this->getTargetName(),
+            'CLASS' => $this->getTargetName(),
         ]))->render();
     }
 
@@ -73,7 +73,11 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
     protected function getArguments(): array
     {
         return [
-            ['name', InputArgument::REQUIRED, 'The name of the interface. Subdirectories are allowed (e.g., Services/SomeInterface).'],
+            [
+                'name',
+                InputArgument::REQUIRED,
+                'The name of the interface. Subdirectories are allowed (e.g., Services/SomeInterface).',
+            ],
             ['module', InputArgument::REQUIRED, 'The name of the module.'],
         ];
     }
@@ -84,7 +88,12 @@ class ModuleMakeInterfaceCommand extends GeneratorCommand
     protected function getOptions(): array
     {
         return [
-            ['force', null, InputOption::VALUE_NONE, 'Create the interface even if the interface already exists.'],
+            [
+                'force',
+                null,
+                InputOption::VALUE_NONE,
+                'Create the interface even if the interface already exists.',
+            ],
         ];
     }
 }

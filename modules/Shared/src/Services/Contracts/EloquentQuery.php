@@ -23,16 +23,22 @@ interface EloquentQuery
     /**
      * Retrieves paginated records, applying optional filters.
      *
-     * @param  array<string, mixed>  $filters
-     * @param  list<string>  $columns
+     * @param array<string, mixed> $filters
+     * @param list<string> $columns
+     *
      * @return LengthAwarePaginator<TModel>
      */
-    public function paginate(array $filters = [], int $perPage = 15, array $columns = ['*']): LengthAwarePaginator;
+    public function paginate(
+        array $filters = [],
+        int $perPage = 15,
+        array $columns = ['*'],
+    ): LengthAwarePaginator;
 
     /**
      * Retrieves all records, optionally limited to specific columns.
      *
-     * @param  list<string>  $columns
+     * @param list<string> $columns
+     *
      * @return Collection<int, TModel>
      */
     public function all(array $columns = ['*']): Collection;
@@ -40,8 +46,9 @@ interface EloquentQuery
     /**
      * Retrieves records based on a set of filters.
      *
-     * @param  array<string, mixed>  $filters
-     * @param  list<string>  $columns
+     * @param array<string, mixed> $filters
+     * @param list<string> $columns
+     *
      * @return Collection<int, TModel>
      */
     public function get(array $filters = [], array $columns = ['*']): Collection;
@@ -49,8 +56,9 @@ interface EloquentQuery
     /**
      * Retrieves the first record matching the given filters.
      *
-     * @param  array<string, mixed>  $filters
-     * @param  list<string>  $columns
+     * @param array<string, mixed> $filters
+     * @param list<string> $columns
+     *
      * @return TModel|null
      */
     public function first(array $filters = [], array $columns = ['*']): ?Model;
@@ -58,18 +66,20 @@ interface EloquentQuery
     /**
      * Retrieves the first record matching the filters or fails.
      *
-     * @param  array<string, mixed>  $filters
-     * @param  list<string>  $columns
-     * @return TModel
+     * @param array<string, mixed> $filters
+     * @param list<string> $columns
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException<TModel>
+     *
+     * @return TModel
      */
     public function firstOrFail(array $filters = [], array $columns = ['*']): Model;
 
     /**
      * Finds a record by its primary key.
      *
-     * @param  list<string>  $columns
+     * @param list<string> $columns
+     *
      * @return TModel|null
      */
     public function find(mixed $id, array $columns = ['*']): ?Model;
@@ -77,14 +87,15 @@ interface EloquentQuery
     /**
      * Checks if any records exist that match the given filters.
      *
-     * @param  array<string, mixed>  $filters
+     * @param array<string, mixed> $filters
      */
     public function exists(array $filters = []): bool;
 
     /**
      * Creates a new record with the given data.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
+     *
      * @return TModel
      */
     public function create(array $data): Model;
@@ -92,7 +103,8 @@ interface EloquentQuery
     /**
      * Updates a record by its primary key with the given data.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
+     *
      * @return TModel
      */
     public function update(mixed $id, array $data): Model;
@@ -100,8 +112,9 @@ interface EloquentQuery
     /**
      * Updates an existing record or creates a new one.
      *
-     * @param  array<string, mixed>  $attributes
-     * @param  array<string, mixed>  $values
+     * @param array<string, mixed> $attributes
+     * @param array<string, mixed> $values
+     *
      * @return TModel
      */
     public function save(array $attributes, array $values = []): Model;
@@ -109,39 +122,40 @@ interface EloquentQuery
     /**
      * Deletes a record by its primary key.
      *
-     * @param  bool  $force  Permanently delete if true.
+     * @param bool $force Permanently delete if true.
      */
     public function delete(mixed $id, bool $force = false): bool;
 
     /**
      * Performs a bulk insert operation.
      *
-     * @param  list<array<string, mixed>>  $data
+     * @param list<array<string, mixed>> $data
      */
     public function insert(array $data): bool;
 
     /**
      * Performs a bulk "upsert" operation.
      *
-     * @param  list<array<string, mixed>>  $values
-     * @param  list<string>|string  $uniqueBy
-     * @param  list<string>|null  $update
+     * @param list<array<string, mixed>> $values
+     * @param list<string>|string $uniqueBy
+     * @param list<string>|null $update
      */
     public function upsert(array $values, array|string $uniqueBy, ?array $update = null): int;
 
     /**
      * Destroys multiple records by their primary keys.
      *
-     * @param  Collection<int, mixed>|list<mixed>|mixed  $ids
-     * @param  bool  $force  Permanently delete if true.
+     * @param Collection<int, mixed>|list<mixed>|mixed $ids
+     * @param bool $force Permanently delete if true.
      */
     public function destroy(mixed $ids, bool $force = false): int;
 
     /**
      * Retrieves filtered records as a plain array.
      *
-     * @param  array<string, mixed>  $filters
-     * @param  list<string>  $columns
+     * @param array<string, mixed> $filters
+     * @param list<string> $columns
+     *
      * @return array<int, array<string, mixed>>
      */
     public function toArray(array $filters = [], array $columns = ['*']): array;
@@ -149,8 +163,9 @@ interface EloquentQuery
     /**
      * Gets a new query builder instance with optional filters applied.
      *
-     * @param  array<string, mixed>  $filters
-     * @param  list<string>  $columns
+     * @param array<string, mixed> $filters
+     * @param list<string> $columns
+     *
      * @return Builder<TModel>
      */
     public function query(array $filters = [], array $columns = ['*']): Builder;
@@ -158,16 +173,22 @@ interface EloquentQuery
     /**
      * Retrieves an item from cache, or executes the callback and caches the result.
      *
-     * @param  \DateTimeInterface|\DateInterval|int  $ttl
-     * @param  Closure(static): mixed  $callback
-     * @param  bool  $skipCache  If true, bypasses the cache and executes the callback directly.
+     * @param \DateTimeInterface|\DateInterval|int $ttl
+     * @param Closure(static): mixed $callback
+     * @param bool $skipCache If true, bypasses the cache and executes the callback directly.
      */
-    public function remember(string $cacheKey, mixed $ttl, Closure $callback, bool $skipCache = false): mixed;
+    public function remember(
+        string $cacheKey,
+        mixed $ttl,
+        Closure $callback,
+        bool $skipCache = false,
+    ): mixed;
 
     /**
      * Sets the Eloquent model instance for the query.
      *
-     * @param  TModel  $model
+     * @param TModel $model
+     *
      * @return static
      */
     public function setModel(Model $model): self;
@@ -175,7 +196,8 @@ interface EloquentQuery
     /**
      * Sets a base query to build upon.
      *
-     * @param  Builder<TModel>  $query
+     * @param Builder<TModel> $query
+     *
      * @return static
      */
     public function setBaseQuery(Builder $query): self;
@@ -183,7 +205,8 @@ interface EloquentQuery
     /**
      * Defines the columns that are searchable.
      *
-     * @param  list<string>  $columns
+     * @param list<string> $columns
+     *
      * @return static
      */
     public function setSearchable(array $columns = []): self;
@@ -191,7 +214,8 @@ interface EloquentQuery
     /**
      * Defines the columns that are sortable.
      *
-     * @param  list<string>  $columns
+     * @param list<string> $columns
+     *
      * @return static
      */
     public function setSortable(array $columns = []): self;

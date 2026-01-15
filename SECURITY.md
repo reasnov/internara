@@ -10,6 +10,8 @@ The following versions of Internara are currently supported with security update
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability within Internara, please send an email to Reas Vyn at **reasnov.official@gmail.com**. All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within Internara, please send an email to Reas Vyn at
+**reasnov.official@gmail.com**. All security vulnerabilities will be promptly addressed.
 
-Please do not disclose security-related issues publicly until they have been resolved and a release has been made available.
+Please do not disclose security-related issues publicly until they have been resolved and a release
+has been made available.

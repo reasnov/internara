@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\School\Livewire;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Modules\School\Services\Contracts\SchoolService;
 use Modules\School\Livewire\Forms\SchoolForm;
+use Modules\School\Services\Contracts\SchoolService;
 
 class SchoolManager extends Component
 {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -11,13 +13,9 @@
 |
 */
 
-pest()->extend(\Tests\TestCase::class)
-    ->in(
-        'Feature/*',
-        'Unit/*',
-        '../modules/*/tests/Feature/*',
-        '../modules/*/tests/Unit/*'
-    );
+pest()
+    ->extend(\Tests\TestCase::class)
+    ->in('Feature/*', 'Unit/*', '../modules/*/tests/Feature/*', '../modules/*/tests/Unit/*');
 
 /*
 |--------------------------------------------------------------------------

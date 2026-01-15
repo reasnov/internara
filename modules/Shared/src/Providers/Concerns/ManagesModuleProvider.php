@@ -48,11 +48,17 @@ trait ManagesModuleProvider
     protected function registerBindings(): void
     {
         if (! $this instanceof ServiceProvider) {
-            throw new \LogicException('The ManagesModuleProvider trait must be used in a class that extends Illuminate\Support\ServiceProvider.');
+            throw new \LogicException(
+                'The ManagesModuleProvider trait must be used in a class that extends Illuminate\Support\ServiceProvider.',
+            );
         }
 
         foreach ($this->bindings() as $abstract => $concrete) {
-            if (is_string($concrete) && class_exists($concrete) && (new \ReflectionClass($concrete))->isInstantiable()) {
+            if (
+                is_string($concrete) &&
+                class_exists($concrete) &&
+                (new \ReflectionClass($concrete))->isInstantiable()
+            ) {
                 $this->app->singleton($abstract, $concrete);
             } else {
                 $this->app->bind($abstract, $concrete);
@@ -91,7 +97,7 @@ trait ManagesModuleProvider
      */
     protected function registerTranslations(): void
     {
-        $langPath = resource_path('lang/modules/' . $this->nameLower);
+        $langPath = resource_path('lang/modules/'.$this->nameLower);
 
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, $this->nameLower);
@@ -107,16 +113,23 @@ trait ManagesModuleProvider
      */
     protected function registerConfig(): void
     {
-        $configPath = module_path($this->name, config('modules.paths.generator.config.path', 'config'));
+        $configPath = module_path(
+            $this->name,
+            config('modules.paths.generator.config.path', 'config'),
+        );
 
         if (is_dir($configPath)) {
             $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($configPath));
 
             foreach ($iterator as $file) {
                 if ($file->isFile() && $file->getExtension() === 'php') {
-                    $config = str_replace($configPath . DIRECTORY_SEPARATOR, '', $file->getPathname());
+                    $config = str_replace(
+                        $configPath.DIRECTORY_SEPARATOR,
+                        '',
+                        $file->getPathname(),
+                    );
                     $configKey = str_replace([DIRECTORY_SEPARATOR, '.php'], ['.', ''], $config);
-                    $segments = explode('.', $this->nameLower . '.' . $configKey);
+                    $segments = explode('.', $this->nameLower.'.'.$configKey);
 
                     // Remove duplicated adjacent segments (e.g. user.user -> user)
                     $normalized = [];
@@ -126,7 +139,7 @@ trait ManagesModuleProvider
                         }
                     }
 
-                    $key = ($config === 'config.php') ? $this->nameLower : implode('.', $normalized);
+                    $key = $config === 'config.php' ? $this->nameLower : implode('.', $normalized);
 
                     $this->publishes([$file->getPathname() => config_path($config)], 'config');
                     $this->mergeConfigFromRecursive($file->getPathname(), $key);
@@ -151,14 +164,20 @@ trait ManagesModuleProvider
      */
     protected function registerViews(): void
     {
-        $viewPath = resource_path('views/modules/' . $this->nameLower);
+        $viewPath = resource_path('views/modules/'.$this->nameLower);
         $sourcePath = module_path($this->name, 'resources/views');
 
-        $this->publishes([$sourcePath => $viewPath], ['views', $this->nameLower . '-module-views']);
+        $this->publishes([$sourcePath => $viewPath], ['views', $this->nameLower.'-module-views']);
 
-        $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->nameLower);
+        $this->loadViewsFrom(
+            array_merge($this->getPublishableViewPaths(), [$sourcePath]),
+            $this->nameLower,
+        );
 
-        Blade::componentNamespace(config('modules.namespace') . '\\' . $this->name . '\\View\\Components', $this->nameLower);
+        Blade::componentNamespace(
+            config('modules.namespace').'\\'.$this->name.'\\View\\Components',
+            $this->nameLower,
+        );
     }
 
     /**
@@ -184,8 +203,8 @@ trait ManagesModuleProvider
     {
         $paths = [];
         foreach (config('view.paths') as $path) {
-            if (is_dir($path . '/modules/' . $this->nameLower)) {
-                $paths[] = $path . '/modules/' . $this->nameLower;
+            if (is_dir($path.'/modules/'.$this->nameLower)) {
+                $paths[] = $path.'/modules/'.$this->nameLower;
             }
         }
 

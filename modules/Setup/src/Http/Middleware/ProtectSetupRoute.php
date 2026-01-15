@@ -11,7 +11,10 @@ use Modules\User\Services\Contracts\SuperAdminService;
 
 class ProtectSetupRoute
 {
-    public function __construct(protected SetupService $setupService, protected SuperAdminService $superAdminService) {}
+    public function __construct(
+        protected SetupService $setupService,
+        protected SuperAdminService $superAdminService,
+    ) {}
 
     /**
      * Handle an incoming request.
@@ -27,11 +30,11 @@ class ProtectSetupRoute
 
     protected function isNotValidAccess(): bool
     {
-        return $this->setupService->isAppInstalled()
-            && $this->superAdminService->remember(
+        return $this->setupService->isAppInstalled() &&
+            $this->superAdminService->remember(
                 cacheKey: 'user.super_admin',
                 ttl: now()->addDay(),
-                callback: fn (SuperAdminService $service) => $service->exists()
+                callback: fn (SuperAdminService $service) => $service->exists(),
             );
     }
 }

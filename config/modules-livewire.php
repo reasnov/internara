@@ -1,7 +1,8 @@
 <?php
 
-return [
+declare(strict_types=1);
 
+return [
     /*
     |--------------------------------------------------------------------------
     | Class Namespace
@@ -57,5 +58,4 @@ return [
         //     'volt_view_namespaces' => ['livewire', 'pages'],
         // ],
     ],
-
 ];

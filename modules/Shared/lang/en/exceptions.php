@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'not_found' => 'The record with ID :id could not be found.',
     'creation_failed' => 'Failed to create :record.',

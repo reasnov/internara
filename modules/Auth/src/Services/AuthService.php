@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Auth\Services;
 
 use Illuminate\Auth\Events\Verified;
@@ -11,8 +13,8 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Modules\Auth\Services\Contracts\AuthService as AuthServiceContract;
 use Modules\Exception\AppException;
-use Modules\User\Services\Contracts\UserService;
 use Modules\User\Models\User;
+use Modules\User\Services\Contracts\UserService;
 
 /**
  * Service to manage user authentication, registration, password management, and email verification.
@@ -27,16 +29,19 @@ class AuthService implements AuthServiceContract
     /**
      * Attempt to log in a user with the given credentials.
      *
-     * @param  array  $credentials  Contains 'email' (which can be an email or username), 'password'.
-     * @param  bool  $remember  Whether to "remember" the user.
-     * @return Authenticatable|User The authenticated user.
+     * @param array $credentials Contains 'email' (which can be an email or username), 'password'.
+     * @param bool $remember Whether to "remember" the user.
      *
      * @throws AppException If authentication fails.
+     *
+     * @return Authenticatable|User The authenticated user.
      */
     public function login(array $credentials, bool $remember = false): Authenticatable|User
     {
         // The 'identifier' field from the form can be either an email or a username.
-        $identifier = $credentials['identifier'] ?? $credentials['email'] ?? $credentials['username'] ?? '';
+        $identifier =
+            $credentials['identifier'] ??
+            ($credentials['email'] ?? ($credentials['username'] ?? ''));
 
         // Determine if the identifier is an email or a username.
         $loginField = Str::contains($identifier, '@') ? 'email' : 'username';
@@ -47,10 +52,13 @@ class AuthService implements AuthServiceContract
         ];
 
         if (! Auth::attempt($authCredentials, $remember)) {
+            // Mask email for logging: user@example.com -> u***@example.com
+            $maskedIdentifier = preg_replace('/(?<=.{1}).(?=.*@)/', '*', $identifier);
+
             throw new AppException(
                 userMessage: 'user::exceptions.invalid_credentials',
-                logMessage: 'Authentication attempt failed for: '.$identifier,
-                code: 401
+                logMessage: 'Authentication attempt failed for: '.$maskedIdentifier,
+                code: 401,
             );
         }
 
@@ -68,8 +76,11 @@ class AuthService implements AuthServiceContract
     /**
      * {@inheritDoc}
      */
-    public function register(array $data, string|array|null $roles = null, bool $sendEmailVerification = false): User
-    {
+    public function register(
+        array $data,
+        string|array|null $roles = null,
+        bool $sendEmailVerification = false,
+    ): User {
         try {
             $user = $this->userService->create([
                 'name' => $data['name'],
@@ -84,13 +95,17 @@ class AuthService implements AuthServiceContract
 
             return $user;
         } catch (QueryException $e) {
-            if ($e->getCode() === '23000') { // Duplicate entry SQLSTATE code
+            if ($e->getCode() === '23000') {
+                // Duplicate entry SQLSTATE code
+                // Mask email for logging
+                $maskedEmail = preg_replace('/(?<=.{1}).(?=.*@)/', '*', $data['email']);
+
                 throw new AppException(
                     userMessage: 'records::exceptions.unique_violation',
                     replace: ['record' => 'user'],
-                    logMessage: 'Attempted to register with duplicate email: '.$data['email'],
+                    logMessage: 'Attempted to register with duplicate email: '.$maskedEmail,
                     code: 409, // Conflict
-                    previous: $e
+                    previous: $e,
                 );
             }
             throw new AppException(
@@ -98,7 +113,7 @@ class AuthService implements AuthServiceContract
                 replace: ['record' => 'user'],
                 logMessage: 'Registration failed due to database error: '.$e->getMessage(),
                 code: 500,
-                previous: $e
+                previous: $e,
             );
         }
     }
@@ -116,20 +131,18 @@ class AuthService implements AuthServiceContract
     /**
      * Change the password for a user.
      *
-     * @param  \Modules\User\Models\User  $user  The user whose password is to be changed.
-     * @param  string  $currentPassword  The user's current password.
-     * @param  string  $newPassword  The new password for the user.
-     * @return bool True if the password was successfully changed, false otherwise.
+     * @param \Modules\User\Models\User $user The user whose password is to be changed.
+     * @param string $currentPassword The user's current password.
+     * @param string $newPassword The new password for the user.
      *
      * @throws \Modules\Exceptions\AppException If the current password does not match.
+     *
+     * @return bool True if the password was successfully changed, false otherwise.
      */
     public function changePassword(User $user, string $currentPassword, string $newPassword): bool
     {
         if (! Hash::check($currentPassword, $user->password)) {
-            throw new AppException(
-                userMessage: 'user::exceptions.password_mismatch',
-                code: 422
-            );
+            throw new AppException(userMessage: 'user::exceptions.password_mismatch', code: 422);
         }
 
         return $user->update([
@@ -140,7 +153,7 @@ class AuthService implements AuthServiceContract
     /**
      * Send the password reset link to a user.
      *
-     * @param  string  $email  The email address to send the reset link to.
+     * @param string $email The email address to send the reset link to.
      */
     public function sendPasswordResetLink(string $email): void
     {
@@ -150,7 +163,8 @@ class AuthService implements AuthServiceContract
     /**
      * Reset the password for a user.
      *
-     * @param  array  $credentials  Contains 'token', 'email', 'password', 'password_confirmation'.
+     * @param array $credentials Contains 'token', 'email', 'password', 'password_confirmation'.
+     *
      * @return bool True if the password was successfully reset, false otherwise.
      */
     public function resetPassword(array $credentials): bool
@@ -160,14 +174,15 @@ class AuthService implements AuthServiceContract
             $user->save();
         });
 
-        return $response == Password::PASSWORD_RESET;
+        return $response === Password::PASSWORD_RESET;
     }
 
     /**
      * Verify a user's email address.
      *
-     * @param  string  $id  The user ID.
-     * @param  string  $hash  The email verification hash.
+     * @param string $id The user ID.
+     * @param string $hash The email verification hash.
+     *
      * @return bool True if the email was successfully verified, false otherwise.
      */
     public function verifyEmail(string $id, string $hash): bool
@@ -194,7 +209,7 @@ class AuthService implements AuthServiceContract
     /**
      * Resend the email verification notification.
      *
-     * @param  \Modules\User\Models\User  $user  The user to resend the verification email to.
+     * @param \Modules\User\Models\User $user The user to resend the verification email to.
      *
      * @throws \Modules\Exceptions\AppException If the email is already verified.
      */
@@ -203,7 +218,7 @@ class AuthService implements AuthServiceContract
         if ($user->hasVerifiedEmail()) {
             throw new AppException(
                 userMessage: 'user::exceptions.email_already_verified',
-                code: 422
+                code: 422,
             );
         }
 
@@ -213,8 +228,9 @@ class AuthService implements AuthServiceContract
     /**
      * Confirm a user's password.
      *
-     * @param  \Modules\User\Models\User  $user  The user to confirm the password for.
-     * @param  string  $password  The password to confirm.
+     * @param \Modules\User\Models\User $user The user to confirm the password for.
+     * @param string $password The password to confirm.
+     *
      * @return bool True if the password matches, false otherwise.
      */
     public function confirmPassword(User $user, string $password): bool

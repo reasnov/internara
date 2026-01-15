@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Shared\Livewire\Concerns;
 
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -70,7 +72,7 @@ trait ManagesRecords
 
         return $this->service->paginate(
             array_filter($filters), // Remove empty filters
-            $this->perPage
+            $this->perPage,
         );
     }
 
@@ -95,7 +97,9 @@ trait ManagesRecords
      */
     public function discard(mixed $id): void
     {
-        $this->dispatch($this->getEventPrefix().':show-confirm-modal', 'confirm-modal', ['id' => $id]);
+        $this->dispatch($this->getEventPrefix().':show-confirm-modal', 'confirm-modal', [
+            'id' => $id,
+        ]);
     }
 
     /**
@@ -103,10 +107,7 @@ trait ManagesRecords
      */
     public function save(): void
     {
-        $this->service->save(
-            ['id' => $this->form->id],
-            $this->form->all()
-        );
+        $this->service->save(['id' => $this->form->id], $this->form->all());
 
         $this->dispatch($this->getEventPrefix().':close-modal', 'form-modal');
         $this->dispatch('notify', message: __('records::messages.record_saved'));

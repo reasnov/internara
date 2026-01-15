@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Setup\Livewire;
 
 use Illuminate\View\View;
@@ -18,7 +20,7 @@ class AccountSetup extends Component
     /**
      * Boots the component and injects the SetupService.
      *
-     * @param  SetupService  $setupService  The service for handling setup logic.
+     * @param SetupService $setupService The service for handling setup logic.
      */
     public function boot(SetupService $setupService): void
     {
@@ -34,7 +36,7 @@ class AccountSetup extends Component
             currentStep: 'account',
             nextStep: 'school',
             prevStep: 'welcome',
-            extra: ['req_record' => 'super-admin']
+            extra: ['req_record' => 'super-admin'],
         );
 
         $this->requireSetupAccess();
@@ -56,11 +58,10 @@ class AccountSetup extends Component
      */
     public function render(): View
     {
-        return view('setup::livewire.account-setup')
-            ->layout('setup::components.layouts.setup', [
-                'title' => __('Buat Akun Administrator | :site_title', [
-                    'site_title' => setting('site_title', 'Internara'),
-                ]),
-            ]);
+        return view('setup::livewire.account-setup')->layout('setup::components.layouts.setup', [
+            'title' => __('Buat Akun Administrator | :site_title', [
+                'site_title' => setting('site_title', 'Internara'),
+            ]),
+        ]);
     }
 }

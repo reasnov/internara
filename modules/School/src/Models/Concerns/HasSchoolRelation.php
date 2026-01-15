@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\School\Models\Concerns;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

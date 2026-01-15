@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\User\Providers;
 
 use Illuminate\Support\ServiceProvider;
@@ -59,7 +61,6 @@ class UserServiceProvider extends ServiceProvider
         return [
             \Modules\User\Services\Contracts\UserService::class => \Modules\User\Services\UserService::class,
             \Modules\User\Services\Contracts\SuperAdminService::class => \Modules\User\Services\SuperAdminService::class,
-
         ];
     }
 

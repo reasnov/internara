@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Setup\Livewire;
 
 use Illuminate\View\View;
@@ -18,7 +20,7 @@ class SchoolSetup extends Component
     /**
      * Boots the component and injects the SetupService.
      *
-     * @param  SetupService  $setupService  The service for handling setup logic.
+     * @param SetupService $setupService The service for handling setup logic.
      */
     public function boot(SetupService $setupService): void
     {
@@ -34,7 +36,7 @@ class SchoolSetup extends Component
             currentStep: 'school',
             nextStep: 'department',
             prevStep: 'account',
-            extra: ['req_record' => 'school']
+            extra: ['req_record' => 'school'],
         );
 
         $this->requireSetupAccess();
@@ -56,11 +58,10 @@ class SchoolSetup extends Component
      */
     public function render(): View
     {
-        return view('setup::livewire.school-setup')
-            ->layout('setup::components.layouts.setup', [
-                'title' => __('Atur Data Sekolah | :site_title', [
-                    'site_title' => setting('site_title', 'Internara'),
-                ]),
-            ]);
+        return view('setup::livewire.school-setup')->layout('setup::components.layouts.setup', [
+            'title' => __('Atur Data Sekolah | :site_title', [
+                'site_title' => setting('site_title', 'Internara'),
+            ]),
+        ]);
     }
 }

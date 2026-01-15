@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Department\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,11 +17,7 @@ class Department extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [
-        'name',
-        'description',
-        'school_id',
-    ];
+    protected $fillable = ['name', 'description', 'school_id'];
 
     protected static function newFactory(): DepartmentFactory
     {

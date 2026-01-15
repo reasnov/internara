@@ -97,8 +97,11 @@ abstract class EloquentQuery implements EloquentQueryContract
     /**
      * {@inheritdoc}
      */
-    public function paginate(array $filters = [], int $perPage = 15, array $columns = ['*']): LengthAwarePaginator
-    {
+    public function paginate(
+        array $filters = [],
+        int $perPage = 15,
+        array $columns = ['*'],
+    ): LengthAwarePaginator {
         return $this->query($filters, $columns)->paginate($perPage, $columns);
     }
 
@@ -222,7 +225,10 @@ abstract class EloquentQuery implements EloquentQueryContract
         $ids = Arr::wrap($ids);
 
         if ($force) {
-            return $this->model->newQuery()->whereIn($this->model->getKeyName(), $ids)->get()
+            return $this->model
+                ->newQuery()
+                ->whereIn($this->model->getKeyName(), $ids)
+                ->get()
                 ->each(fn (Model $model) => $model->forceDelete())
                 ->count();
         }
@@ -255,8 +261,12 @@ abstract class EloquentQuery implements EloquentQueryContract
     /**
      * {@inheritdoc}
      */
-    public function remember(string $cacheKey, mixed $ttl, Closure $callback, bool $skipCache = false): mixed
-    {
+    public function remember(
+        string $cacheKey,
+        mixed $ttl,
+        Closure $callback,
+        bool $skipCache = false,
+    ): mixed {
         if ($skipCache) {
             Cache::forget($cacheKey);
 
@@ -269,8 +279,8 @@ abstract class EloquentQuery implements EloquentQueryContract
     /**
      * Applies registered filters to the query builder.
      *
-     * @param  Builder<TModel>  $query
-     * @param  array<string, mixed>  $filters
+     * @param Builder<TModel> $query
+     * @param array<string, mixed> $filters
      */
     protected function applyFilters(Builder &$query, array &$filters): void
     {
@@ -305,7 +315,8 @@ abstract class EloquentQuery implements EloquentQueryContract
     /**
      * Filters an array to include only fillable model attributes.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
+     *
      * @return array<string, mixed>
      */
     protected function filterFillable(array $data): array

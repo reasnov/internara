@@ -1,27 +1,35 @@
 # Spatie Laravel Activitylog Integration
 
-This document outlines the integration of the `spatie/laravel-activitylog` package within the Internara project, specifically for implementing the **System Monitor and User Activity Log** feature as part of the `Log` module. This package provides a robust and flexible way to log various activities performed by users or the system.
+This document outlines the integration of the `spatie/laravel-activitylog` package within the
+Internara project, specifically for implementing the **System Monitor and User Activity Log**
+feature as part of the `Log` module. This package provides a robust and flexible way to log various
+activities performed by users or the system.
 
 ---
 
 ## 1. Overview
 
-The `spatie/laravel-activitylog` package offers a straightforward solution for tracking actions, changes, and events across your application. It allows logging activities related to Eloquent models, custom events, and provides an easy way to retrieve and display these logs.
+The `spatie/laravel-activitylog` package offers a straightforward solution for tracking actions,
+changes, and events across your application. It allows logging activities related to Eloquent
+models, custom events, and provides an easy way to retrieve and display these logs.
 
 ## 2. Installation (Documented Steps)
 
-To integrate `spatie/laravel-activitylog`, the following steps *would be* performed:
+To integrate `spatie/laravel-activitylog`, the following steps _would be_ performed:
 
 1.  **Install via Composer:**
+
     ```bash
     composer require spatie/laravel-activitylog
     ```
 
 2.  **Publish Configuration and Migration:**
+
     ```bash
     php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="activitylog-config"
     php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="activitylog-migrations"
     ```
+
     This publishes `config/activitylog.php` and the necessary migration file(s).
 
 3.  **Run Migrations:**
@@ -32,11 +40,14 @@ To integrate `spatie/laravel-activitylog`, the following steps *would be* perfor
 
 ## 3. Customization and Integration within the `Log` Module
 
-The `spatie/laravel-activitylog` package is integrated within a dedicated `Log` module to maintain the project's modular architecture and align with Internara's conventions.
+The `spatie/laravel-activitylog` package is integrated within a dedicated `Log` module to maintain
+the project's modular architecture and align with Internara's conventions.
 
 ### 3.1. Custom Activity Model (`modules/Log/src/Models/Activity.php`)
 
-To fully control and extend the activity log entries, a custom `Activity` model will be created within `modules/Log/src/Models/Activity.php`. This model will extend the package's base `Activity` model.
+To fully control and extend the activity log entries, a custom `Activity` model will be created
+within `modules/Log/src/Models/Activity.php`. This model will extend the package's base `Activity`
+model.
 
 ```php
 <?php
@@ -61,7 +72,8 @@ class Activity extends SpatieActivity
 
 ### 3.2. Configuration (`config/activitylog.php`)
 
-The published configuration file `config/activitylog.php` will be adjusted to use our custom `Activity` model and to align with other Internara logging preferences.
+The published configuration file `config/activitylog.php` will be adjusted to use our custom
+`Activity` model and to align with other Internara logging preferences.
 
 ```php
 <?php
@@ -74,10 +86,13 @@ return [
 
 ### 3.3. Migration Adjustments (Optional)
 
-If the project mandates UUIDs for all primary keys, the published `create_activity_log_table` migration *may need* to be adjusted. The default `activitylog` migration typically uses auto-incrementing integers for its primary key. If UUIDs are required for the `activity_log` table, the migration would be modified accordingly.
+If the project mandates UUIDs for all primary keys, the published `create_activity_log_table`
+migration _may need_ to be adjusted. The default `activitylog` migration typically uses
+auto-incrementing integers for its primary key. If UUIDs are required for the `activity_log` table,
+the migration would be modified accordingly.
 
-**Example of Potential Migration Adjustment for UUID Primary Key:**
-(This is illustrative and depends on project-specific UUID implementation)
+**Example of Potential Migration Adjustment for UUID Primary Key:** (This is illustrative and
+depends on project-specific UUID implementation)
 
 ```php
 // In a custom migration or a modified published migration
@@ -93,7 +108,8 @@ To effectively utilize `spatie/laravel-activitylog`:
 
 ### 4.1. Logging Model Events
 
-To log changes to Eloquent models, use the `Spatie\Activitylog\Traits\LogsActivity` trait within your model:
+To log changes to Eloquent models, use the `Spatie\Activitylog\Traits\LogsActivity` trait within
+your model:
 
 ```php
 <?php
@@ -179,10 +195,14 @@ $loginActivities = Activity::where('description', 'User logged in')->get();
 
 ## 5. Integration with v0.x-alpha Release
 
-The `spatie/laravel-activitylog` package, integrated via the `Log` module, directly supports the `System Monitor and User Activity Log` feature outlined in the `v0.x-alpha` release plan. It provides the necessary infrastructure for tracking, storing, and retrieving significant events and user interactions within the application.
+The `spatie/laravel-activitylog` package, integrated via the `Log` module, directly supports the
+`System Monitor and User Activity Log` feature outlined in the `v0.x-alpha` release plan. It
+provides the necessary infrastructure for tracking, storing, and retrieving significant events and
+user interactions within the application.
 
 ---
 
 **Navigation**
 
-[← Previous: Spatie Laravel Permission Integration](spatie-laravel-permission.md) | [Next: Spatie Laravel MediaLibrary Integration →](spatie-laravel-medialibrary.md)
+[← Previous: Spatie Laravel Permission Integration](spatie-laravel-permission.md) |
+[Next: Spatie Laravel MediaLibrary Integration →](spatie-laravel-medialibrary.md)

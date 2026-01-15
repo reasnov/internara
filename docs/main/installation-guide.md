@@ -1,6 +1,7 @@
 # Installation Guide
 
-This guide provides step-by-step instructions to set up the Internara application for local development.
+This guide provides step-by-step instructions to set up the Internara application for local
+development.
 
 ---
 
@@ -8,20 +9,20 @@ This guide provides step-by-step instructions to set up the Internara applicatio
 
 Before you begin, ensure you have the following installed on your system:
 
-*   **PHP:** Version 8.2 or higher
-*   **Composer:** Latest stable version
-*   **Node.js & NPM:** Latest LTS version
-*   **Git:** Latest stable version
-*   **Database:** MySQL 8+, PostgreSQL, or SQLite
-*   **Web Server:** Nginx or Apache (optional, for local development)
+- **PHP:** Version 8.2 or higher
+- **Composer:** Latest stable version
+- **Node.js & NPM:** Latest LTS version
+- **Git:** Latest stable version
+- **Database:** MySQL 8+, PostgreSQL, or SQLite
+- **Web Server:** Nginx or Apache (optional, for local development)
 
 ### Key Third-Party Packages
 
 This project relies on several key packages that are automatically installed via Composer:
 
--   [nwidart/laravel-modules](https://nwidart.com/laravel-modules/v11/introduction)
--   [spatie/laravel-permission](https://spatie.be/docs/laravel-permission/v6/introduction)
--   [robsontenorio/mary](https://mary-ui.com/)
+- [nwidart/laravel-modules](https://nwidart.com/laravel-modules/v11/introduction)
+- [spatie/laravel-permission](https://spatie.be/docs/laravel-permission/v6/introduction)
+- [robsontenorio/mary](https://mary-ui.com/)
 
 ## 2. Setup Instructions
 
@@ -80,7 +81,8 @@ APP_URL=http://localhost:8000
 
 ### Step 5: Database Setup
 
-Run the database migrations and seed the database with initial data. This will create all necessary tables and populate them with default roles, permissions, and possibly some dummy data.
+Run the database migrations and seed the database with initial data. This will create all necessary
+tables and populate them with default roles, permissions, and possibly some dummy data.
 
 ```bash
 php artisan migrate --seed
@@ -96,25 +98,30 @@ php artisan storage:link
 
 ### Step 7: Start the Development Server
 
-Serve the application using Laravel Artisan and start the Vite development server for hot module reloading:
+Serve the application using Laravel Artisan and start the Vite development server for hot module
+reloading:
 
 ```bash
 php artisan serve &
 npm run dev
 ```
 
-The application should now be accessible at `http://localhost:8000` (or the `APP_URL` you configured).
+The application should now be accessible at `http://localhost:8000` (or the `APP_URL` you
+configured).
 
 ---
 
 ## 3. Initial Application Setup
 
-After installation, navigate to the application in your browser. If a setup wizard is available, follow its instructions. Otherwise, you may need to manually create an initial admin user or run a specific seeder if not already covered by `migrate --seed`.
+After installation, navigate to the application in your browser. If a setup wizard is available,
+follow its instructions. Otherwise, you may need to manually create an initial admin user or run a
+specific seeder if not already covered by `migrate --seed`.
 
-*(Further instructions for initial admin user creation or setup wizard will go here if applicable)*
+_(Further instructions for initial admin user creation or setup wizard will go here if applicable)_
 
 ---
 
 **Navigation**
 
-[← Previous: Main Documentation Overview](main-documentation-overview.md) | [Next: Architecture Guide →](architecture-guide.md)
+[← Previous: Main Documentation Overview](main-documentation-overview.md) |
+[Next: Architecture Guide →](architecture-guide.md)

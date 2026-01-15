@@ -13,12 +13,12 @@
             <div class="badge badge-ghost ml-2 text-xs font-medium text-gray-500">
                 {{ 'v' . config('app.version', '1.0.0') }}
             </div>
-        </x-slot:brand>
+        </x-slot>
 
         {{-- Right side actions --}}
         <x-slot:actions class="flex items-center space-x-2">
             <x-ui::theme-toggle />
-        </x-slot:actions>
+        </x-slot>
     </x-mary-nav>
 
     <main class="flex flex-1 flex-col items-center justify-center">

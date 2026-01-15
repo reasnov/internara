@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\User\Livewire;
 
 use Illuminate\Validation\Rule as ValidationRule;
@@ -20,7 +22,11 @@ class UserForm extends Form
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', ValidationRule::unique('users', 'email')->ignore($this->id)],
+            'name' => [
+                'required',
+                'string',
+                ValidationRule::unique('users', 'email')->ignore($this->id),
+            ],
             'email' => 'required|email',
             'password' => 'required|string|min:8|confirmed',
         ];

@@ -32,7 +32,7 @@ class RecordNotFoundException extends AppException
         array $record = [],
         string $logMessage = 'Record not found.',
         int $code = 404,
-        ?Throwable $previous = null
+        ?Throwable $previous = null,
     ) {
         $context = [];
 
@@ -47,7 +47,7 @@ class RecordNotFoundException extends AppException
             logMessage: $logMessage,
             code: $code,
             previous: $previous,
-            context: $context
+            context: $context,
         );
     }
 }

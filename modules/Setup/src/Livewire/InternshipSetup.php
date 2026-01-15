@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Setup\Livewire;
 
 use Illuminate\View\View;
@@ -17,7 +19,7 @@ class InternshipSetup extends Component
     /**
      * Boots the component and injects the SetupService.
      *
-     * @param  SetupService  $setupService  The service for handling setup logic.
+     * @param SetupService $setupService The service for handling setup logic.
      */
     public function boot(SetupService $setupService): void
     {
@@ -33,7 +35,7 @@ class InternshipSetup extends Component
             currentStep: 'internship',
             nextStep: 'complete',
             prevStep: 'department',
-            extra: ['req_record' => 'internship']
+            extra: ['req_record' => 'internship'],
         );
 
         $this->requireSetupAccess();
@@ -46,11 +48,10 @@ class InternshipSetup extends Component
      */
     public function render(): View
     {
-        return view('setup::livewire.internship-setup')
-            ->layout('setup::components.layouts.setup', [
-                'title' => __('Atur Data PKL | :site_title', [
-                    'site_title' => setting('site_title', 'Internara'),
-                ]),
-            ]);
+        return view('setup::livewire.internship-setup')->layout('setup::components.layouts.setup', [
+            'title' => __('Atur Data PKL | :site_title', [
+                'site_title' => setting('site_title', 'Internara'),
+            ]),
+        ]);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,15 +16,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('auth')->group(function () {
-    Route::get('login', Modules\Auth\Livewire\Login::class)
-        ->middleware('guest')->name('login');
+    Route::get('login', Modules\Auth\Livewire\Login::class)->middleware('guest')->name('login');
 
     Route::get('register', Modules\Auth\Livewire\Register::class)
-        ->middleware('guest')->name('register');
+        ->middleware('guest')
+        ->name('register');
 
     Route::get('email/verify/{id}/{hash}', Modules\Auth\Livewire\VerifyEmail::class)
-        ->middleware(['auth', 'signed'])->name('verification.verify');
+        ->middleware(['auth', 'signed'])
+        ->name('verification.verify');
 
     Route::get('email/verify', Modules\Auth\Livewire\VerificationNotice::class)
-        ->middleware('auth')->name('verification.notice');
+        ->middleware('auth')
+        ->name('verification.notice');
 });

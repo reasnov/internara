@@ -4,7 +4,6 @@
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
     <head>
         <x-layouts.base.head :$title />
     </head>
@@ -16,5 +15,4 @@
         <!-- Scripts -->
         @stack('scripts')
     </body>
-
 </html>

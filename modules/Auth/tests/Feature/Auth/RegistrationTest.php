@@ -1,13 +1,14 @@
 <?php
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
+declare(strict_types=1);
+
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 use Modules\Auth\Livewire\Register;
-use Modules\User\Models\User;
 use Modules\Permission\Models\Role;
+use Modules\User\Models\User;
 
 uses(RefreshDatabase::class);
 

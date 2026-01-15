@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'single_record_exists' => 'Hanya satu record sekolah yang diizinkan dalam sistem.',
 ];

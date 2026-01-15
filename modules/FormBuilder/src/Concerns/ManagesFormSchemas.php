@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\FormBuilder\Concerns;
 
 use Modules\FormBuilder\Schema;
@@ -11,10 +13,9 @@ trait ManagesFormSchemas
     public function schema(): Schema
     {
         return Schema::configure(function (Schema $schema) {
-            return $schema->header('Example Title', 'Example Subtitle')
-                ->form([
-                    //
-                ]);
+            return $schema->header('Example Title', 'Example Subtitle')->form([
+                //
+            ]);
         });
     }
 

@@ -25,29 +25,38 @@ class Index extends Component
      * User data.
      */
     public string $name;
+
     public string $email;
+
     public string $username;
+
     public $avatar;
 
     /**
      * Profile data.
      */
     public ?string $phone = null;
+
     public ?string $address = null;
+
     public ?string $bio = null;
+
     public ?string $nip = null;
+
     public ?string $nisn = null;
 
     /**
      * Security data.
      */
     public string $password = '';
+
     public string $password_confirmation = '';
 
     /**
      * Services.
      */
     protected UserService $userService;
+
     protected ProfileService $profileService;
 
     /**
@@ -85,25 +94,25 @@ class Index extends Component
     public function saveInfo(): void
     {
         $this->validate([
-            'name'     => 'required|string|max:255',
-            'username' => 'required|string|unique:users,username,' . auth()->id(),
-            'email'    => 'required|email|unique:users,email,' . auth()->id(),
-            'phone'    => 'nullable|string|max:20',
-            'address'  => 'nullable|string',
-            'bio'      => 'nullable|string|max:1000',
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|unique:users,username,'.auth()->id(),
+            'email' => 'required|email|unique:users,email,'.auth()->id(),
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
+            'bio' => 'nullable|string|max:1000',
         ]);
 
         try {
             $this->userService->update(auth()->id(), [
-                'name'     => $this->name,
+                'name' => $this->name,
                 'username' => $this->username,
-                'email'    => $this->email,
+                'email' => $this->email,
             ]);
 
             $this->profileService->update(auth()->user()->profile->id, [
-                'phone'   => $this->phone,
+                'phone' => $this->phone,
                 'address' => $this->address,
-                'bio'     => $this->bio,
+                'bio' => $this->bio,
             ]);
 
             $this->dispatch('success', message: __('Profile updated successfully.'));
@@ -119,16 +128,18 @@ class Index extends Component
     {
         /** @var User $user */
         $user = auth()->user();
-        
+
         $rules = [];
         if ($user->hasRole('teacher')) {
-            $rules['nip'] = 'required|string|unique:profiles,nip,' . $user->profile->id;
+            $rules['nip'] = 'required|string|unique:profiles,nip,'.$user->profile->id;
         }
         if ($user->hasRole('student')) {
-            $rules['nisn'] = 'required|string|unique:profiles,nisn,' . $user->profile->id;
+            $rules['nisn'] = 'required|string|unique:profiles,nisn,'.$user->profile->id;
         }
 
-        if (empty($rules)) return;
+        if (empty($rules)) {
+            return;
+        }
 
         $data = $this->validate($rules);
 

@@ -15,9 +15,10 @@ uses(RefreshDatabase::class);
 
 class TraitTestModel extends Model
 {
-    use HasUuid, HasStatus;
+    use HasStatus, HasUuid;
 
     protected $table = 'trait_test_models';
+
     protected $fillable = ['name'];
 }
 
@@ -36,21 +37,18 @@ afterEach(function () {
 test('HasUuid trait generates uuid on creation', function () {
     $model = TraitTestModel::create(['name' => 'Test']);
 
-    expect($model->id)->not->toBeNull()
-        ->and(strlen($model->id))->toBe(36);
+    expect($model->id)
+        ->not->toBeNull()
+        ->and(strlen($model->id))
+        ->toBe(36);
 });
 
 test('HasStatus trait can set and get status', function () {
-
     $model = TraitTestModel::create(['name' => 'Test']);
 
     $model->setStatus('active');
 
-
-
     $model = $model->fresh();
-
-    
 
     // Debug: check if statuses table has data
 
@@ -58,22 +56,12 @@ test('HasStatus trait can set and get status', function () {
 
     // \Illuminate\Support\Facades\Log::info('First status: ' . json_encode(\Illuminate\Support\Facades\DB::table('statuses')->first()));
 
+    expect($model->statuses)
+        ->toHaveCount(1)
 
+        ->and($model->latestStatus()->name)
+        ->toBe('active')
 
-        expect($model->statuses)->toHaveCount(1)
-
-
-
-            ->and($model->latestStatus()->name)->toBe('active')
-
-
-
-            ->and($model->getStatusColor())->toBe('success');
-
-
-
-    
-
+        ->and($model->getStatusColor())
+        ->toBe('success');
 });
-
-

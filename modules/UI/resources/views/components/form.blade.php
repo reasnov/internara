@@ -4,6 +4,6 @@
     @isset($actions)
         <x-slot:actions>
             {{ $actions }}
-        </x-slot:actions>
+        </x-slot>
     @endisset
 </x-mary-form>

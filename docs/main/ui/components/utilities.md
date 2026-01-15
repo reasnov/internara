@@ -1,8 +1,10 @@
 # UI Components: Utilities
 
-Utility components provide specialized functionality like theme switching and dynamic slot rendering.
+Utility components provide specialized functionality like theme switching and dynamic slot
+rendering.
 
 ## `slot-render`
+
 A class-based component used to render dynamic UI content registered by modules.
 
 - **Component Tag:** `<x-ui::slot-render name="slot.name" />`
@@ -11,6 +13,7 @@ A class-based component used to render dynamic UI content registered by modules.
 ---
 
 ## `theme-toggle`
+
 A button that allows users to toggle between Light and Dark themes.
 
 - **Usage:** `<x-ui::theme-toggle />`
@@ -19,6 +22,7 @@ A button that allows users to toggle between Light and Dark themes.
 ---
 
 ## `user-menu`
+
 A dropdown component for user-specific actions (Profile, Logout).
 
 - **Usage:** `<x-ui::user-menu />`

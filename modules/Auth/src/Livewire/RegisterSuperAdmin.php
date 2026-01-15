@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Auth\Livewire;
 
 use Livewire\Component;
@@ -12,8 +14,10 @@ class RegisterSuperAdmin extends Component
 
     protected AuthService $authService;
 
-    public function boot(\Modules\Auth\Services\Contracts\AuthService $authService, \Modules\User\Services\Contracts\SuperAdminService $superAdminService): void
-    {
+    public function boot(
+        \Modules\Auth\Services\Contracts\AuthService $authService,
+        \Modules\User\Services\Contracts\SuperAdminService $superAdminService,
+    ): void {
         $this->authService = $authService;
         $this->form->id = $superAdminService->get(['id'])?->id;
     }
@@ -36,11 +40,13 @@ class RegisterSuperAdmin extends Component
 
     public function render()
     {
-        return view('auth::livewire.register-super-admin')
-            ->layout('auth::components.layouts.auth', [
+        return view('auth::livewire.register-super-admin')->layout(
+            'auth::components.layouts.auth',
+            [
                 'title' => __('Buat Akun Utama | :site_title', [
                     'site_title' => setting('site_title', 'Internara'),
                 ]),
-            ]);
+            ],
+        );
     }
 }

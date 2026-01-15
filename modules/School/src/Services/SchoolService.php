@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\School\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -28,8 +30,9 @@ class SchoolService extends EloquentQuery implements SchoolServiceContract
      * Retrieve schools based on conditions.
      * Returns a single School model if configured as single record, or a Collection otherwise.
      *
-     * @param  array<string, mixed>  $where  Conditions to filter the query.
-     * @param  array<int, string>  $columns  Columns to retrieve.
+     * @param array<string, mixed> $where Conditions to filter the query.
+     * @param array<int, string> $columns Columns to retrieve.
+     *
      * @return School|\Illuminate\Support\Collection The found school or a collection of schools.
      */
     public function get(array $filters = [], array $columns = ['*']): \Illuminate\Support\Collection
@@ -45,35 +48,49 @@ class SchoolService extends EloquentQuery implements SchoolServiceContract
     /**
      * List schools with optional filtering and pagination.
      *
-     * @param  array<string, mixed>  $filters  Filter criteria (e.g., 'search', 'sort').
-     * @param  int  $perPage  Number of records per page.
-     * @param  array<int, string>  $columns  Columns to retrieve.
+     * @param array<string, mixed> $filters Filter criteria (e.g., 'search', 'sort').
+     * @param int $perPage Number of records per page.
+     * @param array<int, string> $columns Columns to retrieve.
+     *
      * @return LengthAwarePaginator Paginated list of schools.
      */
-    public function list(array $filters = [], int $perPage = 10, array $columns = ['*']): LengthAwarePaginator
-    {
-        return $this->model->query()->select($columns)
+    public function list(
+        array $filters = [],
+        int $perPage = 10,
+        array $columns = ['*'],
+    ): LengthAwarePaginator {
+        return $this->model
+            ->query()
+            ->select($columns)
             ->when($filters['search'] ?? null, function (Builder $query, string $search) {
                 $query->where(function (Builder $q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%");
+                    $q->where('name', 'like', "%{$search}%")->orWhere(
+                        'email',
+                        'like',
+                        "%{$search}%",
+                    );
                 });
             })
-            ->when($filters['sort'] ?? null, function (Builder $query, string $sort) {
-                $query->orderBy($sort, $filters['direction'] ?? 'asc');
-            }, function (Builder $query) {
-                $query->latest();
-            })
+            ->when(
+                $filters['sort'] ?? null,
+                function (Builder $query, string $sort) {
+                    $query->orderBy($sort, $filters['direction'] ?? 'asc');
+                },
+                function (Builder $query) {
+                    $query->latest();
+                },
+            )
             ->paginate($perPage);
     }
 
     /**
      * Create a new school, respecting the single-record configuration.
      *
-     * @param  array<string, mixed>  $data  The data for creating the school.
-     * @return School The newly created school.
+     * @param array<string, mixed> $data The data for creating the school.
      *
      * @throws AppException If a school already exists and the system is in single-record mode.
+     *
+     * @return School The newly created school.
      */
     public function create(array $data): School
     {
@@ -81,7 +98,7 @@ class SchoolService extends EloquentQuery implements SchoolServiceContract
             if (config('school.single_record') && $this->model->exists()) {
                 throw new AppException(
                     userMessage: 'school::exceptions.single_record_exists',
-                    code: 409 // Conflict
+                    code: 409, // Conflict
                 );
             }
 
@@ -90,13 +107,14 @@ class SchoolService extends EloquentQuery implements SchoolServiceContract
 
             return $school;
         } catch (QueryException $e) {
-            if ($e->getCode() === '23000') { // Duplicate entry
+            if ($e->getCode() === '23000') {
+                // Duplicate entry
                 throw new AppException(
                     userMessage: 'records::exceptions.unique_violation',
                     replace: ['record' => $this->recordName],
                     logMessage: 'Attempted to create school with duplicate unique field.',
                     code: 409,
-                    previous: $e
+                    previous: $e,
                 );
             }
             throw new AppException(
@@ -104,7 +122,7 @@ class SchoolService extends EloquentQuery implements SchoolServiceContract
                 replace: ['record' => $this->recordName],
                 logMessage: 'School creation failed: '.$e->getMessage(),
                 code: 500,
-                previous: $e
+                previous: $e,
             );
         }
     }
@@ -130,20 +148,26 @@ class SchoolService extends EloquentQuery implements SchoolServiceContract
     /**
      * Retrieve the first school record.
      *
-     * @param  array<int, string>  $columns
+     * @param array<int, string> $columns
      */
     public function first(array $filters = [], array $columns = ['*']): ?School
     {
         return parent::first($filters, $columns);
     }
 
-    public function registerFromRelatedModel(Model $model, ?string $foreignKey = null, ?string $ownerKey = null, ?string $relation = null): BelongsTo
-    {
-        return $model->belongsTo($this->model::class, $foreignKey, $ownerKey, $relation);
+    public function registerFromRelatedModel(
+        Model $model,
+        ?string $foreignKey = null,
+        ?string $ownerKey = null,
+        ?string $relation = null,
+    ): BelongsTo {
+        return $model->belongsTo(get_class($this->model), $foreignKey, $ownerKey, $relation);
     }
 
-    protected function handleSchoolLogo(School &$school, UploadedFile|string|null $logo = null): bool
-    {
+    protected function handleSchoolLogo(
+        School &$school,
+        UploadedFile|string|null $logo = null,
+    ): bool {
         return isset($logo) ? $school->setLogo($logo) : false;
     }
 }

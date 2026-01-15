@@ -1,15 +1,20 @@
 # Service Binding and Auto-Discovery
 
-Internara provides a robust and flexible Service Binding mechanism powered by the `BindServiceProvider`. This system automates the registration of dependency injection bindings while offering complete control through configuration.
+Internara provides a robust and flexible Service Binding mechanism powered by the
+`BindServiceProvider`. This system automates the registration of dependency injection bindings while
+offering complete control through configuration.
 
 ## Features
 
--   **Auto-Discovery:** Automatically binds interfaces to their implementation based on naming conventions.
--   **High Performance:** Discovery results are cached (configurable TTL) to prevent I/O overhead in production.
--   **Configurable Patterns:** Customize how implementations are guessed (e.g., `UserRepository` (Interface) -> `UserRepository` or `Repositories\EloquentUserRepository`).
--   **Security:** Block sensitive namespaces from being auto-bound.
--   **Contextual Binding:** Define dependencies based on the consuming class.
--   **Singleton Support:** Toggle between singleton or transient bindings globally.
+- **Auto-Discovery:** Automatically binds interfaces to their implementation based on naming
+  conventions.
+- **High Performance:** Discovery results are cached (configurable TTL) to prevent I/O overhead in
+  production.
+- **Configurable Patterns:** Customize how implementations are guessed (e.g., `UserRepository`
+  (Interface) -> `UserRepository` or `Repositories\EloquentUserRepository`).
+- **Security:** Block sensitive namespaces from being auto-bound.
+- **Contextual Binding:** Define dependencies based on the consuming class.
+- **Singleton Support:** Toggle between singleton or transient bindings globally.
 
 ## Configuration
 
@@ -23,7 +28,8 @@ All configurations are managed in `config/bindings.php`.
 
 ### 2. Caching
 
-In production, discovery results are cached. In `local` environment, cache is disabled (TTL = 0) for developer experience.
+In production, discovery results are cached. In `local` environment, cache is disabled (TTL = 0) for
+developer experience.
 
 ```php
 'cache_ttl' => 1440, // Minutes (24 hours)
@@ -39,11 +45,10 @@ If your services are stateless, you can enable singleton mode to save memory.
 
 ### 4. Custom Patterns
 
-Define how the system should find the concrete class for a given interface.
-Placeholders:
+Define how the system should find the concrete class for a given interface. Placeholders:
 
--   `{{root}}`: The root namespace (e.g., `Modules\User` or `App`).
--   `{{short}}`: The interface name without `Interface` or `Contract` suffix.
+- `{{root}}`: The root namespace (e.g., `Modules\User` or `App`).
+- `{{short}}`: The interface name without `Interface` or `Contract` suffix.
 
 ```php
 'patterns' => [
@@ -90,7 +95,8 @@ Define what implementation to use based on the class that needs it.
 ],
 ```
 
-Alternatively, you can define complex logic in the `BindServiceProvider::contextualBindings()` method.
+Alternatively, you can define complex logic in the `BindServiceProvider::contextualBindings()`
+method.
 
 ## How Auto-Discovery Works
 
@@ -100,29 +106,37 @@ Alternatively, you can define complex logic in the `BindServiceProvider::context
 4.  It generates candidate class names using the configured `patterns`.
 5.  If a candidate class exists and implements the interface, it is registered.
 
-> **Note:** Auto-discovery works best when the Interface and the Implementation share the same Root Namespace. For cross-module dependencies, use Manual Binding.
+> **Note:** Auto-discovery works best when the Interface and the Implementation share the same Root
+> Namespace. For cross-module dependencies, use Manual Binding.
 
 ---
 
 ## Interaction with `ManagesModuleProvider` Trait
 
-While the `BindServiceProvider` excels at auto-discovering bindings based on conventions, modules often require explicit control over their service bindings (e.g., for custom implementations, singletons, or more complex resolution logic).
+While the `BindServiceProvider` excels at auto-discovering bindings based on conventions, modules
+often require explicit control over their service bindings (e.g., for custom implementations,
+singletons, or more complex resolution logic).
 
-The `Modules\Shared\Providers\Concerns\ManagesModuleProvider` trait (used by all standard module service providers) offers a structured way to explicitly declare these bindings within a module's `bindings()` method.
+The `Modules\Shared\Providers\Concerns\ManagesModuleProvider` trait (used by all standard module
+service providers) offers a structured way to explicitly declare these bindings within a module's
+`bindings()` method.
 
--   **Auto-Discovery (by `BindServiceProvider`)**: Ideal for simple `Interface -> Implementation` bindings that follow strict naming conventions.
--   **Explicit Declaration (by `ManagesModuleProvider` trait)**: Use this for:
-    -   Custom bindings that don't fit auto-discovery patterns.
-    -   Ensuring specific singletons.
-    -   Resolving ambiguities.
-    -   Decoupling intra-module dependencies where auto-discovery might be overridden or is less clear.
+- **Auto-Discovery (by `BindServiceProvider`)**: Ideal for simple `Interface -> Implementation`
+  bindings that follow strict naming conventions.
+- **Explicit Declaration (by `ManagesModuleProvider` trait)**: Use this for:
+    - Custom bindings that don't fit auto-discovery patterns.
+    - Ensuring specific singletons.
+    - Resolving ambiguities.
+    - Decoupling intra-module dependencies where auto-discovery might be overridden or is less
+      clear.
 
-When a module uses the `ManagesModuleProvider` trait and explicitly binds an interface in its `bindings()` method, that explicit binding will take precedence over any potential auto-discovery attempts by the `BindServiceProvider` for that specific interface.
+When a module uses the `ManagesModuleProvider` trait and explicitly binds an interface in its
+`bindings()` method, that explicit binding will take precedence over any potential auto-discovery
+attempts by the `BindServiceProvider` for that specific interface.
 
 ---
 
 **Navigation**
 
-
-
-[← Previous: ManagesModuleProvider Trait](module-provider-concerns.md) | [Next: Role & Permission Management Guide →](role-permission-management.md)
+[← Previous: ManagesModuleProvider Trait](module-provider-concerns.md) |
+[Next: Role & Permission Management Guide →](role-permission-management.md)

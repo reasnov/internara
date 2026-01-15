@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Permission\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -21,17 +23,23 @@ class PermissionService extends EloquentQuery implements PermissionServiceContra
     /**
      * List permissions with optional filtering and pagination.
      *
-     * @param  array<string, mixed>  $filters  Filter criteria (e.g., 'search', 'module', 'sort').
-     * @param  int  $perPage  Number of records per page.
-     * @param  array<int, string>  $columns  Columns to retrieve.
+     * @param array<string, mixed> $filters Filter criteria (e.g., 'search', 'module', 'sort').
+     * @param int $perPage Number of records per page.
+     * @param array<int, string> $columns Columns to retrieve.
+     *
      * @return LengthAwarePaginator Paginated list of permissions.
      */
-    public function list(array $filters = [], int $perPage = 10, array $columns = ['*']): LengthAwarePaginator
-    {
-
-        return $this->model->query()->select($columns) // This line is correct in the existing list method
+    public function list(
+        array $filters = [],
+        int $perPage = 10,
+        array $columns = ['*'],
+    ): LengthAwarePaginator {
+        return $this->model
+            ->query()
+            ->select($columns) // This line is correct in the existing list method
             ->when($filters['search'] ?? null, function (Builder $query, string $search) {
-                $query->where('name', 'like', "%{$search}%")
+                $query
+                    ->where('name', 'like', "%{$search}%")
                     ->orWhere('module', 'like', "%{$search}%");
             })
             ->when($filters['module'] ?? null, function (Builder $query, string $module) {
@@ -45,10 +53,11 @@ class PermissionService extends EloquentQuery implements PermissionServiceContra
      * Create a new permission record.
      * This method overrides the one from EloquentQuery trait to match the contract.
      *
-     * @param  array<string, mixed>  $data  The data for creating the permission.
-     * @return Permission The newly created permission.
+     * @param array<string, mixed> $data The data for creating the permission.
      *
      * @throws \Modules\Exceptions\AppException If creation fails due to a database error.
+     *
+     * @return Permission The newly created permission.
      */
     public function create(array $data): Permission
     {
@@ -62,9 +71,11 @@ class PermissionService extends EloquentQuery implements PermissionServiceContra
                 throw new AppException(
                     userMessage: 'records::exceptions.unique_violation',
                     replace: ['record' => $this->recordName],
-                    logMessage: 'Attempted to create '.$this->recordName.' with duplicate unique field.',
+                    logMessage: 'Attempted to create '.
+                        $this->recordName.
+                        ' with duplicate unique field.',
                     code: 409,
-                    previous: $e
+                    previous: $e,
                 );
             }
             throw new AppException(
@@ -72,7 +83,7 @@ class PermissionService extends EloquentQuery implements PermissionServiceContra
                 replace: ['record' => $this->recordName],
                 logMessage: 'Creation of '.$this->recordName.' failed: '.$e->getMessage(),
                 code: 500,
-                previous: $e
+                previous: $e,
             );
         }
     }
@@ -81,13 +92,14 @@ class PermissionService extends EloquentQuery implements PermissionServiceContra
      * Update a permission's details by its ID.
      * This method overrides the one from EloquentQuery trait to match the contract.
      *
-     * @param  mixed  $id  The UUID of the permission.
-     * @param  array<string, mixed>  $data  The data for updating the permission.
-     * @param  array<int, string>  $columns  Columns to retrieve after update.
-     * @return Permission The updated permission.
+     * @param mixed $id The UUID of the permission.
+     * @param array<string, mixed> $data The data for updating the permission.
+     * @param array<int, string> $columns Columns to retrieve after update.
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If the record is not found.
      * @throws \Modules\Exceptions\AppException If the update fails due to a database error.
+     *
+     * @return Permission The updated permission.
      */
     public function update(mixed $id, array $data, array $columns = ['*']): Permission
     {
@@ -98,13 +110,16 @@ class PermissionService extends EloquentQuery implements PermissionServiceContra
 
             return $permission;
         } catch (QueryException $e) {
-            if ($e->getCode() === '23000') { // Duplicate entry
+            if ($e->getCode() === '23000') {
+                // Duplicate entry
                 throw new AppException(
                     userMessage: 'records::exceptions.unique_violation',
                     replace: ['record' => $this->recordName],
-                    logMessage: 'Attempted to update '.$this->recordName.' with duplicate unique field.',
+                    logMessage: 'Attempted to update '.
+                        $this->recordName.
+                        ' with duplicate unique field.',
                     code: 409,
-                    previous: $e
+                    previous: $e,
                 );
             }
             throw new AppException(
@@ -112,7 +127,7 @@ class PermissionService extends EloquentQuery implements PermissionServiceContra
                 replace: ['record' => $this->recordName],
                 logMessage: 'Update of '.$this->recordName.' failed: '.$e->getMessage(),
                 code: 500,
-                previous: $e
+                previous: $e,
             );
         }
     }

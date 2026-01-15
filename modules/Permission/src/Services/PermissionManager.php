@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Permission\Services;
 
 use Modules\Permission\Contracts\PermissionManager as PermissionManagerContract;
@@ -8,24 +10,35 @@ use Modules\Permission\Models\Role;
 
 class PermissionManager implements PermissionManagerContract
 {
-    public function createPermission(string $name, string $description, string $module, string $guardName = 'web'): Permission
-    {
+    public function createPermission(
+        string $name,
+        string $description,
+        string $module,
+        string $guardName = 'web',
+    ): Permission {
         return Permission::updateOrCreate(
             ['name' => $name, 'guard_name' => $guardName],
-            ['description' => $description, 'module' => $module]
+            ['description' => $description, 'module' => $module],
         );
     }
 
-    public function createRole(string $name, string $description, string $module, string $guardName = 'web'): Role
-    {
+    public function createRole(
+        string $name,
+        string $description,
+        string $module,
+        string $guardName = 'web',
+    ): Role {
         return Role::updateOrCreate(
             ['name' => $name, 'guard_name' => $guardName],
-            ['description' => $description, 'module' => $module]
+            ['description' => $description, 'module' => $module],
         );
     }
 
-    public function givePermissionToRole(string $roleName, array $permissions, string $guardName = 'web'): ?Role
-    {
+    public function givePermissionToRole(
+        string $roleName,
+        array $permissions,
+        string $guardName = 'web',
+    ): ?Role {
         $role = Role::findByName($roleName, $guardName);
         if ($role) {
             $role->givePermissionTo($permissions);

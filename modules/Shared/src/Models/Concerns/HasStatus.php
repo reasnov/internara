@@ -29,7 +29,7 @@ trait HasStatus
             return __('shared::status.unknown');
         }
 
-        return __($this->getStatusTranslationPrefix() . $status->name);
+        return __($this->getStatusTranslationPrefix().$status->name);
     }
 
     /**
@@ -64,8 +64,8 @@ trait HasStatus
     protected function getStatusColorMap(): array
     {
         return [
-            'active'   => 'success',
-            'pending'  => 'warning',
+            'active' => 'success',
+            'pending' => 'warning',
             'inactive' => 'error',
         ];
     }

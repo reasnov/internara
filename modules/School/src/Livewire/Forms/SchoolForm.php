@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\School\Livewire\Forms;
 
 use Illuminate\Http\UploadedFile;
@@ -31,7 +33,12 @@ class SchoolForm extends Form
         return [
             'name' => ['required', 'string', Rule::unique('schools', 'name')->ignore($this->id)],
             'address' => ['nullable', 'string', 'max:1000'],
-            'email' => ['nullable', 'email', 'max:255', Rule::unique('schools', 'email')->ignore($this->id)],
+            'email' => [
+                'nullable',
+                'email',
+                'max:255',
+                Rule::unique('schools', 'email')->ignore($this->id),
+            ],
             'phone' => ['nullable', 'string', 'min:8', 'max:15'],
             'fax' => ['nullable', 'string', 'min:8', 'max:15'],
             'principal_name' => ['nullable', 'string'],

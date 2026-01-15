@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 use Nwidart\Modules\Activators\FileActivator;
 use Nwidart\Modules\Providers\ConsoleServiceProvider;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Module Namespace
@@ -57,10 +58,30 @@ return [
              *
              * Note: Keys should be in UPPERCASE.
              */
-            'routes/web' => ['LOWER_NAME', 'STUDLY_NAME', 'PLURAL_LOWER_NAME', 'KEBAB_NAME', 'MODULE_NAMESPACE', 'CONTROLLER_NAMESPACE'],
-            'routes/api' => ['LOWER_NAME', 'STUDLY_NAME', 'PLURAL_LOWER_NAME', 'KEBAB_NAME', 'MODULE_NAMESPACE', 'CONTROLLER_NAMESPACE'],
+            'routes/web' => [
+                'LOWER_NAME',
+                'STUDLY_NAME',
+                'PLURAL_LOWER_NAME',
+                'KEBAB_NAME',
+                'MODULE_NAMESPACE',
+                'CONTROLLER_NAMESPACE',
+            ],
+            'routes/api' => [
+                'LOWER_NAME',
+                'STUDLY_NAME',
+                'PLURAL_LOWER_NAME',
+                'KEBAB_NAME',
+                'MODULE_NAMESPACE',
+                'CONTROLLER_NAMESPACE',
+            ],
             'vite' => ['LOWER_NAME', 'STUDLY_NAME', 'KEBAB_NAME'],
-            'json' => ['LOWER_NAME', 'STUDLY_NAME', 'KEBAB_NAME', 'MODULE_NAMESPACE', 'PROVIDER_NAMESPACE'],
+            'json' => [
+                'LOWER_NAME',
+                'STUDLY_NAME',
+                'KEBAB_NAME',
+                'MODULE_NAMESPACE',
+                'PROVIDER_NAMESPACE',
+            ],
             'views/index' => ['LOWER_NAME'],
             'views/master' => ['LOWER_NAME', 'STUDLY_NAME', 'KEBAB_NAME'],
             'scaffold/config' => ['STUDLY_NAME'],
@@ -218,7 +239,6 @@ return [
         |
         */
         'translations' => true,
-
     ],
 
     /*
@@ -235,7 +255,8 @@ return [
             \Modules\Core\Console\Commands\ModuleMakeClassCommand::class,
             \Modules\Core\Console\Commands\ModuleMakeInterfaceCommand::class,
             \Modules\Core\Console\Commands\ModuleMakeTraitCommand::class,
-        ])->toArray(),
+        ])
+        ->toArray(),
 
     /*
     |--------------------------------------------------------------------------
@@ -248,9 +269,7 @@ return [
     */
     'scan' => [
         'enabled' => false,
-        'paths' => [
-            base_path('vendor/*/*'),
-        ],
+        'paths' => [base_path('vendor/*/*')],
     ],
 
     /*

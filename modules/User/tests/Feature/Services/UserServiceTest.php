@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Modules\User\Models\User;
-use Modules\User\Services\Contracts\UserService;
 use Modules\Permission\Models\Role;
+use Modules\User\Services\Contracts\UserService;
 
 uses(RefreshDatabase::class);
 
@@ -17,10 +18,10 @@ test('UserService automatically verifies email for admin role', function () {
     $userService = app(UserService::class);
 
     $user = $userService->create([
-        'name'     => 'Admin User',
-        'email'    => 'admin@example.com',
+        'name' => 'Admin User',
+        'email' => 'admin@example.com',
         'password' => 'password123',
-        'roles'    => ['admin'],
+        'roles' => ['admin'],
     ]);
 
     expect($user->hasVerifiedEmail())->toBeTrue();
@@ -31,8 +32,8 @@ test('UserService assigns student role by default if not specified', function ()
     $userService = app(UserService::class);
 
     $user = $userService->create([
-        'name'     => 'Regular User',
-        'email'    => 'user@example.com',
+        'name' => 'Regular User',
+        'email' => 'user@example.com',
         'password' => 'password123',
     ]);
 

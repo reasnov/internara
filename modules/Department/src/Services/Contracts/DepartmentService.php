@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Department\Services\Contracts;
 
 use Modules\Shared\Services\Contracts\EloquentQuery;

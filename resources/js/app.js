@@ -1,1 +1,1 @@
-import '../../modules/UI/resources/js/app.js';
+import '../../modules/UI/resources/js/app.js'

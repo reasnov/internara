@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -10,7 +12,10 @@ use Illuminate\Support\Facades\Log;
  * available. This prevents fatal errors across the application if the
  * Settings module is disabled.
  */
-if (class_exists('\\Modules\\Settings\\Providers\\SettingsServiceProvider') && ! function_exists('setting')) {
+if (
+    class_exists('\\Modules\\Settings\\Providers\\SettingsServiceProvider') &&
+    ! function_exists('setting')
+) {
     /**
      * Fallback for the setting() helper function.
      *
@@ -22,7 +27,9 @@ if (class_exists('\\Modules\\Settings\\Providers\\SettingsServiceProvider') && !
     {
         static $hasLogged = false;
         if (! $hasLogged) {
-            Log::warning('The setting() helper was called, but the Settings module is not available. A fallback was used.');
+            Log::warning(
+                'The setting() helper was called, but the Settings module is not available. A fallback was used.',
+            );
             $hasLogged = true;
         }
 

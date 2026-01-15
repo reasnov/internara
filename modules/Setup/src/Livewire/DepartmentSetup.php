@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Setup\Livewire;
 
 use Illuminate\View\View;
@@ -17,7 +19,7 @@ class DepartmentSetup extends Component
     /**
      * Boots the component and injects the SetupService.
      *
-     * @param  \Modules\Setup\Services\Contracts\SetupService  $setupService  The service for handling setup logic.
+     * @param \Modules\Setup\Services\Contracts\SetupService $setupService The service for handling setup logic.
      */
     public function boot(SetupService $setupService): void
     {
@@ -33,7 +35,7 @@ class DepartmentSetup extends Component
             currentStep: 'department',
             nextStep: 'internship',
             prevStep: 'school',
-            extra: ['req_record' => 'department']
+            extra: ['req_record' => 'department'],
         );
 
         $this->requireSetupAccess();
@@ -46,11 +48,10 @@ class DepartmentSetup extends Component
      */
     public function render(): View
     {
-        return view('setup::livewire.department-setup')
-            ->layout('setup::components.layouts.setup', [
-                'title' => __('Atur Data Jurusan | :site_title', [
-                    'site_title' => setting('site_title', 'Internara'),
-                ]),
-            ]);
+        return view('setup::livewire.department-setup')->layout('setup::components.layouts.setup', [
+            'title' => __('Atur Data Jurusan | :site_title', [
+                'site_title' => setting('site_title', 'Internara'),
+            ]),
+        ]);
     }
 }

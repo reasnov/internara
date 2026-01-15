@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Profile\Services\Contracts;
 
-use Modules\Shared\Services\Contracts\EloquentQuery;
 use Modules\Profile\Models\Profile;
+use Modules\Shared\Services\Contracts\EloquentQuery;
 
 /**
  * @extends EloquentQuery<Profile>

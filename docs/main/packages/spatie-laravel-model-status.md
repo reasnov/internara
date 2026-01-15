@@ -1,18 +1,28 @@
 # Spatie Laravel Model Status Integration
 
-This document outlines the integration and usage of the `spatie/laravel-model-status` package within the Internara project. This package provides an elegant and flexible way to add a status to any Eloquent model, allowing for clear and standardized management of an entity's lifecycle.
+This document outlines the integration and usage of the `spatie/laravel-model-status` package within
+the Internara project. This package provides an elegant and flexible way to add a status to any
+Eloquent model, allowing for clear and standardized management of an entity's lifecycle.
 
 ## 1. Introduction
 
-The `spatie/laravel-model-status` package is a robust solution for attaching a status to any Eloquent model. Instead of relying on enum fields or custom tables for each status type, this package centralizes status management, making it easy to track and query the state of your models. It is particularly useful for workflows where models transition through various defined states, such as user verification, internship application stages, or payment processing.
+The `spatie/laravel-model-status` package is a robust solution for attaching a status to any
+Eloquent model. Instead of relying on enum fields or custom tables for each status type, this
+package centralizes status management, making it easy to track and query the state of your models.
+It is particularly useful for workflows where models transition through various defined states, such
+as user verification, internship application stages, or payment processing.
 
 ## 2. Installation (Conceptual)
 
-The package can be installed via Composer. Once installed, its service provider is typically auto-discovered by Laravel.
+The package can be installed via Composer. Once installed, its service provider is typically
+auto-discovered by Laravel.
+
 ```bash
 composer require spatie/laravel-model-status
 ```
-After installation, you'll need to publish and run the migrations to create the `statuses` table, which stores the history of statuses for your models.
+
+After installation, you'll need to publish and run the migrations to create the `statuses` table,
+which stores the history of statuses for your models.
 
 ## 3. Usage
 
@@ -61,7 +71,8 @@ $myModel->statuses; // Collection of Status objects
 
 ### 3.3 Defining Allowed Statuses and Transitions
 
-It's good practice to define the allowed statuses and transitions for a model. This can be done by overriding the `getAllowedStatuses` and `getStatusTransitions` methods in your model:
+It's good practice to define the allowed statuses and transitions for a model. This can be done by
+overriding the `getAllowedStatuses` and `getStatusTransitions` methods in your model:
 
 ```php
 class MyModel extends Model
@@ -108,23 +119,29 @@ MyModel::whereStatusIn(['pending', 'rejected'])->get();
 
 ## 4. Configuration
 
-The package's configuration file (`config/model-status.php`) can be published to customize behavior, such as:
+The package's configuration file (`config/model-status.php`) can be published to customize behavior,
+such as:
 
-*   The table name for statuses.
-*   The model used for statuses (if you extend the default `Status` model).
+- The table name for statuses.
+- The model used for statuses (if you extend the default `Status` model).
 
 ## 5. Internara Specifics
 
-Within Internara, `spatie/laravel-model-status` will be utilized to standardize status management across various domain models, including but not limited to:
+Within Internara, `spatie/laravel-model-status` will be utilized to standardize status management
+across various domain models, including but not limited to:
 
-*   **User Statuses:** Managing the lifecycle of user accounts (e.g., `active`, `suspended`, `pending_verification`).
-*   **Internship Application Statuses:** Tracking the progress of internship applications (e.g., `submitted`, `under_review`, `accepted`, `rejected`).
-*   **Any other entity** requiring a clear, auditable status workflow.
+- **User Statuses:** Managing the lifecycle of user accounts (e.g., `active`, `suspended`,
+  `pending_verification`).
+- **Internship Application Statuses:** Tracking the progress of internship applications (e.g.,
+  `submitted`, `under_review`, `accepted`, `rejected`).
+- **Any other entity** requiring a clear, auditable status workflow.
 
-This consistent approach ensures maintainability, simplifies querying, and provides a clear history of state changes for critical application data.
+This consistent approach ensures maintainability, simplifies querying, and provides a clear history
+of state changes for critical application data.
 
 ---
 
 **Navigation**
 
-[← Previous: Spatie Laravel MediaLibrary Integration](spatie-laravel-medialibrary.md) | [Next: Advanced Guides Overview →](../advanced/advanced-overview.md)
+[← Previous: Spatie Laravel MediaLibrary Integration](spatie-laravel-medialibrary.md) |
+[Next: Advanced Guides Overview →](../advanced/advanced-overview.md)

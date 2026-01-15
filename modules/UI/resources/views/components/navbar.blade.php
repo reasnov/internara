@@ -6,10 +6,10 @@
 
         {{-- Brand --}}
         @slotRender('navbar.brand')
-    </x-slot:brand>
+    </x-slot>
 
     {{-- Right side actions --}}
     <x-slot:actions class="space-x-2">
         @slotRender('navbar.actions')
-    </x-slot:actions>
+    </x-slot>
 </x-mary-nav>

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Dashboard\Livewire;
 
 use Illuminate\View\View;
@@ -9,9 +11,11 @@ class StudentDashboard extends Component
 {
     public function render(): View
     {
-        return view('dashboard::livewire.student-dashboard')
-            ->layout('ui::components.layouts.base.with-navbar', [
+        return view('dashboard::livewire.student-dashboard')->layout(
+            'ui::components.layouts.base.with-navbar',
+            [
                 'title' => 'Dasbor Siswa',
-            ]);
+            ],
+        );
     }
 }

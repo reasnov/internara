@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'verification_subject' => 'Konfirmasi Alamat Email - Program Magang',
     'verification_greeting' => 'Halo, :name!',

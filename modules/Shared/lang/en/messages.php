@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'record_created' => 'Record successfully created.',
     'record_updated' => 'Record successfully updated.',
