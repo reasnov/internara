@@ -60,3 +60,9 @@ Key UI/UX design principles include:
 -   **Performance Target:** Core page load time of **less than 1.5 seconds**.
 -   **Stability Target:** Critical bugs in the full internship cycle must be **100% free** before internal testing.
 -   **Default Localization Language:** Indonesian (`id`).
+
+---
+
+**Navigation**
+
+[← Previous: Foundational Module Philosophy](foundational-module-philosophy.md) | [Next: Development Conventions →](development-conventions.md)

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Setup\Http\Middleware;
 
 use Closure;
@@ -15,22 +17,22 @@ class RequireSetupAccess
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Bypass specific requests
-        if ($this->bypassSpecificRequests($request)) {
-            return $next($request);
-        }
-
         // If the app is installed and is setup route, redirect to login
         if ($this->setupService->isAppInstalled() && $this->isSetupRoute($request)) {
             return redirect()->route('login');
         }
 
-        // If the app is not installed, redirect to the setup wizard.
+        // If the app is not installed, redirect to the setup route.
         if (! $this->setupService->isAppInstalled() && ! $this->isSetupRoute($request)) {
+            // Bypass specific requests
+            if ($this->bypassSpecificRequests($request)) {
+                return $next($request);
+            }
+
             return redirect()->route('setup.welcome');
         }
 
@@ -52,6 +54,7 @@ class RequireSetupAccess
 
     private function isLivewireRequest(Request $request): bool
     {
+        // for UI Interaction and file upload
         return Livewire::isLivewireRequest() || $request->is('livewire/*');
     }
 }

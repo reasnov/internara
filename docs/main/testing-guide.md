@@ -347,6 +347,8 @@ test('a shipping email is sent when an order is completed', function () {
 
 ## Appendix: Class-Based PHPUnit Style Tests
 
+For all class-based PHPUnit style tests, test methods **must** always be prefixed with `test_`. This convention is mandatory and non-negotiable for proper test discovery and adherence to project standards.
+
 While Pest's functional style is preferred, the project fully supports traditional class-based testing using PHPUnit syntax. This approach can be beneficial for grouping numerous related tests within a single class or for leveraging `setUp()` and `tearDown()` methods for complex test arrangements.
 
 ### Application Feature Test Example
@@ -428,4 +430,10 @@ class UserDashboardTest extends TestCase
         $response->assertSee("Welcome, {$user->name}");
     }
 }
+
+---
+
+**Navigation**
+
+[← Previous: Artisan Commands Reference](artisan-commands-reference.md) | [Next: Package Integration Overview →](packages/packages-overview.md)
 ```

@@ -53,3 +53,9 @@ Domain modules (e.g., `User`, `Internship`) represent distinct business areas.
 
 -   **Standard:** They should strive to be **Portable** by only depending on the `Shared` module and external framework packages.
 -   **Constraint:** They use the data provided by `Core` (like Roles/Permissions) via standard Laravel interfaces (Gates/Policies) to avoid hard-coding dependencies on the physical `Core` module. For details, refer to the **[Role and Permission Management Guide](../role-permission-management.md)**.
+
+---
+
+**Navigation**
+
+[← Previous: Architecture Guide](architecture-guide.md) | [Next: Best Practices Guide →](conceptual-best-practices.md)

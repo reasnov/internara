@@ -46,3 +46,9 @@ php artisan module:make-test <TestName> <ModuleName>
 ## Inter-Module Communication
 
 Directly referencing models or concrete classes from other modules is **strictly forbidden**. You must use the Service layer and type-hint the interfaces defined in the module's `Contracts/` directory. For a comprehensive explanation of inter-module communication principles, refer to the **[Architecture Guide](../architecture-guide.md)**.
+
+---
+
+**Navigation**
+
+[← Previous: Laravel Livewire Integration](laravel-livewire.md) | [Next: Laravel Modules Livewire Integration →](mhmiton-laravel-modules-livewire.md)

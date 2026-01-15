@@ -225,3 +225,8 @@ Use this pattern for cross-cutting concerns like authorization.
     3.  The `Permission` module handles the underlying storage logic.
     4.  The domain module simply calls `$user->can('permission.name')`. It doesn't need to know about the `Permission` module or the specific models being used.
 
+---
+
+**Navigation**
+
+[← Previous: Installation Guide](installation-guide.md) | [Next: Module Structure Overview →](foundational-module-philosophy.md)

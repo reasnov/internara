@@ -78,3 +78,10 @@ class UserProfileEditor extends Component
         return view('user::livewire.user-profile-editor');
     }
 }
+```
+
+---
+
+**Navigation**
+
+[← Previous: Laravel Framework Integration](laravel-framework.md) | [Next: Laravel Modules Integration →](nwidart-laravel-modules.md)

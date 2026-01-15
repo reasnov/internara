@@ -73,3 +73,9 @@ class User extends Authenticatable implements HasMedia
 ```
 
 *   **Using the Custom `Media` Model:** If you need to leverage the custom `module` field or any other customizations in the `Media` model, ensure you are interacting with `Modules\Media\Models\Media` rather than the base `Spatie\MediaLibrary\MediaCollections\Models\Media`. You may need to specify this in the `media-library.php` config or by overriding `getMediaModel()` in your `HasMedia` models.
+
+---
+
+**Navigation**
+
+[← Previous: Spatie Laravel Activitylog Integration](spatie-laravel-activitylog.md) | [Next: Spatie Laravel Model Status Integration →](spatie-laravel-model-status.md)

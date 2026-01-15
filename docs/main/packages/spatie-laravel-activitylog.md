@@ -180,3 +180,9 @@ $loginActivities = Activity::where('description', 'User logged in')->get();
 ## 5. Integration with v0.x-alpha Release
 
 The `spatie/laravel-activitylog` package, integrated via the `Log` module, directly supports the `System Monitor and User Activity Log` feature outlined in the `v0.x-alpha` release plan. It provides the necessary infrastructure for tracking, storing, and retrieving significant events and user interactions within the application.
+
+---
+
+**Navigation**
+
+[← Previous: Spatie Laravel Permission Integration](spatie-laravel-permission.md) | [Next: Spatie Laravel MediaLibrary Integration →](spatie-laravel-medialibrary.md)

@@ -21,5 +21,6 @@
     "Assessment": false,
     "Media": true,
     "Student": false,
-    "Teacher": false
+    "Teacher": false,
+    "TestModule": true
 }

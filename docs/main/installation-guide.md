@@ -112,3 +112,9 @@ The application should now be accessible at `http://localhost:8000` (or the `APP
 After installation, navigate to the application in your browser. If a setup wizard is available, follow its instructions. Otherwise, you may need to manually create an initial admin user or run a specific seeder if not already covered by `migrate --seed`.
 
 *(Further instructions for initial admin user creation or setup wizard will go here if applicable)*
+
+---
+
+**Navigation**
+
+[← Previous: Main Documentation Overview](main-documentation-overview.md) | [Next: Architecture Guide →](architecture-guide.md)

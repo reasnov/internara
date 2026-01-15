@@ -16,3 +16,9 @@ Our use of Laravel adheres to specific patterns and conventions to ensure code i
 *   **Routing:** URLs are generated using **named routes** (`route('name')`).
 *   **Configuration:** Access configuration values via the `config()` helper. The `env()` helper **must not** be used outside of the files in the `config/` directory.
 *   **Queues:** Time-consuming tasks are offloaded to **queued jobs**.
+
+---
+
+**Navigation**
+
+[← Previous: Package Integration Overview](packages-overview.md) | [Next: Laravel Livewire Integration →](laravel-livewire.md)

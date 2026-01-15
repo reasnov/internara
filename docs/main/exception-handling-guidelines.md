@@ -219,3 +219,9 @@ Laravel's `App\Exceptions\Handler.php` is the central hub for defining how all e
 *   **For all Exceptions:** The full stack trace and the `logMessage` should be logged in detail for debugging.
 *   **Contextual Logging:** The `AppException` constructor accepts a `$context` array. This data is automatically included in log entries, providing rich, structured information.
 *   **Sensitivity:** Sensitive information (passwords, API keys) must **never** be passed into the context or log message.
+
+---
+
+**Navigation**
+
+[← Previous: UI/UX Development Guide](ui-ux-development-guide.md) | [Next: Service Binding & Auto-Discovery →](service-binding-auto-discovery.md)

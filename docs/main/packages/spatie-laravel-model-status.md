@@ -122,3 +122,9 @@ Within Internara, `spatie/laravel-model-status` will be utilized to standardize 
 *   **Any other entity** requiring a clear, auditable status workflow.
 
 This consistent approach ensures maintainability, simplifies querying, and provides a clear history of state changes for critical application data.
+
+---
+
+**Navigation**
+
+[← Previous: Spatie Laravel MediaLibrary Integration](spatie-laravel-medialibrary.md) | [Next: Advanced Guides Overview →](../advanced/advanced-overview.md)

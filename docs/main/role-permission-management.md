@@ -156,3 +156,9 @@ The **Admin** role is for managing the day-to-day operations and data within the
 
 -   **Permissions:**
         - Receives a broad set of permissions for management tasks (e.g., `user.manage`), but does not have the implicit "grant all" authority of the SuperAdmin. Permissions must be explicitly assigned via seeders.
+
+---
+
+**Navigation**
+
+[← Previous: Service Binding & Auto-Discovery](service-binding-auto-discovery.md) | [Next: Workflow Developer Guide →](modular-monolith-workflow.md)

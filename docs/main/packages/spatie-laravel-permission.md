@@ -27,3 +27,9 @@ protected function overrideSpatieConfig(): void
 }
 ```
 This ensures our custom `Role` and `Permission` models are always used.
+
+---
+
+**Navigation**
+
+[← Previous: Laravel Modules Livewire Integration](mhmiton-laravel-modules-livewire.md) | [Next: Spatie Activity Log Integration →](spatie-laravel-activitylog.md)

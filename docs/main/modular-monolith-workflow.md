@@ -179,3 +179,9 @@ Basic commands for module testing include:
     ```bash
     php artisan test --filter=<ModuleName>
     ```
+
+---
+
+**Navigation**
+
+[← Previous: Role & Permission Management Guide](role-permission-management.md) | [Next: Artisan Commands Reference →](artisan-commands-reference.md)

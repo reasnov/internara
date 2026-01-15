@@ -36,3 +36,9 @@ $this->dispatch('user::profile-updated', userId: $this->user->id);
 
 ## Configuration
 This package is configured in `config/modules-livewire.php`. It automatically scans the `src/Livewire` directory of every enabled module for component discovery.
+
+---
+
+**Navigation**
+
+[← Previous: Laravel Modules Integration](nwidart-laravel-modules.md) | [Next: Spatie Laravel Permission Integration →](spatie-laravel-permission.md)

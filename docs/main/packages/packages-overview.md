@@ -44,3 +44,9 @@ We do not use these packages "out of the box" in a standard way. Instead, we wra
 -   **Support Portability:** Modules (especially `Permission`) are designed to be plug-and-play. They use "Runtime Configuration Injection" to configure their dependencies without requiring the developer to modify global application config files.
 -   **Maintain Clean Namespaces:** Our custom configuration omits the `src` segment from namespaces for better readability and a more professional class structure.
 -   **Zero-Manual-Setup:** A well-designed module should work immediately upon being enabled, handling its own service bindings and dependency overrides.
+
+---
+
+**Navigation**
+
+[← Previous: Testing Guide](../testing-guide.md) | [Next: Laravel Framework →](laravel-framework.md)

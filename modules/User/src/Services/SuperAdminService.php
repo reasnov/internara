@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\User\Services;
 
 use Illuminate\Http\UploadedFile;
@@ -33,10 +35,11 @@ class SuperAdminService extends EloquentQuery implements Contracts\SuperAdminSer
     /**
      * Create a new SuperAdmin user.
      *
-     * @param  array<string, mixed>  $data  The data for creating the SuperAdmin user.
-     * @return \Modules\User\Models\User The newly created SuperAdmin user.
+     * @param array<string, mixed> $data The data for creating the SuperAdmin user.
      *
      * @throws \Modules\Exception\AppException If a SuperAdmin already exists or creation fails.
+     *
+     * @return \Modules\User\Models\User The newly created SuperAdmin user.
      */
     public function create(array $data): User
     {
@@ -60,15 +63,16 @@ class SuperAdminService extends EloquentQuery implements Contracts\SuperAdminSer
     /**
      * Update the existing SuperAdmin user.
      *
-     * @param  mixed  $id  The primary key of the SuperAdmin user.
-     * @param  array<string, mixed>  $data  The data for updating the SuperAdmin user.
-     * @param  array<int, string>  $columns  Columns to retrieve after update.
-     * @return \Modules\User\Models\User The updated SuperAdmin user.
+     * @param mixed $id The primary key of the SuperAdmin user.
+     * @param array<string, mixed> $data The data for updating the SuperAdmin user.
+     * @param array<int, string> $columns Columns to retrieve after update.
      *
      * @throws \Modules\Exception\RecordNotFoundException If no SuperAdmin exists or the provided ID does not match the SuperAdmin.
      * @throws \Modules\Exception\AppException If the update fails.
+     *
+     * @return \Modules\User\Models\User The updated SuperAdmin user.
      */
-    public function update(mixed $id, array $data, array $columns = ['*']): User
+    public function update(mixed $id, array $data): User
     {
         /** @var User|null $existingOwner */
         $existingOwner = $this->query(columns: ['id'])->first(); // Use the superAdmin scope to get the single SuperAdmin
@@ -93,7 +97,7 @@ class SuperAdminService extends EloquentQuery implements Contracts\SuperAdminSer
         unset($data['roles']);
         unset($data['role']);
 
-        $updatedOwner = parent::update($existingOwner->id, $data, $columns);
+        $updatedOwner = parent::update($existingOwner->id, $data);
 
         $this->handleSuperAdminAvatar($updatedOwner, $data['avatar_file'] ?? null);
 
@@ -105,7 +109,8 @@ class SuperAdminService extends EloquentQuery implements Contracts\SuperAdminSer
     /**
      * Update an existing SuperAdmin or create a new one if not found.
      *
-     * @param  array<string, mixed>  $data  The data for creating or updating the SuperAdmin.
+     * @param array<string, mixed> $data The data for creating or updating the SuperAdmin.
+     *
      * @return \Modules\User\Models\User The created or updated SuperAdmin user.
      */
     public function save(array $attributes, array $values = []): User
@@ -127,7 +132,7 @@ class SuperAdminService extends EloquentQuery implements Contracts\SuperAdminSer
         $superAdmin = $this->find($id);
 
         if (! $superAdmin) {
-            throw new RecordNotFoundException(replace: ['record' => $this->recordName, 'id' => $id]);
+            throw new RecordNotFoundException(replace: ['record' => 'SuperAdmin', 'id' => $id]);
         }
 
         throw new AppException(
@@ -139,7 +144,8 @@ class SuperAdminService extends EloquentQuery implements Contracts\SuperAdminSer
     /**
      * Get the single SuperAdmin user.
      *
-     * @param  array<int, string>  $columns  Columns to retrieve.
+     * @param array<int, string> $columns Columns to retrieve.
+     *
      * @return \Modules\User\Models\User|null The SuperAdmin user or null if not found.
      */
     public function getSuperAdmin(array $columns = ['*']): ?User
@@ -161,9 +167,9 @@ class SuperAdminService extends EloquentQuery implements Contracts\SuperAdminSer
     public function get(array $filters = [], array $columns = ['*']): \Illuminate\Support\Collection
     {
         throw new AppException(
-            userMessage: 'user::exceptions.cannot_get_multiple_owners',
+            userMessage: 'user::exceptions.cannot_get_multiple_super_admins',
             logMessage: 'Attempted to get a collection of SuperAdmins, which is not allowed.',
-            code: 405 // Method Not Allowed
+            code: 405
         );
     }
 

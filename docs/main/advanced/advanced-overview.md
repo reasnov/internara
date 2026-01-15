@@ -14,3 +14,9 @@ Explains how to customize the generation of new modules, including the use of cu
 
 ## When to use these guides
 Refer to these documents only after you have a solid understanding of the core architecture and standard workflows defined in the [Master Documentation](../main-documentation-overview.md). Advanced techniques should be used sparingly and only when the default conventions are insufficient for a specific business requirement.
+
+---
+
+**Navigation**
+
+[← Previous: Spatie Laravel Model Status Integration](../packages/spatie-laravel-model-status.md) | [Next: Custom Module Generator →](custom-module-generator.md)

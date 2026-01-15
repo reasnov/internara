@@ -114,3 +114,9 @@ protected function handle()
 ```
 
 This strategy ensures that every new module starts with a perfect, project-compliant structure without manual adjustment.
+
+---
+
+**Navigation**
+
+[← Previous: Advanced Guides Overview](advanced-overview.md) | [Next: Versions Overview →](../../versions/versions-overview.md)

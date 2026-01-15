@@ -422,3 +422,9 @@ These commands are specific to the `nwidart/laravel-modules` package and are use
 | Command | Description |
 |---|---|
 | `volt:install` | Install all of the Volt resources. |
+
+---
+
+**Navigation**
+
+[← Previous: Workflow Developer Guide](modular-monolith-workflow.md) | [Next: Testing Guide →](testing-guide.md)

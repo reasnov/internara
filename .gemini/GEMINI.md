@@ -1,4 +1,3 @@
-```markdown
 # Gemini Guidelines: Internara Project
 
 This document outlines the core principles, project context, and operational guidelines for the AI assistant (“Gemini”) when working on the Internara project. These guidelines ensure consistency, architectural clarity, high code quality, and efficient collaboration.
@@ -7,7 +6,7 @@ This document outlines the core principles, project context, and operational gui
 
 ## Project Overview
 
-**Internara** is an internship management system built with **Laravel Modular MVC**, where business rules are centralized in a **service-oriented business logic layer**.
+**Internara** is an internship management system built with **Laravel Modular Monolith (Modular MVC)**, where business rules are centralized in a **service-oriented business logic layer**.
 
 The architecture prioritizes clarity, maintainability, and pragmatic separation of concerns by leveraging Laravel’s native MVC conventions while intentionally avoiding unnecessary abstraction layers such as standalone Entities, Repositories, or internal DTOs unless explicitly justified by clear boundary or integration requirements.
 
@@ -32,7 +31,7 @@ As an AI assistant, you operate under the following identity and interaction pri
 
 ## Core Architecture Philosophy
 
--   The project adopts **Modular MVC**, not strict Domain-Driven Design or Clean Architecture.
+-   The project adopts **Modular Monolith**, not strict Domain-Driven Design or Clean Architecture.
 -   **Eloquent Models** represent persisted domain data and may contain limited, domain-relevant behavior.
 -   **Services** are the primary holders of business logic and orchestration.
 -   **Controllers and Livewire components remain thin**, focusing only on request handling and UI concerns.
@@ -49,17 +48,25 @@ These directives guide all technical workflows for the Internara project. For de
 -   **Planning First**
     Always formulate a detailed plan, present it to the user, and obtain explicit approval before starting any implementation.
 
--   **English Code Only**
-    All code must be written in English.
-
--   **English Documentation Only**
-    All documentation, including comments, user-facing documentation, and any explanatory text, must be written entirely in English, no matter the context or target audience.
+-   **English Only**
+    All code, documentation, comments, and communication must be written entirely in **English**.
 
 -   **Professional PHPDoc**
-    Every class and method must include concise and professional PHPDoc, focusing on _why_ complex logic exists.
+    Every class and method must include concise and professional PHPDoc in English. Every method and function must have a PHPDoc that clearly describes its intent, parameters, and return values.
+
+-   **Code Cleanliness and Hygiene**
+    Always ensure the codebase remains clean and professional by:
+    -   Removing unnecessary, commented-out, or redundant code.
+    -   Eliminating excessive whitespace, empty lines, and ensuring consistent spacing.
+    -   Removing comments that do not add value or are redundant with the code itself.
 
 -   **Cross-check Project Documentation**
-    Always cross-reference and adhere to existing project documentation (especially within the `/docs` directory) to ensure consistency and alignment with established patterns, conventions, and architectural decisions.
+    Always cross-reference and adhere to existing project documentation (especially within the `/docs` directory). For comprehensive navigation, prioritize:
+    - [docs/table-of-contents.md](docs/table-of-contents.md)
+    - [docs/main/main-documentation-overview.md](docs/main/main-documentation-overview.md)
+    - [docs/main/development-conventions.md](docs/main/development-conventions.md)
+    - [docs/versions/versions-overview.md](docs/versions/versions-overview.md)
+    - [docs/versions/v0.1.x-alpha.md](docs/versions/v0.1.x-alpha.md)
 
 ---
 
@@ -87,124 +94,67 @@ These directives guide all technical workflows for the Internara project. For de
    Provide a concise Keypoints Summary outlining actions taken, decisions made, and outcomes achieved.
 
 8. **Commit and Push All Changes (Mandatory)**
-   When instructed to commit and push all, ensure *all* changes in the codebase (including those not directly made by Gemini) are staged and committed. Craft professional commit messages by thoroughly reviewing *all actual* changes in the codebase, understanding that significant and minor alterations might exist in files not directly touched by the immediate task.
+   When instructed to commit and push all, ensure *all* changes in the codebase (including those not directly made by Gemini) are staged and committed. Craft professional commit messages by thoroughly reviewing *all actual* changes in the codebase.
 
 ---
 
 ## Foundational Technical Context
 
-The Internara project is built with the following core technologies:
-
+### Environment & Stack
 -   **PHP Version:** 8.4.1
--   **Laravel Framework:** v12
--   **Livewire:** v3
--   **Volt:** v1
+-   **Laravel Framework:** v12.43.1
+-   **Database:** SQLite (Initiation Phase)
+-   **Frontend:** TALL Stack (Tailwind CSS v4.1.18, Alpine.js, Laravel, Livewire v3.7.3)
+-   **Component Library:** DaisyUI + MaryUI
 -   **Architecture:** Modular Monolith using `nwidart/laravel-modules`
+-   **Active Application Version:** `v0.1.x-alpha` (`ARC01-INIT`) - Initiation Phase
+
+### Current Version Constraints (v0.1.x-alpha)
+-   **No "App" Logic:** The `app/` directory must remain minimal. All business and framework logic must reside in `modules/`.
+-   **No Business Features:** Do not create "Users", "Schools", or "Internships" models/features yet. Focus on building the capability and infrastructure (UI, Exceptions, Shared, etc.).
 
 ### Namespace Convention
-
-For files located at:
-```
-
-modules/{ModuleName}/src/{Subdirectory}/{FileName}.php
-
-```
-
 Namespaces **must omit the `src` segment**:
-
-```
-
-namespace Modules\\{ModuleName}\\{Subdirectory};
-
-```
+- *Correct:* `namespace Modules\User\Services;`
+- *Location:* `modules/User/src/Services/UserService.php`
 
 ---
 
-## General Development Practices
+## Technical Conventions
 
-- **Adherence to Existing Code**
-  Always analyze and follow existing conventions, structure, naming, and patterns used in sibling files.
+### Service Layer
+-   Most services should extend `Modules\Shared\Services\EloquentQuery`.
+-   Services must implement an interface (contract) that extends `Modules\Shared\Services\Contracts\EloquentQuery`.
+-   Initialize the associated Model in the constructor using `$this->setModel(new YourModel())`.
 
-- **Naming Conventions**
-  Use clear, descriptive, and intention-revealing names for classes, methods, and variables.
+### Inter-Module Communication
+-   **Synchronous:** Use **Interfaces** (Contracts). Type-hint the interface, not the concrete class.
+-   **Asynchronous:** Use **Events**.
+-   **Isolation:** Modules MUST NOT directly reference concrete classes or internal models of other modules.
 
-- **UUID Usage**
-  The `User` model uses UUIDs as its primary key.
+### UI & Component Preference
+1.  Existing **UI Module** Components (`<x-ui::... />`).
+2.  **MaryUI** Components.
+3.  New Custom Component in **UI Module**.
 
-- **Blade Component Property Shorthand**
-  When passing properties to Blade components, prefer using the shorthand syntax (e.g., `:$title` instead of `:title="$title"`) for cleaner and more concise code.
+### Cross-Module UI Injection (Slot System)
+-   Use `@slotRender('slot.name')` in Blade to allow other modules to inject UI elements.
+-   Register components to slots via `SlotRegistry::register()` in Service Providers.
 
----
+### Exception Handling
+-   Use `Modules\Exception\AppException` for domain errors.
+-   Use translation keys: `{module_name}::exceptions.{key_name}`.
 
-## Livewire & Volt Conventions
-
-- **Thin Components (UI Focus)**
-  Livewire components must remain UI-focused and must not contain business logic. All business operations must be delegated to the appropriate Service layer.
-
-- **Component Embedding**
-  When embedding Livewire components within Blade views, use:
-```
-
-@livewire('module-alias::component-dot-notation-name')
-
-```
-or
-```
-
-<x-livewire:module-alias::component-dot-notation-name />
-
-```
-
-- **State Management**
-Livewire component state resides primarily on the server.
-
-- **Event Dispatching**
-Use `$this->dispatch()` for emitting events between Livewire components.
-
----
-
-## Testing Conventions
-
-- **Pest Exclusivity**
-All tests must be written using the Pest testing framework.
-
-- **Module-Specific Tests**
-Generate tests using:
-```
-
-php artisan module:make-test <TestName> <ModuleName> [--feature]
-
-```
-Omit the `--feature` flag to generate unit tests.
-
----
-
-## Code Formatting
-
-- **Pint Enforcement**
-Before finalizing any code changes, always run:
-```
-
-vendor/bin/pint --dirty
-
-```
-to ensure compliance with project coding standards.
+### Testing & Formatting
+-   **Framework:** All tests must be written using **Pest**.
+-   **Pint:** Always run `vendor/bin/pint --dirty` before finalizing changes.
 
 ---
 
 ## Leveraging Laravel Boost Tools
 
 Use the integrated Laravel Boost tools to support efficient development:
-
 - **Artisan Commands:** `list-artisan-commands`
 - **URL Generation:** `get-absolute-url`
-- **Debugging:**
-- Application code: `tinker`
-- Read-only database access: `database-query`
-- Frontend diagnostics: `browser-logs`
-- Backend error inspection: `last_error`
-- **Documentation Search:**
-Prioritize `search-docs` for version-specific Laravel documentation. Use `search_file_content` or `glob` for project-local documentation under `/docs`.
-
-
-```
+- **Debugging:** `tinker`, `database-query`, `browser-logs`, `last_error`.
+- **Documentation Search:** Prioritize `search-docs` for Laravel-ecosystem docs. Use `search_file_content` or `glob` for project-local docs under `/docs`.

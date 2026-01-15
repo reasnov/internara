@@ -118,3 +118,9 @@ The `Modules\Shared\Providers\Concerns\ManagesModuleProvider` trait (used by all
     -   Decoupling intra-module dependencies where auto-discovery might be overridden or is less clear.
 
 When a module uses the `ManagesModuleProvider` trait and explicitly binds an interface in its `bindings()` method, that explicit binding will take precedence over any potential auto-discovery attempts by the `BindServiceProvider` for that specific interface.
+
+---
+
+**Navigation**
+
+[← Previous: Exception Handling Guidelines](exception-handling-guidelines.md) | [Next: Role & Permission Management Guide →](role-permission-management.md)

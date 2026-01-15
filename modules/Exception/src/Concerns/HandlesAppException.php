@@ -22,7 +22,8 @@ trait HandlesAppException
     /**
      * Determines if the given Throwable instance is an AppException.
      *
-     * @param  Throwable  $exception  The exception to check.
+     * @param Throwable $exception The exception to check.
+     *
      * @return bool True if the exception is an instance of AppException, false otherwise.
      */
     protected function isAppException(Throwable $exception): bool
@@ -36,13 +37,14 @@ trait HandlesAppException
      * This is a convenient helper method to construct an AppException with
      * default parameters or specific overrides.
      *
-     * @param  string  $userMessage  The user-friendly message key or literal message.
-     * @param  array  $replace  Replacements for the user message translation.
-     * @param  string|null  $locale  Specific locale for the user message.
-     * @param  string|null  $logMessage  The technical log message.
-     * @param  int  $code  The HTTP status code or internal error code.
-     * @param  Throwable|null  $previous  The previous exception in the chain.
-     * @param  array  $context  Additional context data for logging.
+     * @param string $userMessage The user-friendly message key or literal message.
+     * @param array $replace Replacements for the user message translation.
+     * @param string|null $locale Specific locale for the user message.
+     * @param string|null $logMessage The technical log message.
+     * @param int $code The HTTP status code or internal error code.
+     * @param Throwable|null $previous The previous exception in the chain.
+     * @param array $context Additional context data for logging.
+     *
      * @return AppException A new instance of AppException.
      */
     protected function newAppException(
@@ -71,13 +73,13 @@ trait HandlesAppException
      * This method acts as a convenience wrapper for immediately throwing
      * an AppException after its creation.
      *
-     * @param  string  $userMessage  The user-friendly message key or literal message.
-     * @param  array  $replace  Replacements for the user message translation.
-     * @param  string|null  $locale  Specific locale for the user message.
-     * @param  string|null  $logMessage  The technical log message.
-     * @param  int  $code  The HTTP status code or internal error code.
-     * @param  Throwable|null  $previous  The previous exception in the chain.
-     * @param  array  $context  Additional context data for logging.
+     * @param string $userMessage The user-friendly message key or literal message.
+     * @param array $replace Replacements for the user message translation.
+     * @param string|null $locale Specific locale for the user message.
+     * @param string|null $logMessage The technical log message.
+     * @param int $code The HTTP status code or internal error code.
+     * @param Throwable|null $previous The previous exception in the chain.
+     * @param array $context Additional context data for logging.
      *
      * @throws AppException
      */
@@ -107,7 +109,7 @@ trait HandlesAppException
      * If the Throwable is an AppException, its custom reporting logic is used.
      * Otherwise, it's reported as a generic exception.
      *
-     * @param  Throwable  $exception  The exception instance to report.
+     * @param Throwable $exception The exception instance to report.
      */
     protected function reportException(Throwable $exception): void
     {
@@ -120,8 +122,8 @@ trait HandlesAppException
      * This method explicitly calls the render method of the AppException,
      * allowing a consuming class to control when the response is generated.
      *
-     * @param  AppException  $exception  The AppException instance to render.
-     * @param  Request  $request  The current HTTP request.
+     * @param AppException $exception The AppException instance to render.
+     * @param Request $request The current HTTP request.
      */
     protected function renderAppException(AppException $exception, Request $request): JsonResponse|RedirectResponse
     {
@@ -135,7 +137,8 @@ trait HandlesAppException
      * The Livewire component consuming this trait should handle the actual dispatching
      * of the event and the `stopPropagation` logic.
      *
-     * @param  Throwable  $exception  The exception to handle.
+     * @param Throwable $exception The exception to handle.
+     *
      * @return array{event: string, message: string} An array containing the event name and message to be dispatched.
      */
     protected function handleAppExceptionInLivewire(Throwable $exception): array
@@ -155,10 +158,10 @@ trait HandlesAppException
      * This method serves as a central entry point for managing exceptions, ensuring
      * consistent reporting and appropriate responses for API, web, and Livewire requests.
      *
-     * @param  Throwable  $exception  The exception to handle.
-     * @param  Request  $request  The current HTTP request.
+     * @param Throwable $exception The exception to handle.
+     * @param Request $request The current HTTP request.
      */
-    protected function handleAppException(Throwable $exception, Request $request): JsonResponse|RedirectResponse|array|void
+    protected function handleAppException(Throwable $exception, Request $request): JsonResponse|RedirectResponse|array|null
     {
         $this->reportException($exception);
 

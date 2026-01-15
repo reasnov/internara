@@ -103,3 +103,9 @@ To maintain the high quality, consistency, and developer-friendliness of Interna
     -   For code files, use comprehensive PHPDoc/DocBlocks for every method and class. Focus these comments on the _purpose_ and _complex logic_ of the code, not merely restating what the code does.
 
 By following these guidelines, we ensure that Internara's documentation remains a valuable, accessible, and up-to-date resource for all developers.
+
+---
+
+**Navigation**
+
+[Next: Main Documentation Overview →](main/main-documentation-overview.md)

@@ -358,3 +358,9 @@ This approach ensures that `Module A` does not need to know that `Module B` exis
 ## 9. Important Note on Inertia
 
 The slot system is designed for server-rendered HTML (Blade and Livewire components). It is **not** suitable for dynamically injecting Inertia components. Inertia operates on a client-side rendering paradigm where dynamic components should be managed using Inertia's own features (e.g., `<component :is="dynamicComponentName" />` in your client-side framework) in conjunction with props passed from your Laravel controllers.
+
+---
+
+**Navigation**
+
+[← Previous: Development Conventions](development-conventions.md) | [Next: Exception Handling Guidelines →](exception-handling-guidelines.md)
