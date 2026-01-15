@@ -42,4 +42,4 @@ Internara's UI strategy follows a specific preference hierarchy for components:
 
 **Navigation**
 
-[← Back to TOC](table-of-contents.md) | [Next: UI/UX Development Guide →](ui-ux-development-guide.md)
+[← Back to TOC](table-of-contents.md) | [Next: Layouts →](components/layouts.md)

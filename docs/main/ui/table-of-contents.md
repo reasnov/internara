@@ -6,9 +6,12 @@ This index lists all documentation related to the Internara design system and sh
 -   **[UI Module Overview](ui-overview.md)**: Introduction to the UI module's purpose and strategy.
 -   **[UI/UX Development Guide](ui-ux-development-guide.md)**: Global design principles and standards.
 
-## 2. Components
-*(Documentation for specific components will be added here after the component inventory task)*
--   *None yet.*
+## 2. Component Reference
+-   **[Layouts](components/layouts.md)**: Foundational HTML layouts and structures.
+-   **[Forms](components/forms.md)**: Input fields, buttons, and file uploaders.
+-   **[Navigation](components/navigation.md)**: Navbars, footers, and branding elements.
+-   **[Display](components/display.md)**: Cards, icons, and informational elements.
+-   **[Utilities](components/utilities.md)**: Theme togglers and dynamic slot systems.
 
 ---
 [← Back to Main Documentation](../table-of-contents.md)
