@@ -1,15 +1,112 @@
 # Internara
 
-![Version](https://img.shields.io/badge/version-v0.3.0--alpha-blue?style=flat-square)
+![Version](https://img.shields.io/badge/version-v0.4.x--alpha-blue?style=flat-square)
 ![Status](https://img.shields.io/badge/status-active--development-orange?style=flat-square)
-...
+![Tests](https://img.shields.io/badge/tests-passing-brightgreen?style=flat-square)
+![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
+![PHP](https://img.shields.io/badge/PHP-%3E%3D%208.4-777bb4?style=flat-square&logo=php)
+![Laravel](https://img.shields.io/badge/Laravel-v12-ff2d20?style=flat-square&logo=laravel)
+
+**Internara** is an open-source internship management system built with **Laravel 12**,
+**Livewire 3**, and a **Modular Monolith** architecture. It is designed to streamline the entire
+internship lifecycle, from registration and journal logging to final reporting and evaluation.
+
+## Features
+
+- **Modular Architecture:** Built using `nwidart/laravel-modules` for a scalable and maintainable
+  codebase, isolating business domains into self-contained modules.
+- **Modern Tech Stack:** Leveraging the **TALL Stack** (Tailwind CSS v4, Alpine.js, Laravel 12,
+  Livewire 3) for a blazing-fast and interactive user experience.
+- **Robust Infrastructure:**
+    - **Automated DI:** Self-binding service layer using `EloquentQuery` patterns.
+    - **Modular Tooling:** Custom Artisan generators for Classes, Interfaces, and Traits that
+      respect modular namespace conventions.
+    - **Standardized States:** Integrated status management across all domain models.
+- **Role-Based Access Control:** Secure access management using `spatie/laravel-permission` with
+  full UUID support and modular isolation.
+- **Internship Lifecycle Management:**
+    - **Registration:** Students can browse and apply for available placements.
+    - **Journals:** Daily log entries for students to track their progress.
+    - **Assignments:** Teachers can assign tasks and review submissions.
+    - **Assessments:** Comprehensive evaluation system with customizable aspects and indicators.
+    - **Reporting:** Automated and manual reporting tools for final grades.
+- **Minimalist UI:** Designed with **MaryUI** and **DaisyUI** for a clean, professional, and
+  accessible interface.
+
+## Requirements
+
+- PHP 8.4 or higher
+- Composer
+- Node.js & NPM
+- SQLite (default for development), MySQL, or PostgreSQL
+
+### Key Third-Party Packages
+
+This project is built upon the Laravel ecosystem and several key packages:
+
+- [nwidart/laravel-modules](https://nwidart.com/laravel-modules/v11/introduction)
+- [spatie/laravel-permission](https://spatie.be/docs/laravel-permission/v6/introduction)
+- [spatie/laravel-model-status](https://github.com/spatie/laravel-model-status)
+- [robsontenorio/mary](https://mary-ui.com/)
+
+## Installation
+
+1.  **Clone the repository:**
+
+    ```bash
+    git clone https://github.com/reasnov/internara.git
+    cd internara
+    ```
+
+2.  **Install PHP dependencies:**
+
+    ```bash
+    composer install
+    ```
+
+3.  **Install Node.js dependencies:**
+
+    ```bash
+    npm install
+    ```
+
+4.  **Configure environment:**
+
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
+
+    Update your `.env` file with your database credentials.
+
+5.  **Run migrations and seeders:**
+
+    ```bash
+    php artisan migrate --seed
+    ```
+
+6.  **Build assets:**
+
+    ```bash
+    npm run build
+    ```
+
+7.  **Start the development server:**
+
+    ```bash
+    php artisan serve
+    ```
+
+## Version History & Support
+
 ### Version History
 
-| Version          | Series Code  | Status         | Key Focus                  |
-| :--------------- | :----------- | :------------- | :------------------------- |
-| **v0.3.0-alpha** | `ARC01-USER` | ✅ *Completed* | User & Profile Management  |
-| **v0.2.0-alpha** | `ARC01-CORE` | ✅ *Completed* | Core & Shared Systems      |
-| **v0.1.1-alpha** | `ARC01-INIT` | ✅ *Completed* | Project Initiation         |
+| Version          | Series Code  | Status           | Key Focus                  |
+| :--------------- | :----------- | :--------------- | :------------------------- |
+| **v0.4.x-alpha** | `ARC01-INST` | 🛠️ *In Progress* | Institutional & Academic   |
+| **v0.3.0-alpha** | `ARC01-USER` | ✅ *Completed*   | User & Profile Management  |
+| **v0.2.0-alpha** | `ARC01-CORE` | ✅ *Completed*   | Core & Shared Systems      |
+| **v0.1.1-alpha** | `ARC01-INIT` | ✅ *Completed*   | Project Initiation         |
 
 ### Support Status
 
