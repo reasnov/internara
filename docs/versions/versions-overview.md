@@ -16,7 +16,7 @@ Detailed guidelines on Internara's Semantic Versioning, Series Codes (e.g., `ARC
 ## Release History
 
 ### Completed Releases
--   **v0.2.x-alpha** ([Documentation](v0.2.x-alpha.md)): **Core & Shared Systems Phase**. Implementation of the Shared (Utilities) and Permission (RBAC) modules.
+-   **v0.2.0-alpha** ([Documentation v0.2.x-alpha](v0.2.x-alpha.md)): **Core & Shared Systems Phase**. Implementation of the Shared (Utilities) and Permission (RBAC) modules.
 -   **v0.1.1-alpha** ([Documentation v0.1.x-alpha](v0.1.x-alpha.md)): **Project Initiation Phase**. Environment setup, framework installation, and establishing the modular architecture foundation.
 
 ### In Progress
