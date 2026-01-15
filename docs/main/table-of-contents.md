@@ -9,6 +9,7 @@ This index lists all primary developer guides, ordered by the logical developmen
 ## 2. Architecture & Concepts
 Understanding the "Why" and "How" of the system structure.
 -   **[Architecture Guide](architecture-guide.md)**: High-level guide to Internara's modular architecture (Layers, Communication).
+-   **[Module Inventory](modules/table-of-contents.md)**: Purpose and categorization of all application modules.
 -   **[EloquentQuery Base Service](eloquent-query-service.md)**: Technical reference for the standardized service layer implementation.
 -   **[Module Structure Overview](foundational-module-philosophy.md)**: Purpose of Core, Shared, Support, and Domain modules.
 -   **[Best Practices Guide](conceptual-best-practices.md)**: Conceptual overview of principles (Interface-First, Separation of Concerns).
