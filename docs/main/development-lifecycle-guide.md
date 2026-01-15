@@ -206,7 +206,7 @@ _(Choose Option A or B based on release type)_
 
 ### 4.5. Roadmap & Next Steps
 
--   [ ] ...
+-   ...
 ```
 
 ---
