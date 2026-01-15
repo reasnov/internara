@@ -95,7 +95,7 @@ use one of the formats below.
 
 Use this for versions focused on infrastructure, tooling, or refactoring (`INIT`, `RFT`).
 
-- **Format:** Categorized checklists of concrete tasks.
+- **Format:** Categorized checks of concrete tasks.
 - **Detail Level:** High. Mention specific packages, configurations, and commands used.
 - **Example:**
     - **Environment Setup:** "Install Laravel v12, Configure SQLite."
@@ -125,7 +125,7 @@ This section provides the _proof_ of quality and the bridge to the next version.
 - **Purpose:** To prove that the implementation works and meets the project's high standards.
 - **What to Write:**
     - **Tooling Setup:** Confirm that testing (Pest) and linting (Pint) tools are active.
-    - **Verification Checklist:** A list of specific checks performed to validate the release (e.g.,
+    - **Verification Checks:** A list of specific checks performed to validate the release (e.g.,
       "Run `php artisan test`: All Green", "Verify storage link functionality").
 
 #### Section: `Security Issues`
@@ -211,7 +211,7 @@ _(Choose Option A or B based on release type)_
 
 - [ ] ...
 
-### 4.2. Verification Checklist
+### 4.2. Verification Checks
 
 - [ ] ...
 
