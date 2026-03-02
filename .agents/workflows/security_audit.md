@@ -17,12 +17,14 @@ Identify, verify, and remediate vulnerabilities while ensuring that the system's
     - **Persistence Layer (PIP)**: Confirm that only UUID v4 is used for identifiers and that sensitive data is properly cast for encryption.
 
 ### Phase 2: RBAC & Identity Governance (ISO/IEC 29146)
-- **Action**: Audit the Role-Based Access Control implementation.
-- **Checks**:
+- **Action**: Audit the Role-Based Access Control implementation and ensure full coverage.
+- **Mandatory Checks**:
+    - **Policy Coverage**: Verify that **EVERY** domain model has a dedicated Policy class. Flag any model lacking a policy as a "High" severity finding (Implicit Allow risk).
+    - **Explicit Permissions**: Ensure all actions are guarded by granular permissions following the `{module}.{action}` convention. Flag any hardcoded "is_admin" checks or missing permission definitions.
     - **Role Taxonomy**: Verify that access is restricted according to the stakeholder roles (Student, Instructor, Staff, Industry Supervisor, Administrator).
-    - **Permission Naming**: Ensure permissions follow the `{module}.{action}` convention (e.g., `attendance.report`).
     - **Ownership Context**: Verify that Policies enforce resource ownership (e.g., a student can only update their own profile).
     - **Least Privilege**: Check if any component or service has been granted excessive permissions beyond its domain function.
+    - **Seeder Integrity**: Verify that all required permissions are explicitly defined in the module's database seeder.
 
 ### Phase 3: Data Privacy & Encryption Integrity (ISO/IEC 29100)
 - **Action**: Trace the lifecycle of Personally Identifiable Information (PII).

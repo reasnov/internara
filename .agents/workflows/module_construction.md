@@ -36,6 +36,7 @@ Construct a new domain module that is logically isolated, contract-driven, and f
 - **Tasks**:
     - **Contract-First**: Define the Service Contract (Interface) in `src/Services/Contracts/` before implementation.
     - **Implementation**: Extend `BaseService` (for orchestration) or `EloquentQuery` (for data-centric logic).
+    - **Security Policy**: Create a dedicated **Policy class** for each Model. Implement the "Deny by Default" principle and map permissions to actions.
     - **Defense**: Integrate `Gate::authorize()` for all state-changing operations.
     - **Atomicity**: Ensure multi-record mutations are wrapped in database transactions.
     - **Events**: Dispatch Domain Events (past tense) for significant state changes to enable asynchronous cross-module decoupling.
