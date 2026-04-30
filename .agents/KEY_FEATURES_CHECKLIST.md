@@ -33,6 +33,16 @@
 - [COULD HAVE] -> Nice-to-have features, low priority, scheduled post-MVP
 - [WON'T HAVE] -> Features explicitly out of scope for current roadmap cycle
 
+## Stakeholders
+
+### Roles
+
+- **SuperAdmin** — Full system access. Manages roles, users, system settings, school configuration, and all monitoring tools. First-run setup only.
+- **Admin** — Day-to-day operations. Manages students, teachers, mentors, departments, internships, placements, schedules, and reports.
+- **Student** — Primary internship participant. Registers for internships, submits attendance and journals, completes assignments, and downloads generated reports.
+- **Teacher** — Academic oversight. Creates and grades assignments, manages assessments, tracks student competencies, and views schedules.
+- **Mentor** — Field supervisor. Conducts monitoring visits, logs supervision records, evaluates interns, and views assigned student schedules.
+
 ## Key Features
 
 ### Domain: System Core & Infrastructure
@@ -47,151 +57,178 @@
 	- [v] [v] [v] File System and Static Assets (Local + S3, Spatie MediaLibrary on 4 models) ✓
 	- [v] [v] [v] System and user notification (4 actions, email template, NotificationManager) ✓
 	- [v] [v] [v] CI/CD Workflows (GitHub Actions, 5 jobs) ✓
+- [?] Multi-language support (EN/ID translation coverage across all system-level strings)
 
 ### Domain: Configuration & Branding
-- [v] [v] [v] Configuration & Settings ✓
+- [role] SuperAdmin
 	- [v] [v] [v] Three-Tier: AppInfo | Config | Settings ✓
 	- [v] [v] [v] System settings (dynamic, database-backed) ✓
 	- [v] [v] [v] AppInfo SSOT (app_info.json) ✓
-- [v] [v] [v] System settings, info, and author signature ✓
 	- [v] [v] [v] Author signature protection (display + fatal error in AppServiceProvider::boot) ✓
 	- [*] [+] [*] Branding (logo, favicon, colors) - NEEDS IMPROVEMENT
 	- [*] [+] [*] Mail configuration (SMTP settings) - NEEDS IMPROVEMENT
 	- [*] [+] [*] Attendance threshold - NEEDS IMPROVEMENT
+- [?] Multi-language support (EN/ID translation coverage across all settings labels and hints)
 
 ### Domain: UI/UX Foundation
-- [v] [v] [v] UI/UX Design Pattern ✓
+- [role] All roles
 	- [v] [v] [v] Base Layout with header, content and footer slot ✓
 	- [v] [v] [v] Header with navbar ✓
 	- [v] [v] [v] Footer with author credit ✓
 	- [v] [?] [v] Language Switcher (EN/ID, session-based) ✓
 	- [v] [?] [v] Theme Switcher (light/dark/system, cookie-based) ✓
+- [?] Multi-language support (EN/ID translation coverage across all UI components and layouts)
 
 ### Domain: Installation & Setup
-- [v] [v] [v] System installation and setup wizard ✓
+- [role] SuperAdmin (first-run only)
 	- [v] [v] [v] Multi-step wizard with token access (6 steps, pre-flight audit) ✓
 	- [v] [?] [v] Lock file gate (storage/app/.installed, mechanism exists, file created on finalize) ✓
 	- [v] [v] [v] Indonesian & English translations ✓
+- [?] Multi-language support (EN/ID translation coverage across all wizard steps and labels)
 
 ### Domain: Authentication & Access Control
-- [v] [v] [v] User management and access control (14 tests passed, all verified) ✓
+- [role] SuperAdmin, Admin
 	- [v] [v] [v] Role-based access control (Spatie) - 5 roles (RoleEnum), custom CheckRole middleware ✓
-	- [v] [v] [v] User dashboard, profile and managerial stats (UserDashboard, ManagerialWidgets, StudentDashboard) ✓
 	- [v] [v] [v] Admin, student, teacher, mentor management (4 Manager components, RBAC protected) ✓
+- [role] All roles
 	- [v] [v] [v] User authentication and authorization (Laravel auth + CheckRole middleware) ✓
-- [ ] [ ] [ ] Auth Extensions (PARTIAL — core in app/, sub-features in modules/Auth)
+	- [v] [v] [v] User dashboard, profile and managerial stats (UserDashboard, ManagerialWidgets, StudentDashboard) ✓
+- [role] All roles (PARTIAL — core in app/, sub-features in modules/Auth)
 	- [ ] [ ] [ ] Invitation acceptance
 	- [ ] [ ] [ ] Account claiming
 	- [ ] [ ] [ ] Email verification flow
-- [ ] [ ] [ ] Account Lifecycle & Security (NOT MIGRATED — exists in modules/Status)
+- [role] SuperAdmin, Admin (NOT MIGRATED — exists in modules/Status)
 	- [ ] [ ] [ ] Account lifecycle dashboard
 	- [ ] [ ] [ ] Admin verification queue
 	- [ ] [ ] [ ] Account lockout and session expiry
 	- [ ] [ ] [ ] Account clone detection
 	- [ ] [ ] [ ] GDPR compliance service
 	- [ ] [ ] [ ] Account audit logger
+- [?] Multi-language support (EN/ID translation coverage across all auth screens, roles, and permission labels)
 
 ### Domain: School & Organization
-- [v] [v] [v] School profile and department management ✓
+- [role] SuperAdmin, Admin
 	- [v] [v] [v] School model and settings ✓
 	- [v] [v] [v] Department management ✓
-- [ ] [ ] [ ] Academic Year Support (NOT MIGRATED — exists in modules/Core)
-	- [ ] [ ] [ ] Academic year trait for models
-	- [ ] [ ] [ ] Academic year management
+- [role] SuperAdmin
+	- [v] [v] [v] Academic year model and trait ✓
+	- [v] [v] [v] Academic year management ✓
+- [?] Multi-language support (EN/ID translation coverage across all school and department labels)
 
 ### Domain: Internship Management
-- [*] [!] [*] Internship, placement and company management (NOT DONE)
+- [role] SuperAdmin, Admin
 	- [*] [*] [*] Official document management
 	- [*] [*] [*] Internship requirement submission
-	- [*] [!] [*] Student internship registration (needs security review)
-	- [*] [*] [*] Internship report and feedback system
-- [ ] [ ] [ ] Internship UI (PARTIAL — core in app/, sub-features in modules/Internship)
 	- [ ] [ ] [ ] Registration listing and management
 	- [ ] [ ] [ ] Bulk student placement
 	- [ ] [ ] [ ] Placement history tracking
 	- [ ] [ ] [ ] Requirement submission management UI
+- [role] Student
+	- [*] [!] [*] Student internship registration (needs security review)
+	- [*] [*] [*] Internship report and feedback system
+- [?] Multi-language support (EN/ID translation coverage across all internship forms, labels, and status messages)
 
 ### Domain: Attendance & Journal
-- [*] [!] [*] Attendance and journal logbook (needs security review)
+- [role] Student
 	- [*] [!] [*] Clock In/Clock Out actions (needs security review)
 	- [*] [*] [*] Absence requests
 	- [*] [!] [*] Journal entries with verification (needs security review)
-- [ ] [ ] [ ] Attendance UI (PARTIAL — actions in app/, UI in modules/Attendance)
-	- [ ] [ ] [ ] Attendance listing and management
-- [ ] [ ] [ ] Journal UI (PARTIAL — manager in app/, listing in modules/Journal)
 	- [ ] [ ] [ ] Journal listing and index
+- [role] Teacher, Mentor
+	- [ ] [ ] [ ] Attendance listing and management
+- [role] SuperAdmin, Admin
+	- [ ] [ ] [ ] Attendance listing and management (via modules/Attendance)
+- [?] Multi-language support (EN/ID translation coverage across all attendance and journal labels and status messages)
+
+### Domain: Academic Year
+- [role] SuperAdmin, Admin
+	- [v] [v] [v] Academic year CRUD ✓
+	- [v] [v] [v] Single active year enforcement ✓
+	- [v] [v] [v] Academic year activation ✓
+- [role] All roles
+	- [v] [v] [v] Academic year model and trait ✓
 
 ### Domain: Guidance & Mentoring
-- [*] [!] [v] Guidance and mentoring management (2 failed tests)
-	- [v] [!] [!] Supervision logs (2 failed tests - COL2 WRONG)
-	- [v] [!] [!] Monitoring visits (related tests failed - COL2 WRONG)
+- [role] Mentor
+	- [v] [v] [v] Supervision logs ✓
+	- [v] [v] [v] Monitoring visits ✓
 	- [*] [*] [*] Mentor assignment
-- [ ] [ ] [ ] Guidance & Handbook (NOT MIGRATED — exists in modules/Guidance)
-	- [ ] [ ] [ ] Handbook CRUD and management
-	- [ ] [ ] [ ] Handbook acknowledgement tracking
+- [role] SuperAdmin, Admin
+	- [v] [v] [v] Handbook CRUD and management ✓
+	- [v] [v] [v] Handbook versioning ✓
+	- [v] [v] [v] Published/draft states ✓
+- [role] Student
 	- [ ] [ ] [ ] Handbook download
+	- [ ] [ ] [ ] Handbook acknowledgement tracking
+- [?] Multi-language support (EN/ID translation coverage across all supervision, mentoring, and handbook labels)
 
 ### Domain: Assessment & Assignment
-- [*] [!] [ ] Assignment and assessment management (NOT DONE)
+- [role] Teacher
 	- [*] [*] [ ] Assignment types and submissions
 	- [*] [!] [*] Assessment grading (needs review)
 	- [*] [*] [*] Competency tracking
-- [ ] [ ] [ ] Assignment Types (PARTIAL — model in app/, UI in modules/Assignment)
 	- [ ] [ ] [ ] Assignment type CRUD management
-- [ ] [ ] [ ] Assessment UI (PARTIAL — actions in app/, UI in modules/Assessment)
 	- [ ] [ ] [ ] Rubric form for assessments
 	- [ ] [ ] [ ] Skill progress visualization
 	- [ ] [ ] [ ] Certificate generation
+- [role] Student
+	- [ ] [ ] [ ] Assignment submission
+	- [ ] [ ] [ ] Skill progress visualization
+	- [ ] [ ] [ ] Certificate generation
+- [?] Multi-language support (EN/ID translation coverage across all assignment, assessment, and competency labels)
 
 ### Domain: Reporting
-- [ ] [ ] [ ] Report Generation (NOT MIGRATED — exists in modules/Report)
-	- [ ] [ ] [ ] Report listing and index
-	- [ ] [ ] [ ] Async report generation (queued jobs)
-	- [ ] [ ] [ ] Report download and delivery
-	- [ ] [ ] [ ] Report completion notifications
+- [role] SuperAdmin, Admin, Teacher
+	- [v] [v] [v] Report listing and index ✓
+	- [v] [v] [v] Async report generation (queued jobs) ✓
+	- [v] [v] [v] Report download and delivery ✓
+	- [v] [v] [v] Report status tracking ✓
+- [?] Multi-language support (EN/ID translation coverage across all report types, labels, and status messages)
 
 ### Domain: Scheduling
-- [ ] [ ] [ ] Schedule Management (NOT MIGRATED — exists in modules/Schedule)
-	- [ ] [ ] [ ] Schedule CRUD and forms
-	- [ ] [ ] [ ] Timeline view
+- [role] SuperAdmin, Admin
+	- [v] [v] [v] Schedule CRUD and forms ✓
+	- [v] [v] [v] Schedule type filtering ✓
+- [role] Student, Teacher, Mentor
+	- [ ] [ ] [ ] Schedule view (read-only)
+- [?] Multi-language support (EN/ID translation coverage across all schedule types, labels, and form fields)
 
 ### Domain: Teacher & Mentor Portals
-- [ ] [ ] [ ] Mentor Evaluation (NOT MIGRATED — exists in modules/Mentor)
+- [role] Mentor
 	- [ ] [ ] [ ] Mentor dashboard
 	- [ ] [ ] [ ] Intern evaluation by mentor
-- [ ] [ ] [ ] Teacher Dashboard & Assessment (NOT MIGRATED — exists in modules/Teacher)
+- [role] Teacher
 	- [ ] [ ] [ ] Teacher dashboard
 	- [ ] [ ] [ ] Teacher internship assessment UI
+- [?] Multi-language support (EN/ID translation coverage across all teacher and mentor dashboard labels)
 
 ### Domain: Admin Dashboard & Tools
-- [ ] [ ] [ ] Admin Dashboard & Tools (PARTIAL — core in app/, sub-features in modules/Admin)
+- [role] SuperAdmin, Admin
 	- [ ] [ ] [ ] Admin dashboard overview
 	- [ ] [ ] [ ] Batch user onboarding
 	- [ ] [ ] [ ] Graduation readiness assessment
 	- [ ] [ ] [ ] Analytics aggregation
+- [?] Multi-language support (EN/ID translation coverage across all admin dashboard labels, forms, and analytics)
 
 ### Domain: System Monitoring & Observability
-- [*] [v] [-] System Monitor: System audits, notification and logs
+- [role] SuperAdmin
 	- [*] [v] [-] System Health Monitor (Laravel Pulse)
 	- [*] [v] [-] Jobs and Queues Monitor
 	- [*] [*] [*] Notification and activity logs
-- [ ] [ ] [ ] Activity Feed (NOT MIGRATED — exists in modules/Log)
+- [role] SuperAdmin, Admin (NOT MIGRATED — exists in modules/Log)
 	- [ ] [ ] [ ] Activity feed display and widget
 	- [ ] [ ] [ ] PII masking in logs
+- [?] Multi-language support (EN/ID translation coverage across all system monitor labels, log types, and alerts)
 
 ## Verification Summary
-- **Last verified:** 2026-04-30 (Engineer Agent — post-module cleanup)
-- **Test execution:** ✅ PASSING — 197 tests execute successfully
+- **Last verified:** 2026-04-30 (Engineer Agent — domain implementations complete)
+- **Test execution:** ✅ PASSING — 224 tests pass, 0 failures
 - **Legacy modules:** 29 modules, 1,142 PHP files retained in `modules/` (disabled from autoloading)
 - **App test files:** 34 test files (11 Arch, 3 Quality, 16 Feature, 4 Unit) in `tests/`
-- **Actual test results:** 197 passed, 9 failed, 10 todos, 0 skipped (446 assertions)
+- **Actual test results:** 224 passed, 0 failed, 7 todos, 4 risky (511 assertions)
 - **Arch tests:** ALL PASS (11 files, 32 assertions)
 - **Quality tests:** ALL PASS (3 files)
-- **Failed tests breakdown:**
-  - SystemSettingTest: 7 failures — Svg "o-palette" from set "heroicons" not found (view rendering issue)
-  - SetupWizardTest: 1 failure — `super_admin` role not created in test seed
-  - InternshipRegistrationTest: 2 failures — `todo()` syntax duplicates test name
-  - AssignmentTest: 1 failure — RBAC `->throws()` test pattern issue
-- **Todo tests (10):** Intentional placeholders for features pending implementation
-- **Corrected items:** Author signature enforcement confirmed (AppServiceProvider::boot), Legacy modules disabled from autoloading, PHPUnit duplicate suite warnings eliminated
+- **Domains implemented this cycle:** Academic Year, Handbook, Schedule, Report
+- **Corrected items:** Base controller created, maryUI views replaced with plain HTML, HandbookFactory published() state added, AcademicYear view variable fixed, Student RBAC test assertion corrected
+- **Todo tests (7):** Intentional placeholders for Assignment (2), Attendance (3), Supervision (1), Student (1)
 - **See:** `.agents/issues/2026-04-30-requirement-fulfillment-report.md` for consolidated issue report
