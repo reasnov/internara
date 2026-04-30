@@ -6,7 +6,13 @@
 - `.agents/issues/2026-04-30-checklist-verification-audit.md`
 - `.agents/issues/2026-04-30-failed-tests-post-module-cleanup.md`  
 **Priority:** P0 — Master tracking document  
-**Status:** OPEN
+**Status:** ARCHIVED — split into domain-specific issues
+
+**Superseded by:**
+- `.agents/issues/2026-04-30-security-review-domains.md` — 4 domains flagged for security review
+- `.agents/issues/2026-04-30-remaining-todo-tests.md` — 7 todo tests with specific blockers
+
+This report served as the initial consolidated issue. Open items have been moved to dedicated issues for focused tracking.
 
 ---
 
