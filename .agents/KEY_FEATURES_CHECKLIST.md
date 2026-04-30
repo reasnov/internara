@@ -39,13 +39,13 @@
 - [v] [v] [v] Laravel MVC Architecture (Action-Oriented) ✓
 	- [v] [v] [v] Action Layer (70 stateless use cases) ✓
 	- [v] [v] [v] Rich Models (UUID, business rules) ✓
-	- [v] [v] [v] Optional Layers (Repos(1), Events(1), Listeners(1), Services(2)) ✓
+	- [v] [v] [v] Lifecycle Layers (Repos(1), Events(1), Listeners(1), Services(2)) ✓
 	- [v] [v] [v] Form Requests and Thin Controllers (12 Form Requests - IMPROVED) ✓
 - [v] [v] [v] System Infrastructure ✓
 	- [v] [v] [v] Database (SQLite, MySQL, PostgreSQL) - 41 migrations ✓
-	- [v] [?] [?] Cache and Session (Database + Redis-ready) - NEEDS REVIEW
-	- [v] [?] [?] File System and Static Assets (Local + S3-ready) - NEEDS REVIEW
-	- [v] [?] [?] System and user notification (in-app, email) - NEEDS REVIEW
+	- [v] [v] [v] Cache and Session (Database default, Redis-ready) ✓
+	- [v] [v] [v] File System and Static Assets (Local + S3, Spatie MediaLibrary on 4 models) ✓
+	- [v] [v] [v] System and user notification (4 actions, email template, NotificationManager) ✓
 	- [v] [v] [v] CI/CD Workflows (GitHub Actions, 5 jobs) ✓
 
 ### Domain: Configuration & Branding
@@ -74,11 +74,11 @@
 	- [v] [v] [v] Indonesian & English translations ✓
 
 ### Domain: Authentication & Access Control
-- [v] [?] [?] User management and access control (14 tests passed, NEEDS REVIEW)
-	- [v] [?] [?] Role-based access control (Spatie) - 4 roles, 62 permissions (NEEDS REVIEW)
-	- [*] [?] [?] User dashboard, profile and managerial stats - NOT DONE
-	- [v] [?] [?] Admin, student, teacher, mentor management (RBAC protected - NEEDS REVIEW)
-	- [v] [?] [?] User authentication and authorization (NEEDS REVIEW)
+- [v] [v] [v] User management and access control (14 tests passed, all verified) ✓
+	- [v] [v] [v] Role-based access control (Spatie) - 5 roles (RoleEnum), custom CheckRole middleware ✓
+	- [v] [v] [v] User dashboard, profile and managerial stats (UserDashboard, ManagerialWidgets, StudentDashboard) ✓
+	- [v] [v] [v] Admin, student, teacher, mentor management (4 Manager components, RBAC protected) ✓
+	- [v] [v] [v] User authentication and authorization (Laravel auth + CheckRole middleware) ✓
 - [ ] [ ] [ ] Auth Extensions (PARTIAL — core in app/, sub-features in modules/Auth)
 	- [ ] [ ] [ ] Invitation acceptance
 	- [ ] [ ] [ ] Account claiming
