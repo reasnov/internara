@@ -14,6 +14,7 @@
 - **Minimal Footprint**: Make the smallest change that satisfies the requirement
 
 ## Legend
+- [#] Header or notes -> use for section headers and notes
 - [v] Completed -> mark if feature is fully implemented and working
 - [*] In-progress -> mark if feature is partially implemented and actively being developed
 - [+] Needs Improvement -> mark if feature exists but needs enhancement or refactoring
