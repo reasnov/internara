@@ -37,9 +37,7 @@ class NotificationService extends BaseService implements Contract
      */
     public function getUnreadCount(string $userId): int
     {
-        return NotificationModel::where('notifiable_id', $userId)
-            ->whereNull('read_at')
-            ->count();
+        return NotificationModel::where('notifiable_id', $userId)->whereNull('read_at')->count();
     }
 
     /**

@@ -39,19 +39,14 @@ describe('AppTestOrchestrator', function () {
             ],
         ];
 
-        $this->discovery->shouldReceive('discover')
-            ->once()
-            ->andReturn($targets);
+        $this->discovery->shouldReceive('discover')->once()->andReturn($targets);
 
-        $this->executor->shouldReceive('setTimeout')
-            ->once()
-            ->andReturnSelf();
+        $this->executor->shouldReceive('setTimeout')->once()->andReturnSelf();
 
-        $this->executor->shouldReceive('setParallel')
-            ->once()
-            ->andReturnSelf();
+        $this->executor->shouldReceive('setParallel')->once()->andReturnSelf();
 
-        $this->executor->shouldReceive('execute')
+        $this->executor
+            ->shouldReceive('execute')
             ->once()
             ->andReturn([
                 'output' => 'Test output',
@@ -60,12 +55,9 @@ describe('AppTestOrchestrator', function () {
                 'peakMemory' => 1024,
             ]);
 
-        $this->sessionManager->shouldReceive('record')
-            ->once();
+        $this->sessionManager->shouldReceive('record')->once();
 
-        $this->sessionManager->shouldReceive('isPassed')
-            ->once()
-            ->andReturn(false);
+        $this->sessionManager->shouldReceive('isPassed')->once()->andReturn(false);
 
         $result = $this->orchestrator->execute();
 
@@ -75,7 +67,8 @@ describe('AppTestOrchestrator', function () {
 
     it('handles missing modules', function () {
         $missing = [];
-        $this->discovery->shouldReceive('discover')
+        $this->discovery
+            ->shouldReceive('discover')
             ->once()
             ->andReturnUsing(function ($modules, $dirty, &$missingRef) {
                 $missingRef = ['NonExistentModule'];
@@ -98,15 +91,14 @@ describe('AppTestOrchestrator', function () {
             ],
         ];
 
-        $this->discovery->shouldReceive('discover')
-            ->once()
-            ->andReturn($targets);
+        $this->discovery->shouldReceive('discover')->once()->andReturn($targets);
 
         $options = [
             'no-arch' => true,
         ];
 
-        $this->executor->shouldReceive('execute')
+        $this->executor
+            ->shouldReceive('execute')
             ->once() // Only Unit should execute
             ->andReturn([
                 'output' => 'Test output',
@@ -115,12 +107,9 @@ describe('AppTestOrchestrator', function () {
                 'peakMemory' => 1024,
             ]);
 
-        $this->sessionManager->shouldReceive('record')
-            ->once();
+        $this->sessionManager->shouldReceive('record')->once();
 
-        $this->sessionManager->shouldReceive('isPassed')
-            ->once()
-            ->andReturn(false);
+        $this->sessionManager->shouldReceive('isPassed')->once()->andReturn(false);
 
         $result = $this->orchestrator->execute($options);
 
@@ -136,9 +125,7 @@ describe('AppTestOrchestrator', function () {
             ],
         ];
 
-        $this->discovery->shouldReceive('discover')
-            ->once()
-            ->andReturn($targets);
+        $this->discovery->shouldReceive('discover')->once()->andReturn($targets);
 
         $segments = $this->orchestrator->listSegments();
 
@@ -147,15 +134,19 @@ describe('AppTestOrchestrator', function () {
     });
 
     it('generates report', function () {
-        $this->sessionManager->shouldReceive('getResults')
+        $this->sessionManager
+            ->shouldReceive('getResults')
             ->once()
             ->andReturn([
-                ['module' => 'TestModule', 'type' => 'Unit', 'success' => true, 'timestamp' => now()->toIso8601String()],
+                [
+                    'module' => 'TestModule',
+                    'type' => 'Unit',
+                    'success' => true,
+                    'timestamp' => now()->toIso8601String(),
+                ],
             ]);
 
-        $this->reporter->shouldReceive('displaySessionMetrics')
-            ->once()
-            ->andReturn(100.0);
+        $this->reporter->shouldReceive('displaySessionMetrics')->once()->andReturn(100.0);
 
         $passRate = $this->orchestrator->report();
 
@@ -168,8 +159,7 @@ describe('AppTestOrchestrator', function () {
     });
 
     it('clears sessions', function () {
-        $this->sessionManager->shouldReceive('clearAll')
-            ->once();
+        $this->sessionManager->shouldReceive('clearAll')->once();
 
         $this->orchestrator->clearSessions();
     });

@@ -61,14 +61,18 @@ class SchoolSetup extends SetupWizardBase
 
     public function saveSchool(SchoolService $schoolService): void
     {
-        $validated = Validator::make([
-            'name' => $this->name,
-            'type' => $this->type,
-            'address' => $this->address,
-            'phone' => $this->phone,
-            'email' => $this->email,
-            'website' => $this->website,
-        ], $this->rules(), $this->messages())->validate();
+        $validated = Validator::make(
+            [
+                'name' => $this->name,
+                'type' => $this->type,
+                'address' => $this->address,
+                'phone' => $this->phone,
+                'email' => $this->email,
+                'website' => $this->website,
+            ],
+            $this->rules(),
+            $this->messages(),
+        )->validate();
 
         $school = $schoolService->create($validated);
 

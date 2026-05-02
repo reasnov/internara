@@ -146,11 +146,7 @@ enum Permission: string
     public static function grouped(): array
     {
         return [
-            'core' => [
-                self::CORE_VIEW_DASHBOARD,
-                self::CORE_VIEW_AUDIT,
-                self::CORE_EXPORT_DATA,
-            ],
+            'core' => [self::CORE_VIEW_DASHBOARD, self::CORE_VIEW_AUDIT, self::CORE_EXPORT_DATA],
             'user' => [
                 self::USER_VIEW,
                 self::USER_CREATE,
@@ -158,10 +154,7 @@ enum Permission: string
                 self::USER_DELETE,
                 self::USER_MANAGE,
             ],
-            'profile' => [
-                self::PROFILE_VIEW,
-                self::PROFILE_UPDATE,
-            ],
+            'profile' => [self::PROFILE_VIEW, self::PROFILE_UPDATE],
             'school' => [
                 self::SCHOOL_VIEW,
                 self::SCHOOL_CREATE,
@@ -239,45 +232,19 @@ enum Permission: string
                 self::SCHEDULE_UPDATE,
                 self::SCHEDULE_MANAGE,
             ],
-            'guidance' => [
-                self::GUIDANCE_VIEW,
-                self::GUIDANCE_MANAGE,
-            ],
-            'report' => [
-                self::REPORT_VIEW,
-                self::REPORT_GENERATE,
-                self::REPORT_EXPORT,
-            ],
-            'setting' => [
-                self::SETTING_VIEW,
-                self::SETTING_MANAGE,
-            ],
-            'media' => [
-                self::MEDIA_VIEW,
-                self::MEDIA_UPLOAD,
-                self::MEDIA_DELETE,
-            ],
+            'guidance' => [self::GUIDANCE_VIEW, self::GUIDANCE_MANAGE],
+            'report' => [self::REPORT_VIEW, self::REPORT_GENERATE, self::REPORT_EXPORT],
+            'setting' => [self::SETTING_VIEW, self::SETTING_MANAGE],
+            'media' => [self::MEDIA_VIEW, self::MEDIA_UPLOAD, self::MEDIA_DELETE],
             'notification' => [
                 self::NOTIFICATION_VIEW,
                 self::NOTIFICATION_SEND,
                 self::NOTIFICATION_MANAGE,
             ],
-            'admin' => [
-                self::ADMIN_VIEW,
-                self::ADMIN_MANAGE,
-            ],
-            'student' => [
-                self::STUDENT_VIEW,
-                self::STUDENT_MANAGE,
-            ],
-            'teacher' => [
-                self::TEACHER_VIEW,
-                self::TEACHER_MANAGE,
-            ],
-            'mentor' => [
-                self::MENTOR_VIEW,
-                self::MENTOR_MANAGE,
-            ],
+            'admin' => [self::ADMIN_VIEW, self::ADMIN_MANAGE],
+            'student' => [self::STUDENT_VIEW, self::STUDENT_MANAGE],
+            'teacher' => [self::TEACHER_VIEW, self::TEACHER_MANAGE],
+            'mentor' => [self::MENTOR_VIEW, self::MENTOR_MANAGE],
         ];
     }
 
@@ -288,9 +255,6 @@ enum Permission: string
      */
     public static function allValues(): array
     {
-        return array_values(array_map(
-            fn (self $case) => $case->value,
-            self::cases(),
-        ));
+        return array_values(array_map(fn(self $case) => $case->value, self::cases()));
     }
 }

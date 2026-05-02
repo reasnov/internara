@@ -42,7 +42,7 @@ class PermissionService extends EloquentQuery implements Contract
      */
     public function getRoles(): array
     {
-        return array_map(fn (Role $role) => $role->value, Role::cases());
+        return array_map(fn(Role $role) => $role->value, Role::cases());
     }
 
     /**
@@ -78,11 +78,11 @@ class PermissionService extends EloquentQuery implements Contract
     public function getDropdownOptions(): array
     {
         return array_map(
-            fn (Permission $permission) => [
+            fn(Permission $permission) => [
                 'value' => $permission->value,
                 'label' => __($permission->value),
             ],
-            Permission::cases()
+            Permission::cases(),
         );
     }
 }

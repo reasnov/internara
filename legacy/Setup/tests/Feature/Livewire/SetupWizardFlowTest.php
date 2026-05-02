@@ -29,8 +29,7 @@ describe('Setup Wizard Flow', function () {
         $token = $setupService->generateToken();
 
         // Step 1: Welcome (just click next)
-        $this->get("/setup/welcome?token={$token}")
-            ->assertStatus(200);
+        $this->get("/setup/welcome?token={$token}")->assertStatus(200);
 
         $setup = $setupService->getSetup();
         expect($setup->isStepCompleted('welcome'))->toBeTrue();

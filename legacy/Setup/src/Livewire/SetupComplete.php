@@ -28,22 +28,25 @@ class SetupComplete extends SetupWizardBase
     public function completeSetup(): void
     {
         // [S1 - Secure] Server-side mandate enforcement
-        $this->validate([
-            'dataVerified' => 'accepted',
-            'securityAware' => 'accepted',
-            'legalAgreed' => 'accepted',
-        ], [
-            'dataVerified.accepted' => __('setup::validation.complete.verify_data'),
-            'securityAware.accepted' => __('setup::validation.complete.security_aware'),
-            'legalAgreed.accepted' => __('setup::validation.complete.legal_agree'),
-        ]);
+        $this->validate(
+            [
+                'dataVerified' => 'accepted',
+                'securityAware' => 'accepted',
+                'legalAgreed' => 'accepted',
+            ],
+            [
+                'dataVerified.accepted' => __('setup::validation.complete.verify_data'),
+                'securityAware.accepted' => __('setup::validation.complete.security_aware'),
+                'legalAgreed.accepted' => __('setup::validation.complete.legal_agree'),
+            ],
+        );
 
         $setup = $this->setupService->getSetup();
 
         // Get admin ID from completed steps
         $adminId = $setup->admin_id;
 
-        if (! $adminId) {
+        if (!$adminId) {
             $this->addError('general', __('setup::messages.admin_not_found'));
 
             return;

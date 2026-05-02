@@ -23,20 +23,13 @@ describe('SystemInstaller', function () {
         $this->setupService = Mockery::mock(SetupService::class);
         $this->auditor = Mockery::mock(InstallationAuditor::class);
 
-        $this->installer = new SystemInstaller(
-            $this->setupService,
-            $this->auditor
-        );
+        $this->installer = new SystemInstaller($this->setupService, $this->auditor);
     });
 
     describe('install', function () {
         it('fails when env file cannot be created', function () {
-            File::shouldReceive('exists')
-                ->with(base_path('.env'))
-                ->andReturn(false);
-            File::shouldReceive('exists')
-                ->with(base_path('.env.example'))
-                ->andReturn(false);
+            File::shouldReceive('exists')->with(base_path('.env'))->andReturn(false);
+            File::shouldReceive('exists')->with(base_path('.env.example'))->andReturn(false);
 
             expect($this->installer->install())->toBeFalse();
         });
@@ -63,22 +56,15 @@ describe('SystemInstaller', function () {
 
     describe('ensureEnvFileExists', function () {
         it('returns true if .env already exists', function () {
-            File::shouldReceive('exists')
-                ->with(base_path('.env'))
-                ->andReturn(true);
+            File::shouldReceive('exists')->with(base_path('.env'))->andReturn(true);
 
             expect($this->installer->ensureEnvFileExists())->toBeTrue();
         });
 
         it('creates .env from .env.example', function () {
-            File::shouldReceive('exists')
-                ->with(base_path('.env'))
-                ->andReturn(false);
-            File::shouldReceive('exists')
-                ->with(base_path('.env.example'))
-                ->andReturn(true);
-            File::shouldReceive('copy')
-                ->andReturn(true);
+            File::shouldReceive('exists')->with(base_path('.env'))->andReturn(false);
+            File::shouldReceive('exists')->with(base_path('.env.example'))->andReturn(true);
+            File::shouldReceive('copy')->andReturn(true);
 
             Log::shouldReceive('info');
 
@@ -121,7 +107,7 @@ describe('SystemInstaller', function () {
         it('runs migrate if no migrations exist', function () {
             DB::shouldReceive('connection')->andReturnSelf();
             DB::shouldReceive('getPdo')->andReturnSelf();
-            DB::shouldReceive('table')->andThrow(new \Exception);
+            DB::shouldReceive('table')->andThrow(new \Exception());
 
             Artisan::shouldReceive('call')
                 ->with('migrate', ['--force' => true])

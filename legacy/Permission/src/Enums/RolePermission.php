@@ -35,9 +35,7 @@ enum RolePermission: string
      */
     protected function allPermissions(): array
     {
-        return array_merge(
-            Permission::allValues(),
-        );
+        return array_merge(Permission::allValues());
     }
 
     /**

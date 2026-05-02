@@ -54,7 +54,7 @@
     --color-info-content: oklch(100% 0 0);
     --color-success: oklch(55% 0.58 150); /* Bold Green */
     --color-success-content: oklch(100% 0 0);
-    --color-warning: oklch(70% 0.60 80); /* Bold Amber */
+    --color-warning: oklch(70% 0.6 80); /* Bold Amber */
     --color-warning-content: oklch(10% 0 0);
     --color-error: oklch(55% 0.62 25); /* Bold Red */
     --color-error-content: oklch(100% 0 0);

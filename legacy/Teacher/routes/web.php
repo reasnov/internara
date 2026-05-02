@@ -13,6 +13,8 @@ Route::middleware(['auth', 'verified', 'role:teacher'])->group(function () {
     Route::livewire('/teacher/mentoring/{registrationId}', MentoringManager::class)->name(
         'teacher.mentoring',
     );
-    Route::livewire('/teacher/assess/{registrationId}', AssessInternship::class)->name('teacher.assess');
+    Route::livewire('/teacher/assess/{registrationId}', AssessInternship::class)->name(
+        'teacher.assess',
+    );
     Route::livewire('/teacher/reports', ReportIndex::class)->name('teacher.reports');
 });

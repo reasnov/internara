@@ -84,9 +84,9 @@ class AppTestOrchestrator implements OrchestratorInterface
             $subsegments = $target['segments'] ?? ['Arch', 'Unit', 'Feature', 'Browser'];
 
             foreach ($subsegments as $sub) {
-                $testPath = $target['path'].DIRECTORY_SEPARATOR.$sub;
+                $testPath = $target['path'] . DIRECTORY_SEPARATOR . $sub;
 
-                if (! File::isDirectory($testPath)) {
+                if (!File::isDirectory($testPath)) {
                     continue;
                 }
 
@@ -101,7 +101,10 @@ class AppTestOrchestrator implements OrchestratorInterface
                     continue;
                 }
 
-                if (($options['continue'] ?? false) && $this->sessionManager->isPassed($target['label'], $sub)) {
+                if (
+                    ($options['continue'] ?? false) &&
+                    $this->sessionManager->isPassed($target['label'], $sub)
+                ) {
                     $results[] = [
                         'module' => $target['label'],
                         'type' => $sub,
@@ -129,14 +132,9 @@ class AppTestOrchestrator implements OrchestratorInterface
                 $duration = microtime(true) - $segmentStart;
 
                 // Record result
-                $this->sessionManager->record(
-                    $target['label'],
-                    $sub,
-                    $success,
-                    $executionResult,
-                );
+                $this->sessionManager->record($target['label'], $sub, $success, $executionResult);
 
-                $allOutput .= $executionResult['output'].$executionResult['errorOutput'];
+                $allOutput .= $executionResult['output'] . $executionResult['errorOutput'];
 
                 $results[] = [
                     'module' => $target['label'],
@@ -146,7 +144,7 @@ class AppTestOrchestrator implements OrchestratorInterface
                     'peakMemory' => $executionResult['peakMemory'] ?? 0,
                 ];
 
-                if (! $success) {
+                if (!$success) {
                     $overallSuccess = false;
                     $failures[] = [
                         'label' => "{$target['label']} > {$sub}",
@@ -283,7 +281,7 @@ class AppTestOrchestrator implements OrchestratorInterface
             $command[] = '--stop-on-failure';
         }
 
-        if (! empty($options['filter'])) {
+        if (!empty($options['filter'])) {
             $command[] = '--filter';
             $command[] = $options['filter'];
         }
@@ -323,7 +321,11 @@ class AppTestOrchestrator implements OrchestratorInterface
         }
 
         // Check --with-browser for Browser tests
-        if ($sub === 'Browser' && ! ($options['with-browser'] ?? false) && ! ($options['browser-only'] ?? false)) {
+        if (
+            $sub === 'Browser' &&
+            !($options['with-browser'] ?? false) &&
+            !($options['browser-only'] ?? false)
+        ) {
             return true;
         }
 
@@ -335,7 +337,7 @@ class AppTestOrchestrator implements OrchestratorInterface
             $options['browser-only'] ?? false,
         ];
 
-        if (in_array(true, $onlyFlags, true) && ! ($options["{$subLower}-only"] ?? false)) {
+        if (in_array(true, $onlyFlags, true) && !($options["{$subLower}-only"] ?? false)) {
             return true;
         }
 
@@ -362,7 +364,7 @@ class AppTestOrchestrator implements OrchestratorInterface
         $count = 0;
         foreach ($targets as $target) {
             foreach ($target['segments'] ?? ['Arch', 'Unit', 'Feature', 'Browser'] as $sub) {
-                $testPath = $target['path'].DIRECTORY_SEPARATOR.$sub;
+                $testPath = $target['path'] . DIRECTORY_SEPARATOR . $sub;
                 if (File::isDirectory($testPath)) {
                     $count++;
                 }

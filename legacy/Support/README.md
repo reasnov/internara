@@ -2,25 +2,29 @@
 
 ## Overview
 
-Core infrastructure module for Internara v0.14.0. Provides testing infrastructure with memory leak prevention, session management, and modular testing orchestration for 29+ modules.
+Core infrastructure module for Internara v0.14.0. Provides testing infrastructure with memory leak
+prevention, session management, and modular testing orchestration for 29+ modules.
 
 ## Features
 
 ### 🧪 Testing Infrastructure
 
 **Memory-Safe Test Execution:**
+
 - Isolated processes via `Symfony/Process`
 - No memory leaks across test suites
 - Automated garbage collection
 - Retry logic for flaky tests
 
 **Session Management:**
+
 - Automated cleanup (max sessions, pruning)
 - PII masking in session data
 - Session integrity validation
 - Configurable lifetime
 
 **Result Reporting:**
+
 - JUnit XML export (CI/CD)
 - JSON export (API consumption)
 - Console table output
@@ -79,7 +83,7 @@ $orchestrator = app(AppTestOrchestrator::class);
 $results = $orchestrator->run([
     'modules' => ['Log', 'Support'],
     'coverage' => true,
-    'format' => 'json'
+    'format' => 'json',
 ]);
 
 echo $results['summary'];
@@ -89,6 +93,7 @@ echo $results['summary'];
 ## Configuration
 
 See `config/testing.php`:
+
 ```php
 return [
     'memory_limit' => '512M',
@@ -111,6 +116,7 @@ php artisan test modules/Support --filter=Testing
 ```
 
 **Coverage**: 90%+
+
 - ProcessExecutor memory isolation tests
 - SessionManager cleanup tests
 - ResultReporter export tests
@@ -119,6 +125,7 @@ php artisan test modules/Support --filter=Testing
 ## Core Components
 
 ### ProcessExecutor
+
 ```php
 // Isolated test execution
 $executor = app(ProcessExecutorInterface::class);
@@ -126,6 +133,7 @@ $results = $executor->execute(['Log', 'Support'], 'feature');
 ```
 
 ### SessionManager
+
 ```php
 // Automated session cleanup
 $sessionManager = app(SessionManagerInterface::class);
@@ -133,6 +141,7 @@ $sessionManager->pruneExpiredSessions();
 ```
 
 ### ResultReporter
+
 ```php
 // Export test results
 $reporter = app(ResultReporterInterface::class);

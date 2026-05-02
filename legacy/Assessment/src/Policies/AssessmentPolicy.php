@@ -29,7 +29,7 @@ class AssessmentPolicy
      */
     public function view(User $user, Assessment $assessment): bool
     {
-        if (! $user->hasPermissionTo(Permission::ASSESSMENT_VIEW->value)) {
+        if (!$user->hasPermissionTo(Permission::ASSESSMENT_VIEW->value)) {
             return false;
         }
 
@@ -55,11 +55,11 @@ class AssessmentPolicy
      */
     public function update(User $user, Assessment $assessment): bool
     {
-        if (! $user->hasPermissionTo(Permission::ASSESSMENT_MANAGE->value)) {
+        if (!$user->hasPermissionTo(Permission::ASSESSMENT_MANAGE->value)) {
             return false;
         }
 
-        return $user->id === $assessment->evaluator_id && ! $assessment->isFinalized();
+        return $user->id === $assessment->evaluator_id && !$assessment->isFinalized();
     }
 
     /**
@@ -67,8 +67,8 @@ class AssessmentPolicy
      */
     public function delete(User $user, Assessment $assessment): bool
     {
-        return $user->hasPermissionTo(Permission::ASSESSMENT_MANAGE->value)
-            && $user->id === $assessment->evaluator_id;
+        return $user->hasPermissionTo(Permission::ASSESSMENT_MANAGE->value) &&
+            $user->id === $assessment->evaluator_id;
     }
 
     /**
@@ -76,8 +76,8 @@ class AssessmentPolicy
      */
     public function grade(User $user, Assessment $assessment): bool
     {
-        return $user->hasPermissionTo(Permission::ASSESSMENT_GRADE->value)
-            && $user->id === $assessment->evaluator_id;
+        return $user->hasPermissionTo(Permission::ASSESSMENT_GRADE->value) &&
+            $user->id === $assessment->evaluator_id;
     }
 
     /**

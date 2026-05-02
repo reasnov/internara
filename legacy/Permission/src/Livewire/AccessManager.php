@@ -60,11 +60,11 @@ class AccessManager extends RecordManager
         }
 
         // Admin can only manage subordinate roles
-        return in_array($roleName, [
-            Role::TEACHER->value,
-            Role::MENTOR->value,
-            Role::STUDENT->value,
-        ], true);
+        return in_array(
+            $roleName,
+            [Role::TEACHER->value, Role::MENTOR->value, Role::STUDENT->value],
+            true,
+        );
     }
 
     /**
@@ -77,7 +77,7 @@ class AccessManager extends RecordManager
             ->orderBy('name')
             ->get()
             ->groupBy('module')
-            ->map(fn ($perms) => $perms->pluck('name')->values()->all())
+            ->map(fn($perms) => $perms->pluck('name')->values()->all())
             ->toArray();
     }
 
@@ -99,7 +99,7 @@ class AccessManager extends RecordManager
     {
         $role = RoleModel::findOrFail($roleId);
 
-        if (! $this->canManageRole($role->name)) {
+        if (!$this->canManageRole($role->name)) {
             $this->notify(__('permission::ui.access_manager.cannot_manage'), 'error');
 
             return;
@@ -125,7 +125,7 @@ class AccessManager extends RecordManager
     {
         $role = RoleModel::findOrFail($roleId);
 
-        if (! $this->canManageRole($role->name)) {
+        if (!$this->canManageRole($role->name)) {
             $this->notify(__('permission::ui.access_manager.cannot_manage'), 'error');
 
             return;
@@ -143,9 +143,19 @@ class AccessManager extends RecordManager
     protected function getTableHeaders(): array
     {
         return [
-            ['key' => 'name', 'label' => __('permission::ui.access_manager.table.role'), 'sortable' => true],
-            ['key' => 'description', 'label' => __('permission::ui.access_manager.table.description')],
-            ['key' => 'permission_count', 'label' => __('permission::ui.access_manager.table.permissions')],
+            [
+                'key' => 'name',
+                'label' => __('permission::ui.access_manager.table.role'),
+                'sortable' => true,
+            ],
+            [
+                'key' => 'description',
+                'label' => __('permission::ui.access_manager.table.description'),
+            ],
+            [
+                'key' => 'permission_count',
+                'label' => __('permission::ui.access_manager.table.permissions'),
+            ],
             ['key' => 'user_count', 'label' => __('permission::ui.access_manager.table.users')],
             ['key' => 'actions', 'label' => __('ui::common.actions'), 'class' => 'w-1 text-right'],
         ];
@@ -178,9 +188,11 @@ class AccessManager extends RecordManager
     {
         $data = $this->normalizeResults();
 
-        return view('permission::livewire.access-manager', $data)
-            ->layout('ui::components.layouts.dashboard', [
+        return view('permission::livewire.access-manager', $data)->layout(
+            'ui::components.layouts.dashboard',
+            [
                 'title' => $this->title,
-            ]);
+            ],
+        );
     }
 }

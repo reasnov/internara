@@ -18,7 +18,12 @@ interface SessionManagerInterface
      *
      * @param array{output: string, errorOutput: string} $executionResult
      */
-    public function record(string $module, string $type, bool $success, array $executionResult): void;
+    public function record(
+        string $module,
+        string $type,
+        bool $success,
+        array $executionResult,
+    ): void;
 
     /**
      * Check if a segment has passed and is still valid.

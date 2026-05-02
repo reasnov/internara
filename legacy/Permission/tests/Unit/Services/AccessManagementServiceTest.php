@@ -25,11 +25,7 @@ it('can create a permission', function () {
 it('can create a role', function () {
     $service = app(AccessManagementService::class);
 
-    $role = $service->createRole(
-        name: 'test-role',
-        description: 'Test role',
-        module: 'test',
-    );
+    $role = $service->createRole(name: 'test-role', description: 'Test role', module: 'test');
 
     expect($role)->toBeInstanceOf(Role::class);
     expect($role->name)->toBe('test-role');
@@ -83,13 +79,13 @@ it('can delete a permission', function () {
 it('throws exception for non-existent role', function () {
     $service = app(AccessManagementService::class);
 
-    expect(fn () => $service->deleteRole('non-existent'))
-        ->toThrow(RoleDoesNotExist::class);
+    expect(fn() => $service->deleteRole('non-existent'))->toThrow(RoleDoesNotExist::class);
 });
 
 it('throws exception for non-existent permission', function () {
     $service = app(AccessManagementService::class);
 
-    expect(fn () => $service->deletePermission('non-existent'))
-        ->toThrow(PermissionDoesNotExist::class);
+    expect(fn() => $service->deletePermission('non-existent'))->toThrow(
+        PermissionDoesNotExist::class,
+    );
 });

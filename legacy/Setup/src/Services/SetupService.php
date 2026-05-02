@@ -144,10 +144,12 @@ class SetupService extends BaseService implements Contract
                 ])
                 ->log('setup_finalized');
 
-            event(new SetupFinalized(
-                schoolName: $setup->school?->name ?? null,
-                installedAt: now()->toIso8601String(),
-            ));
+            event(
+                new SetupFinalized(
+                    schoolName: $setup->school?->name ?? null,
+                    installedAt: now()->toIso8601String(),
+                ),
+            );
         });
     }
 

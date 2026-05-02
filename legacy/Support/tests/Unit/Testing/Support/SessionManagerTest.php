@@ -11,7 +11,7 @@ use Modules\Support\Testing\Support\SessionManager;
 describe('SessionManager', function () {
     beforeEach(function () {
         // Use a unique session ID for each test
-        $this->sessionId = 'test_'.uniqid();
+        $this->sessionId = 'test_' . uniqid();
         $this->manager = new SessionManager($this->sessionId);
     });
 
@@ -95,19 +95,24 @@ describe('SessionManager', function () {
     it('provides metadata', function () {
         $metadata = $this->manager->getMetadata();
 
-        expect($metadata)->toHaveKeys(['sessionId', 'segmentCount', 'diskUsageBytes', 'oldestTimestamp']);
+        expect($metadata)->toHaveKeys([
+            'sessionId',
+            'segmentCount',
+            'diskUsageBytes',
+            'oldestTimestamp',
+        ]);
         expect($metadata['sessionId'])->toBe($this->sessionId);
     });
 
     it('cleans up old sessions', function () {
         // Create an old session directory
-        $oldSessionId = 'old_test_'.uniqid();
+        $oldSessionId = 'old_test_' . uniqid();
         $oldPath = storage_path("framework/testing/sessions/{$oldSessionId}");
         File::makeDirectory($oldPath, 0700, true);
         File::put("{$oldPath}/test.json", json_encode(['test' => true]));
 
         // Set modification time to 10 days ago
-        touch($oldPath, time() - (10 * 24 * 3600));
+        touch($oldPath, time() - 10 * 24 * 3600);
 
         $deleted = SessionManager::cleanup(7);
 

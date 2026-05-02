@@ -20,7 +20,10 @@ use Modules\Setup\Livewire\SetupWelcome;
 Route::prefix('setup')
     ->middleware([ProtectSetupRoute::class])
     ->group(function () {
-        Route::get('/', fn () => redirect()->route('setup.welcome', ['token' => request('token')]))->name('setup');
+        Route::get(
+            '/',
+            fn() => redirect()->route('setup.welcome', ['token' => request('token')]),
+        )->name('setup');
 
         Route::livewire('/welcome', SetupWelcome::class)->name('setup.welcome');
         Route::livewire('/school', SchoolSetup::class)->name('setup.school');

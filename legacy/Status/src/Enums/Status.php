@@ -52,14 +52,17 @@ enum Status: string
             // Neutral states
             self::PENDING => '#f59e0b', // Amber - waiting for action
             self::ACTIVATED => '#3b82f6', // Blue - in progress
+            // Blue - in progress
 
             // Active states
             self::VERIFIED => '#10b981', // Green - fully active & verified
             self::PROTECTED => '#8b5cf6', // Purple - special/protected
+            // Purple - special/protected
 
             // Problem states
             self::RESTRICTED => '#f97316', // Orange - limited access
             self::SUSPENDED => '#ef4444', // Red - no access
+            // Red - no access
 
             // End of life
             self::INACTIVE => '#6b7280', // Gray - dormant
@@ -73,7 +76,7 @@ enum Status: string
      */
     public function label(): string
     {
-        return 'status::status.'.$this->value;
+        return 'status::status.' . $this->value;
     }
 
     /**
@@ -83,10 +86,12 @@ enum Status: string
     {
         return match ($this) {
             self::PENDING => 'Akun telah dibuat. Menunggu untuk diaktifkan oleh pemilik akun.',
-            self::ACTIVATED => 'Akun telah diaktifkan oleh pemilik. Menunggu verifikasi dari admin/pengajar.',
+            self::ACTIVATED
+                => 'Akun telah diaktifkan oleh pemilik. Menunggu verifikasi dari admin/pengajar.',
             self::VERIFIED => 'Akun terverifikasi dan dapat digunakan secara penuh.',
             self::PROTECTED => 'Akun Super Admin terlindungi - tidak dapat diubah atau dihapus.',
-            self::RESTRICTED => 'Akun dalam pembatasan sementara. Fungsionalitas terbatas selama investigasi.',
+            self::RESTRICTED
+                => 'Akun dalam pembatasan sementara. Fungsionalitas terbatas selama investigasi.',
             self::SUSPENDED => 'Akun ditangguhkan - tidak memiliki akses ke sistem.',
             self::INACTIVE => 'Akun tidak aktif - tidak ada login selama 180+ hari.',
             self::ARCHIVED => 'Akun diarsipkan permanen - menunggu penghapusan data sesuai GDPR.',

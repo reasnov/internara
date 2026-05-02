@@ -21,7 +21,11 @@ interface TargetDiscoveryInterface
      *
      * @return array<int, array{label: string, path: string, segments: array<string>}>
      */
-    public function discover(array $requestedModules = [], bool $onlyDirty = false, array &$missing = []): array;
+    public function discover(
+        array $requestedModules = [],
+        bool $onlyDirty = false,
+        array &$missing = [],
+    ): array;
 
     /**
      * Check if a module is enabled and has test directories.

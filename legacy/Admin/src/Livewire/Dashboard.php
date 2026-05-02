@@ -114,8 +114,9 @@ class Dashboard extends Component
         return view('admin::livewire.dashboard', $data)->layout(
             'ui::components.layouts.dashboard',
             [
-                'title' => __('admin::ui.dashboard.title').
-                    ' | '.
+                'title' =>
+                    __('admin::ui.dashboard.title') .
+                    ' | ' .
                     setting('brand_name', setting('app_name')),
                 'context' => 'admin::ui.menu.dashboard',
             ],

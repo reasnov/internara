@@ -20,12 +20,14 @@ test('it returns correct translation key', function () {
 });
 
 test('it returns correct description', function () {
-    expect(Status::VERIFIED->description())
-        ->toContain('terverifikasi');
+    expect(Status::VERIFIED->description())->toContain('terverifikasi');
 });
 
 test('it validates transitions correctly', function () {
-    expect(Status::PENDING->canTransitionTo(Status::VERIFIED))->toBeTrue()
-        ->and(Status::VERIFIED->canTransitionTo(Status::INACTIVE))->toBeTrue()
-        ->and(Status::PROTECTED->canTransitionTo(Status::VERIFIED))->toBeFalse();
+    expect(Status::PENDING->canTransitionTo(Status::VERIFIED))
+        ->toBeTrue()
+        ->and(Status::VERIFIED->canTransitionTo(Status::INACTIVE))
+        ->toBeTrue()
+        ->and(Status::PROTECTED->canTransitionTo(Status::VERIFIED))
+        ->toBeFalse();
 });

@@ -29,7 +29,7 @@ class ReportPolicy
      */
     public function view(User $user, GeneratedReport $report): bool
     {
-        if (! $user->hasPermissionTo(Permission::REPORT_VIEW->value)) {
+        if (!$user->hasPermissionTo(Permission::REPORT_VIEW->value)) {
             return false;
         }
 
@@ -56,11 +56,12 @@ class ReportPolicy
      */
     public function export(User $user, GeneratedReport $report): bool
     {
-        if (! $user->hasPermissionTo(Permission::REPORT_EXPORT->value)) {
+        if (!$user->hasPermissionTo(Permission::REPORT_EXPORT->value)) {
             return false;
         }
 
-        return $user->id === $report->generated_by || $user->hasPermissionTo(Permission::REPORT_GENERATE->value);
+        return $user->id === $report->generated_by ||
+            $user->hasPermissionTo(Permission::REPORT_GENERATE->value);
     }
 
     /**

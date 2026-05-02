@@ -71,7 +71,7 @@ class ProcessExecutor implements ProcessExecutorInterface
             $result = $this->doExecute($command, $env);
 
             // Success or non-transient failure
-            if ($result['exitCode'] === 0 || ! $this->isTransientFailure($result)) {
+            if ($result['exitCode'] === 0 || !$this->isTransientFailure($result)) {
                 return $result;
             }
 
@@ -98,11 +98,9 @@ class ProcessExecutor implements ProcessExecutorInterface
      */
     protected function doExecute(array $command, array $env = []): array
     {
-        $processEnv = array_merge(
-            ['APP_ENV' => 'testing'],
-            $env,
-            ['PHP_MEMORY_LIMIT' => (string) $this->memoryLimit],
-        );
+        $processEnv = array_merge(['APP_ENV' => 'testing'], $env, [
+            'PHP_MEMORY_LIMIT' => (string) $this->memoryLimit,
+        ]);
 
         $process = new Process($command, base_path(), $processEnv);
         $process->setTimeout($this->timeout);
@@ -193,7 +191,7 @@ class ProcessExecutor implements ProcessExecutorInterface
             // Remove from active processes
             $this->activeProcesses = array_filter(
                 $this->activeProcesses,
-                fn (Process $p) => $p !== $process
+                fn(Process $p) => $p !== $process,
             );
 
             // Clear references

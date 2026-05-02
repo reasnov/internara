@@ -27,8 +27,7 @@ test('it handles missing composer.json gracefully', function () {
         File::delete($path);
     }
 
-    artisan('app:info')
-        ->assertExitCode(0); // Should not crash
+    artisan('app:info')->assertExitCode(0); // Should not crash
 
     if ($original) {
         File::put($path, $original);
@@ -43,8 +42,7 @@ test('it handles missing package.json gracefully', function () {
         File::delete($path);
     }
 
-    artisan('app:info')
-        ->assertExitCode(0); // Should not crash
+    artisan('app:info')->assertExitCode(0); // Should not crash
 
     if ($original) {
         File::put($path, $original);

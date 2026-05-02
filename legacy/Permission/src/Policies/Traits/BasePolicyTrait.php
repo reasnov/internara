@@ -56,7 +56,7 @@ trait BasePolicyTrait
     protected function hasAnyPermission(User $user, array $permissions): bool
     {
         $permissionValues = array_filter(
-            array_map(fn ($p) => $p instanceof Permission ? $p->value : $p, $permissions)
+            array_map(fn($p) => $p instanceof Permission ? $p->value : $p, $permissions),
         );
 
         return $user->hasAnyPermission($permissionValues);
@@ -93,7 +93,7 @@ trait BasePolicyTrait
         }
 
         if ($this->isSuperAdmin($user)) {
-            return ! $target->hasRole(Role::SUPER_ADMIN->value);
+            return !$target->hasRole(Role::SUPER_ADMIN->value);
         }
 
         if ($this->isAdmin($user)) {
@@ -112,8 +112,11 @@ trait BasePolicyTrait
      *
      * Default: requires 'delete' permission or 'manage' permission.
      */
-    protected function canDelete(User $user, ?Permission $deletePermission, ?Permission $managePermission = null): bool
-    {
+    protected function canDelete(
+        User $user,
+        ?Permission $deletePermission,
+        ?Permission $managePermission = null,
+    ): bool {
         $managePermission ??= $deletePermission;
 
         return $user->hasAnyPermission([
@@ -127,8 +130,11 @@ trait BasePolicyTrait
      *
      * Default: requires 'update' permission or 'manage' permission.
      */
-    protected function canUpdate(User $user, ?Permission $updatePermission, ?Permission $managePermission = null): bool
-    {
+    protected function canUpdate(
+        User $user,
+        ?Permission $updatePermission,
+        ?Permission $managePermission = null,
+    ): bool {
         $managePermission ??= $updatePermission;
 
         return $user->hasAnyPermission([
@@ -142,8 +148,11 @@ trait BasePolicyTrait
      *
      * Default: requires 'create' permission or 'manage' permission.
      */
-    protected function canCreate(User $user, ?Permission $createPermission, ?Permission $managePermission = null): bool
-    {
+    protected function canCreate(
+        User $user,
+        ?Permission $createPermission,
+        ?Permission $managePermission = null,
+    ): bool {
         $managePermission ??= $createPermission;
 
         return $user->hasAnyPermission([
@@ -155,8 +164,9 @@ trait BasePolicyTrait
     /**
      * Deny with a message.
      */
-    protected function deny(string $message = 'You are not authorized to perform this action.'): void
-    {
+    protected function deny(
+        string $message = 'You are not authorized to perform this action.',
+    ): void {
         $this->deny($message);
     }
 }

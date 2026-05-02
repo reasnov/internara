@@ -43,11 +43,11 @@ trait RbacTrait
         }
 
         $user = auth()->user();
-        if (! $user) {
+        if (!$user) {
             return false;
         }
 
-        $target = $target ?: ($this->modelClass ?? null);
+        $target = $target ?: $this->modelClass ?? null;
 
         $permissionValue = $this->resolvePermissionValue(
             match ($action) {
@@ -56,16 +56,16 @@ trait RbacTrait
                 'update' => $this->updatePermission ?? null,
                 'delete' => $this->deletePermission ?? null,
                 default => null,
-            }
+            },
         );
 
         return match ($action) {
-            'view', 'create' => $permissionValue
-                ? $user->can($permissionValue)
-                : true,
+            'view', 'create' => $permissionValue ? $user->can($permissionValue) : true,
             'update', 'delete' => $permissionValue
                 ? $user->can($permissionValue)
-                : ($target ? $user->can($action, $target) : true),
+                : ($target
+                    ? $user->can($action, $target)
+                    : true),
             default => false,
         };
     }
@@ -85,7 +85,7 @@ trait RbacTrait
             return;
         }
 
-        $target = $target ?: ($this->modelClass ?? null);
+        $target = $target ?: $this->modelClass ?? null;
 
         $permissionValue = $this->resolvePermissionValue(
             match ($action) {
@@ -94,7 +94,7 @@ trait RbacTrait
                 'update' => $this->updatePermission ?? null,
                 'delete' => $this->deletePermission ?? null,
                 default => null,
-            }
+            },
         );
 
         if ($permissionValue) {

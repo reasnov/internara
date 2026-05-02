@@ -2,11 +2,13 @@
 
 ## Overview
 
-Enterprise-grade audit and logging system for Internara v0.14.0. Supports 29+ modules with PII protection, automated integrity verification, and regulatory compliance.
+Enterprise-grade audit and logging system for Internara v0.14.0. Supports 29+ modules with PII
+protection, automated integrity verification, and regulatory compliance.
 
 ## Features
 
 ### 🔐 Security (S1)
+
 - **PII Masking**: Automatic masking of sensitive data (email, phone, NIK, NISN)
 - **Audit Trail**: Complete audit logs for all state changes
 - **Integrity Verification**: Automated detection of tampered logs
@@ -16,15 +18,11 @@ Enterprise-grade audit and logging system for Internara v0.14.0. Supports 29+ mo
 
 ```php
 // Main audit orchestrator
-AuditService::log(
-    module: 'Student',
-    action: 'create',
-    auditable: $student,
-    newValue: $data
-);
+AuditService::log(module: 'Student', action: 'create', auditable: $student, newValue: $data);
 ```
 
 **Available Methods:**
+
 - `log()` - Create audit entry
 - `getLogsForModel()` - Get logs for specific model
 - `getLogsByUser()` - Get logs by user
@@ -34,6 +32,7 @@ AuditService::log(
 ### ⚙️ Configuration
 
 See `config/audit.php`:
+
 ```php
 return [
     'enabled' => env('AUDIT_ENABLED', true),
@@ -53,14 +52,14 @@ return [
 public function create(array $data): Model
 {
     $model = parent::create($data);
-    
+
     app(AuditService::class)->log(
         module: 'YourModule',
         action: 'create',
         auditable: $model,
         newValue: $data
     );
-    
+
     return $model;
 }
 ```
@@ -86,6 +85,7 @@ php artisan test modules/Log
 ```
 
 **Coverage**: 90%+
+
 - PII masking tests
 - Audit log creation tests
 - Integrity verification tests

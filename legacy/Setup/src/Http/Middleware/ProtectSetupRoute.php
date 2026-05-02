@@ -37,10 +37,13 @@ class ProtectSetupRoute
                 'seconds_remaining' => $seconds,
             ]);
 
-            return response()->json([
-                'error' => __('setup::messages.rate_limited', ['seconds' => $seconds]),
-                'retry_after' => $seconds,
-            ], 429);
+            return response()->json(
+                [
+                    'error' => __('setup::messages.rate_limited', ['seconds' => $seconds]),
+                    'retry_after' => $seconds,
+                ],
+                429,
+            );
         }
 
         RateLimiter::hit($this->throttleKey($request), self::RATE_LIMIT_DECAY);
@@ -56,10 +59,10 @@ class ProtectSetupRoute
 
         $setupService = app(SetupService::class);
 
-        if (! $setupService->validateToken($token)) {
+        if (!$setupService->validateToken($token)) {
             Log::warning('Setup access denied: invalid/expired token', [
                 'ip' => $request->ip(),
-                'token_prefix' => substr($token, 0, 8).'...',
+                'token_prefix' => substr($token, 0, 8) . '...',
             ]);
 
             return $this->denyAccess(__('setup::messages.token_invalid'));
@@ -79,7 +82,7 @@ class ProtectSetupRoute
     {
         return RateLimiter::tooManyAttempts(
             $this->throttleKey($request),
-            self::RATE_LIMIT_ATTEMPTS
+            self::RATE_LIMIT_ATTEMPTS,
         );
     }
 
@@ -88,7 +91,7 @@ class ProtectSetupRoute
      */
     protected function throttleKey(Request $request): string
     {
-        return 'setup_throttle:'.$request->ip();
+        return 'setup_throttle:' . $request->ip();
     }
 
     /**
@@ -100,6 +103,8 @@ class ProtectSetupRoute
             return response()->json(['error' => $message], 403);
         }
 
-        return redirect()->route('setup.welcome')->withErrors(['token' => $message]);
+        return redirect()
+            ->route('setup.welcome')
+            ->withErrors(['token' => $message]);
     }
 }

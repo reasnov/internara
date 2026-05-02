@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 describe('ResultReporter', function () {
     beforeEach(function () {
-        $output = new ConsoleOutput;
+        $output = new ConsoleOutput();
         $this->reporter = new ResultReporter(new Factory($output));
     });
 
@@ -21,7 +21,14 @@ describe('ResultReporter', function () {
 
     it('displays matrix correctly', function () {
         $results = [
-            ['module' => 'TestModule', 'Arch' => 'PASS', 'Unit' => 'PASS', 'Feature' => 'FAIL', 'Browser' => '-', 'total' => 10.5],
+            [
+                'module' => 'TestModule',
+                'Arch' => 'PASS',
+                'Unit' => 'PASS',
+                'Feature' => 'FAIL',
+                'Browser' => '-',
+                'total' => 10.5,
+            ],
         ];
 
         // Just ensure it doesn't throw exceptions
@@ -50,8 +57,18 @@ describe('ResultReporter', function () {
 
     it('displays session metrics', function () {
         $sessionResults = [
-            ['module' => 'TestModule', 'type' => 'Unit', 'success' => true, 'timestamp' => now()->toIso8601String()],
-            ['module' => 'TestModule', 'type' => 'Feature', 'success' => false, 'timestamp' => now()->toIso8601String()],
+            [
+                'module' => 'TestModule',
+                'type' => 'Unit',
+                'success' => true,
+                'timestamp' => now()->toIso8601String(),
+            ],
+            [
+                'module' => 'TestModule',
+                'type' => 'Feature',
+                'success' => false,
+                'timestamp' => now()->toIso8601String(),
+            ],
         ];
 
         $passRate = $this->reporter->displaySessionMetrics('test-session-123', $sessionResults, 10);
@@ -60,7 +77,12 @@ describe('ResultReporter', function () {
 
     it('exports to JUnit XML', function () {
         $results = [
-            ['module' => 'TestModule', 'type' => 'Unit', 'success' => true, 'timestamp' => now()->toIso8601String()],
+            [
+                'module' => 'TestModule',
+                'type' => 'Unit',
+                'success' => true,
+                'timestamp' => now()->toIso8601String(),
+            ],
         ];
 
         $path = storage_path('framework/testing/reports/test_junit.xml');
@@ -75,7 +97,12 @@ describe('ResultReporter', function () {
 
     it('exports to JSON', function () {
         $results = [
-            ['module' => 'TestModule', 'type' => 'Unit', 'success' => true, 'timestamp' => now()->toIso8601String()],
+            [
+                'module' => 'TestModule',
+                'type' => 'Unit',
+                'success' => true,
+                'timestamp' => now()->toIso8601String(),
+            ],
         ];
 
         $path = storage_path('framework/testing/reports/test.json');

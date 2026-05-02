@@ -30,7 +30,11 @@ interface ResultReporterInterface
     /**
      * Display performance metrics.
      */
-    public function displayPerformance(int $totalSegments, int $passedSegments, float $duration): void;
+    public function displayPerformance(
+        int $totalSegments,
+        int $passedSegments,
+        float $duration,
+    ): void;
 
     /**
      * Display failure details.
@@ -46,7 +50,11 @@ interface ResultReporterInterface
      *
      * @return float Global pass rate (0-100)
      */
-    public function displaySessionMetrics(string $sessionId, array $sessionResults, int $totalPossibleSegments): float;
+    public function displaySessionMetrics(
+        string $sessionId,
+        array $sessionResults,
+        int $totalPossibleSegments,
+    ): float;
 
     /**
      * Export results to JUnit XML format.

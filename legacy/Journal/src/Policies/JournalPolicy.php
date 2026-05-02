@@ -112,9 +112,7 @@ class JournalPolicy
             return false;
         }
 
-        return $user->hasAnyPermission([
-            Permission::JOURNAL_MANAGE->value,
-        ]);
+        return $user->hasAnyPermission([Permission::JOURNAL_MANAGE->value]);
     }
 
     /**

@@ -12,5 +12,7 @@ Route::middleware(['auth', 'verified', 'role:mentor'])->group(function () {
     Route::livewire('/mentor/mentoring/{registrationId}', MentoringManager::class)->name(
         'mentor.mentoring',
     );
-    Route::livewire('/mentor/evaluate/{registrationId}', EvaluateIntern::class)->name('mentor.evaluate');
+    Route::livewire('/mentor/evaluate/{registrationId}', EvaluateIntern::class)->name(
+        'mentor.evaluate',
+    );
 });
