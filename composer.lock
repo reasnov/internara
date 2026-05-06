@@ -2317,16 +2317,16 @@
         },
         {
             "name": "laravel-lang/lang",
-            "version": "15.29.3",
+            "version": "15.29.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/lang.git",
-                "reference": "c388b20ea78da7ad6234f9ec0681d326f31d35f6"
+                "reference": "c2e40b08fc7bccb8668fdff89b95f504f1ff393c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/lang/zipball/c388b20ea78da7ad6234f9ec0681d326f31d35f6",
-                "reference": "c388b20ea78da7ad6234f9ec0681d326f31d35f6",
+                "url": "https://api.github.com/repos/Laravel-Lang/lang/zipball/c2e40b08fc7bccb8668fdff89b95f504f1ff393c",
+                "reference": "c2e40b08fc7bccb8668fdff89b95f504f1ff393c",
                 "shasum": ""
             },
             "require": {
@@ -2387,7 +2387,7 @@
                     "type": "yoomoney"
                 }
             ],
-            "time": "2026-04-26T14:40:40+00:00"
+            "time": "2026-05-03T18:05:18+00:00"
         },
         {
             "name": "laravel-lang/locale-list",
@@ -2876,16 +2876,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v13.7.0",
+            "version": "v13.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "f13b85b2cce7ef5e8f3bcdf2b6c6364bbdedae0b"
+                "reference": "e7db333a025a1e93ebca7744953069d7719f4bcf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/f13b85b2cce7ef5e8f3bcdf2b6c6364bbdedae0b",
-                "reference": "f13b85b2cce7ef5e8f3bcdf2b6c6364bbdedae0b",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/e7db333a025a1e93ebca7744953069d7719f4bcf",
+                "reference": "e7db333a025a1e93ebca7744953069d7719f4bcf",
                 "shasum": ""
             },
             "require": {
@@ -2926,8 +2926,8 @@
                 "symfony/http-kernel": "^7.4.0 || ^8.0.0",
                 "symfony/mailer": "^7.4.0 || ^8.0.0",
                 "symfony/mime": "^7.4.0 || ^8.0.0",
-                "symfony/polyfill-php84": "^1.33",
-                "symfony/polyfill-php85": "^1.33",
+                "symfony/polyfill-php84": "^1.36",
+                "symfony/polyfill-php85": "^1.36",
                 "symfony/polyfill-php86": "^1.36",
                 "symfony/process": "^7.4.5 || ^8.0.5",
                 "symfony/routing": "^7.4.0 || ^8.0.0",
@@ -3096,7 +3096,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2026-04-28T17:18:25+00:00"
+            "time": "2026-05-05T21:01:14+00:00"
         },
         {
             "name": "laravel/prompts",
